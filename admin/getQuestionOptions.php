@@ -1,0 +1,1 @@
+<?php	include("globals.php");		$question_id = $params->getInt("question_id");		$options = $db->getAll("SELECT * FROM ".$quiz_questions_options_table." WHERE edate = 0 AND question_id = '".$question_id."' ORDER BY pos"); safeCheck($options);	echo json_encode($options);	?>

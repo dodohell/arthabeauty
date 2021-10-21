@@ -1,0 +1,605 @@
+{include file="admin/header.html"}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb p-0">
+        <li class="breadcrumb-item">
+            <a href="./">
+                <span class="mdi mdi-home"></span>                
+            </a>
+        </li>
+        <li class="breadcrumb-item">
+            <a href="./{$php_self}">{#categories#}</a>
+        </li>
+        <li class="breadcrumb-item" aria-current="page">{$row.name}</li>
+    </ol>
+</nav>
+<div class="row-fluid">
+    <form method="post" enctype="multipart/form-data">
+        <div class="row">
+            <div class="col-sm-7 well">
+                <div class="nonboxy-widget">
+                    <div class="widget-head">
+                        <h5>{#short_description#}</h5>
+                    </div>
+                    <div class="widget-content">
+                        <div class="widget-box">
+                            {$editorExcerpt}
+                        </div>
+                    </div>
+                </div>
+                <div class="nonboxy-widget">
+                    <div class="widget-head">
+                        <h5>{#description#}</h5>
+                    </div>
+                    <div class="widget-content">
+                        <div class="widget-box">
+                            {$editor}
+                        </div>
+                    </div>
+                </div>
+                {if $id}
+                    <hr />
+                    <!-- <div class="widget-head" id="productsCont">
+                        <h5>{#products#}</h5>
+                    </div>
+                    <div class="widget-content">
+                        <div class="control-group">
+                            <input type='hidden' placeholder="Моля, започнете да пишете. Резултати ще се появят при въвеждането на повече от 3 символа"  class='select2'  data-primary='products' name="products" style="min-width: 100%;"/>
+                        </div>
+                    </div> -->
+                    <ul class="nav nav-tabs">
+                        <li class="nav-item"><a class="nav-link active" href="#tab0" data-toggle="tab">{#brands#}</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#tab1" data-toggle="tab">{#collections#}</a></li>
+                        <li class="nav-item"><a class="nav-link" href="#tab2" data-toggle="tab">{#products#}</a></li>
+                    </ul>
+                    
+                    <div class="tab-content">
+                        <div class="tab-pane container active" id="tab0">
+                            {if $id}
+                                <input type='text' placeholder="Моля, започнете да пишете. Резултати ще се появят при въвеждането на повече от 3 символа"  class='select2'  data-primary='brands' name="brands" style="min-width: 100%;"/>
+                            {else}
+                                За да изберете марка, върху която да сложите отстъпка запазете записа и се върнете, за да довършите (Запази и остани).
+                            {/if}
+                        </div>
+                        <div class="tab-pane container fade" id="tab1">
+                            {if $id}
+                                <input type='text' placeholder="Моля, започнете да пишете. Резултати ще се появят при въвеждането на повече от 3 символа"  class='select2'  data-primary='collections' name="collections" style="min-width: 100%;"/>
+                            {else}
+                                За да изберете Колекция, върху която да сложите отстъпка запазете записа и се върнете, за да довършите (Запази и остани).
+                            {/if}
+                        </div>
+                        <div class="tab-pane container fade" id="tab2">
+                            {if $id}
+                                <input type='hidden' class='select2'  placeholder="Моля, започнете да пишете. Резултати ще се появят при въвеждането на повече от 3 символа"  data-primary='products' name="products" style="min-width: 100%;"/>
+                            {else}
+                                За да изберете Продукти, върху които да сложите отстъпка запазете записа и се върнете, за да довършите (Запази и остани).
+                            {/if}
+                        </div>
+                    </div>
+                    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+                    <link href="{$host}js/select2.css" rel="stylesheet" />
+                    <script src="{$host}js/select2.min.js"></script>
+                    <script src="{$host}lang/select2_locale_bg.js"></script>
+                    <script type="text/javascript">
+                        var pageID = {$id};
+                        var relDom = 'category';
+                        {literal}
+                            var jq1113 = jQuery.noConflict(true);
+                            jq1113(document).ready(function () {
+                                jq1113(".select2").each(function (index) {
+                                    var apiURL = '/admin/' + jq1113(this).attr('data-primary') + 'API.php';
+                                    attachSelect(jq1113(this), apiURL)
+                                });
+                            });
+
+                            function attachSelect(elem, apiURL) {
+                                elem.select2({
+                                    ajax: {// Зарежда JSON от API страницата и го прехвърля във формат за selec2  
+                                        url: apiURL + "?id=" + pageID + "&secondary=" + relDom,
+                                        dataType: 'json',
+                                        delay: 250,
+                                        data: function (params) {
+                                            //console.log(params);
+                                            //console.log(apiURL+"?id=" + pageID+"&secondary="+relDom);
+                                            return {
+                                                search: params
+                                            };
+                                        },
+                                        processResults: function (data, page) {
+                                            return {
+                                                results: jq1113.map(data, function (item) {
+                                                    return {
+                                                        text: item.name,
+                                                        id: item.id
+                                                    }
+                                                })
+                                            };
+                                        },
+                                        cache: true
+                                    },
+                                    multiple: true,
+                                    escapeMarkup: function (markup) {
+                                        return markup;
+                                    }, // let our custom formatter work
+                                    initSelection: function (element, callback) {
+                                        jq1113.ajax(apiURL + "?selected=" + pageID + "&secondary=" + relDom, {// Добавя избраните полета
+                                            dataType: 'json'
+                                        }).done(function (data) {
+                                            data = jq1113.map(data, function (item) {// Преформатира за Select2
+                                                return {
+                                                    text: item.name,
+                                                    id: item.id
+                                                }
+                                            });
+                                            callback(data);
+                                        });
+                                    },
+                                    minimumInputLength: 3,
+                                    language: "bg"
+                                }).select2('val', []);//PatchyFix
+                            }
+
+                        {/literal}
+                    </script>
+                    
+                {/if}
+            </div>
+            <div class="col-sm-5 well">
+                <div class="nonboxy-widget">
+                    <div class="widget-head">
+                        <h5>{#settings#}</h5>
+                    </div>
+                    <div class="widget-content">
+                        <div class="widget-box">
+                            <fieldset>
+                                <div class="control-group">
+                                    <label class="checkbox inline"><input type="checkbox" value="1" name="active" {if $row.active}checked{/if}> {#active#}</label>
+                                    {*<label class="checkbox inline"><input type="checkbox" value="1" name="dont_open" {if $row.dont_open}checked{/if}> {#dont_open#}</label>
+                                    <label class="checkbox inline"><input type="checkbox" value="1" name="first_page" {if $row.first_page}checked{/if}> {#homepage#}</label>*}
+                                    <label class="checkbox inline"><input type="checkbox" value="1" name="show_subcategories_products" {if $row.show_subcategories_products}checked{/if}> {#show_subcategories_products#}</label>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                    <div class="widget-head">
+                        <h5>{#general_information#}</h5>
+                    </div>
+                    <div class="widget-content">
+                        <div class="widget-box">
+                            <fieldset>
+                                <div class="control-group">
+                                    <label class="control-label" for="name_bg">{#name#} BG</label>
+                                    <div class="controls">
+                                        <input type="text" name="name_bg" value="{$row.name_bg}" class="form-control form-control-sm text-tip" id="name_bg" title="{#enter#} {#name#} BG">
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label" for="name_en">{#name#} EN</label>
+                                    <div class="controls">
+                                        <input type="text" name="name_en" value="{$row.name_en}" class="form-control form-control-sm text-tip" id="name_en" title="{#enter#} {#name#} EN">
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label" for="name_de">{#name#} DE</label>
+                                    <div class="controls">
+                                        <input type="text" name="name_de" value="{$row.name_de}" class="form-control form-control-sm text-tip" id="name_de" title="{#enter#} {#name#} DE">
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label" for="name_ro">{#name#} RO</label>
+                                    <div class="controls">
+                                        <input type="text" name="name_ro" value="{$row.name_ro}" class="form-control form-control-sm text-tip" id="name_ro" title="{#enter#} {#name#} RO">
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label" for="name_ru">{#name#} RU</label>
+                                    <div class="controls">
+                                        <input type="text" name="name_ru" value="{$row.name_ru}" class="form-control form-control-sm text-tip" id="name_ru" title="{#enter#} {#name#} RU">
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label" for="h1_bg">{#name_h1#} BG</label>
+                                    <div class="controls">
+                                        <input type="text" name="h1_bg" value="{$row.h1_bg}" class="form-control form-control-sm text-tip" id="h1_bg" title="{#enter#} {#name_h1#} BG">
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label" for="h1_en">{#name_h1#} EN</label>
+                                    <div class="controls">
+                                        <input type="text" name="h1_en" value="{$row.h1_en}" class="form-control form-control-sm text-tip" id="h1_en" title="{#enter#} {#name_h1#} EN">
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label" for="h1_de">{#name_h1#} DE</label>
+                                    <div class="controls">
+                                        <input type="text" name="h1_de" value="{$row.h1_de}" class="form-control form-control-sm text-tip" id="h1_de" title="{#enter#} {#name_h1#} DE">
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label" for="h1_ro">{#name_h1#} RO</label>
+                                    <div class="controls">
+                                        <input type="text" name="h1_ro" value="{$row.h1_ro}" class="form-control form-control-sm text-tip" id="h1_ro" title="{#enter#} {#name_h1#} RO">
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label" for="h1_ru">{#name_h1#} RU</label>
+                                    <div class="controls">
+                                        <input type="text" name="h1_ru" value="{$row.h1_ru}" class="form-control form-control-sm text-tip" id="h1_ru" title="{#enter#} {#name_h1#} RU">
+                                    </div>
+                                </div>
+
+                                <div class="control-group">
+                                    <label class="control-label" for="url_bg">{#url#} BG</label>
+                                    <div class="controls">
+                                        <input type="text" name="url_bg" value="{$row.url_bg}" class="form-control form-control-sm text-tip" id="url_bg" title="{#enter#} {#url#} BG">
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label" for="url_en">{#url#} EN</label>
+                                    <div class="controls">
+                                        <input type="text" name="url_en" value="{$row.url_en}" class="form-control form-control-sm text-tip" id="url_en" title="{#enter#} {#url#} EN">
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label" for="url_de">{#url#} DE</label>
+                                    <div class="controls">
+                                        <input type="text" name="url_de" value="{$row.url_de}" class="form-control form-control-sm text-tip" id="url_de" title="{#enter#} {#url#} DE">
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label" for="url_ro">{#url#} RO</label>
+                                    <div class="controls">
+                                        <input type="text" name="url_ro" value="{$row.url_ro}" class="form-control form-control-sm text-tip" id="url_ro" title="{#enter#} {#url#} RO">
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label" for="url_ru">{#url#} RU</label>
+                                    <div class="controls">
+                                        <input type="text" name="url_ru" value="{$row.url_ru}" class="form-control form-control-sm text-tip" id="url_ru" title="{#enter#} {#url#} RU">
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label" for="url_target">{#url_target#}</label>
+                                    <div class="controls">
+                                        <select name="url_target" class="form-control form-control-sm" id="url_target">
+                                            <option value="_self" {if $row.url_target == "_self"}selected{/if}>{#target_self#}</option>
+                                            <option value="_blank" {if $row.url_target == "_blank"}selected{/if}>{#target_blank#}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+
+                    </div>
+                    <div class="widget-head">
+                        <h5>{#htaccess_settings#}</h5>
+                    </div>
+                    <div class="widget-content">
+                        <div class="widget-box">
+                            <fieldset>
+                                <div class="control-group">
+                                    <label class="control-label" for="htaccess_url_bg">{#htaccess_url#} BG</label>
+                                    <div class="controls">
+                                        <input type="text" name="htaccess_url_bg" value="{$row.htaccess_url_bg}" class="htaccessField form-control form-control-sm text-tip" id="htaccess_url_bg" title="{#enter#} {#htaccess_url#} BG" autocomplete="new-password">
+                                        <div class="errorHTACCESS">{#invalid_or_duplicate_htaccess#}</div>
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label" for="htaccess_url_en">{#htaccess_url#} EN</label>
+                                    <div class="controls">
+                                        <input type="text" name="htaccess_url_en" value="{$row.htaccess_url_en}" class="htaccessField form-control form-control-sm text-tip" id="htaccess_url_en" title="{#enter#} {#htaccess_url#} EN" autocomplete="new-password">
+                                        <div class="errorHTACCESS">{#invalid_or_duplicate_htaccess#}</div>
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label" for="htaccess_url_de">{#htaccess_url#} DE</label>
+                                    <div class="controls">
+                                        <input type="text" name="htaccess_url_de" value="{$row.htaccess_url_de}" class="htaccessField form-control form-control-sm text-tip" id="htaccess_url_de" title="{#enter#} {#htaccess_url#} DE" autocomplete="new-password">
+                                        <div class="errorHTACCESS">{#invalid_or_duplicate_htaccess#}</div>
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label" for="htaccess_url_ro">{#htaccess_url#} RO</label>
+                                    <div class="controls">
+                                        <input type="text" name="htaccess_url_ro" value="{$row.htaccess_url_ro}" class="htaccessField form-control form-control-sm text-tip" id="htaccess_url_ro" title="{#enter#} {#htaccess_url#} RO" autocomplete="new-password">
+                                        <div class="errorHTACCESS">{#invalid_or_duplicate_htaccess#}</div>
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label" for="htaccess_url_ru">{#htaccess_url#} RU</label>
+                                    <div class="controls">
+                                        <input type="text" name="htaccess_url_ru" value="{$row.htaccess_url_ru}" class="htaccessField form-control form-control-sm text-tip" id="htaccess_url_ru" title="{#enter#} {#htaccess_url#} RU" autocomplete="new-password">
+                                        <div class="errorHTACCESS">{#invalid_or_duplicate_htaccess#}</div>
+                                    </div>
+                                </div>
+                                {if 0}<div id="errorTracker"></div>{/if}
+                                {literal}
+                                    <script>
+                                        $(document).ready(function () {
+                                            $(".htaccessField").bind("keyup", function () {
+                                                var use_index = $(".htaccessField").index(this);
+                                                var lang = $(".htaccessField:eq(" + use_index + ")").attr("name").replace("htaccess_url_", "");
+                                                var fieldValue = $(".htaccessField:eq(" + use_index + ")").val().trim();
+
+                                                if (fieldValue == "") {
+                                                    $(".errorHTACCESS:eq(" + use_index + ")").hide();
+                                                } else {
+                                                    $.ajax({
+                                                        type: "POST",
+                                                        url: "checkHtaccess.php",
+                                                        data: "type=categories&lang_check=" + lang + "&record_id={/literal}{$row.id}{literal}&htaccess_url=" + $(this).val(),
+                                                        success: function (html) {
+                                                            // $("#errorTracker").empty();
+                                                            // $("#errorTracker").append(html);
+                                                            if (html != 0) {
+                                                                if (html == 2) {
+                                                                    $(".errorHTACCESS:eq(" + use_index + ")").hide();
+                                                                } else {
+                                                                    $(".errorHTACCESS:eq(" + use_index + ")").show();
+                                                                }
+                                                            } else {
+                                                                $(".errorHTACCESS:eq(" + use_index + ")").hide();
+                                                            }
+
+                                                            //check for filing the inputs with duplicate data at once and avoid submiting it.
+                                                            var error = 0;
+                                                            $(".htaccessField").each(function (i, e) {
+                                                                if (i != use_index) {
+                                                                    var elemVal = $(".htaccessField:eq(" + i + ")").val().trim();
+                                                                    if (fieldValue == elemVal) {
+                                                                        error = 1;
+                                                                        return false;
+                                                                    }
+                                                                }
+                                                            });
+
+                                                            if (error == 1) {
+                                                                $(".errorHTACCESS:eq(" + use_index + ")").show();
+                                                            } else {
+                                                                //$(".errorHTACCESS:eq("+use_index+")").hide();
+                                                            }
+                                                        }
+                                                    });
+                                                }
+                                            });
+                                        });
+                                    </script>
+                                {/literal}
+                            </fieldset>
+                        </div>
+                    </div>
+                    <div class="widget-head">
+                        <h5>{#general_images#}</h5>
+                    </div>
+                    <div class="widget-content">
+                        <div class="widget-box">
+                            <fieldset>
+                                <div class="my-3">
+                                    <span>{#picture_main#}</span>
+                                    <div class="custom-file">
+                                        <input type="file" name="pic_main" class="custom-file-input" id="pic_main">
+                                        <label class="custom-file-label" for="pic_main">{if $row.pic_main}{$row.pic_main}{else}{#picture_main#}{/if}</label>
+                                    </div>
+                                    <p class="help-block">
+                                        <strong>{#notice#}:</strong> {#notice_leading_image#}
+                                    </p>
+                                    {if $row.pic_main}
+                                        <img src="/files/tn/{$row.pic_main}" class="picView">
+                                        <a href="categories_ae.php?act=delete&field=pic_main&id={$id}&menu_pos={$menu_pos}"><i class="mdi mdi-trash-can-outline"></i>{#delete#}</a>
+                                    {/if}
+                                </div>
+                                <div class="my-3">
+                                    <span>{#icon#}</span>
+                                    <div class="custom-file">
+                                        <input type="file" name="icon" class="custom-file-input" id="icon">
+                                        <label class="custom-file-label" for="icon">{if $row.icon}{$row.icon}{else}{#icon#}{/if}</label>
+                                    </div>
+                                    {if $row.icon}
+                                        <img src="/files/tn/{$row.icon}" class="picView">
+                                        <a href="categories_ae.php?act=delete&field=icon&id={$id}"><i class="mdi mdi-trash-can-outline"></i>{#delete#}</a>
+                                    {/if}
+                                </div>
+                                <div class="my-3">
+                                    <span>{#picture#} 1</span>
+                                    <div class="custom-file">
+                                        <input type="file" name="pic_1" class="custom-file-input" id="pic_1">
+                                        <label class="custom-file-label" for="pic_1">{if $row.pic_1}{$row.pic_1}{else}{#picture#} 1{/if}</label>
+                                    </div>
+                                    {if $row.pic_1}
+                                        <img src="/files/tn/{$row.pic_1}" class="picView">
+                                        <a href="categories_ae.php?act=delete&field=pic_1&id={$row.id}&menu_pos={$menu_pos}"><i class="mdi mdi-trash-can-outline"></i>{#delete#}</a>
+                                    {/if}
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label" for="pic_1_name_bg">{#picture#} 1 {#name#} BG</label>
+                                    <div class="controls">
+                                        <input type="text" name="pic_1_name_bg" value="{$row.pic_1_name_bg}" class="htaccessField form-control form-control-sm text-tip" id="pic_1_name_bg" title="{#picture#} 1 {#name#} BG">
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label" for="pic_1_name_en">{#picture#} 1 {#name#} EN</label>
+                                    <div class="controls">
+                                        <input type="text" name="pic_1_name_en" value="{$row.pic_1_name_en}" class="htaccessField form-control form-control-sm text-tip" id="pic_1_name_en" title="{#picture#} 1 {#name#} EN">
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label" for="pic_1_name_de">{#picture#} 1 {#name#} DE</label>
+                                    <div class="controls">
+                                        <input type="text" name="pic_1_name_de" value="{$row.pic_1_name_de}" class="htaccessField form-control form-control-sm text-tip" id="pic_1_name_de" title="{#picture#} 1 {#name#} DE">
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label" for="pic_1_name_ro">{#picture#} 1 {#name#} RO</label>
+                                    <div class="controls">
+                                        <input type="text" name="pic_1_name_ro" value="{$row.pic_1_name_ro}" class="htaccessField form-control form-control-sm text-tip" id="pic_1_name_ro" title="{#picture#} 1 {#name#} RO">
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label" for="pic_1_name_ru">{#picture#} 1 {#name#} RU</label>
+                                    <div class="controls">
+                                        <input type="text" name="pic_1_name_ru" value="{$row.pic_1_name_ru}" class="htaccessField form-control form-control-sm text-tip" id="pic_1_name_ru" title="{#picture#} 1 {#name#} RU">
+                                    </div>
+                                </div>
+                                <div class="my-3">
+                                    <span>{#picture#} 2</span>
+                                    <div class="custom-file">
+                                        <input type="file" name="pic_2" class="custom-file-input" id="pic_2">
+                                        <label class="custom-file-label" for="pic_2">{if $row.pic_2}{$row.pic_2}{else}{#picture#} 2{/if}</label>
+                                    </div>
+                                    {if $row.pic_2}
+                                        <img src="/files/tn/{$row.pic_2}" class="picView">
+                                        <a href=categories_ae.php?act=delete&field=pic_2&id={$id}"><i class="mdi mdi-trash-can-outline"></i>{#delete#}</a>
+                                    {/if}
+                                </div>
+                                <script>
+                                    $('#pic_main, #pic_1, #pic_2 #icon').on('change',function(){
+                                        //get the file name
+                                        var fileName = $(this).val();
+                                        //replace the "Choose a file" label
+                                        $(this).next('.custom-file-label').html(fileName);
+                                    })
+                                </script>
+                                <div class="control-group">
+                                    <label class="control-label" for="pic_2_name_bg">{#picture#} 2 {#name#} BG</label>
+                                    <div class="controls">
+                                        <input type="text" name="pic_2_name_bg" value="{$row.pic_2_name_bg}" class="htaccessField form-control form-control-sm text-tip" id="pic_2_name_bg" title="{#picture#} 2 {#name#} BG">
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label" for="pic_2_name_en">{#picture#} 2 {#name#} EN</label>
+                                    <div class="controls">
+                                        <input type="text" name="pic_2_name_en" value="{$row.pic_2_name_en}" class="htaccessField form-control form-control-sm text-tip" id="pic_2_name_en" title="{#picture#} 2 {#name#} EN">
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label" for="pic_2_name_de">{#picture#} 2 {#name#} DE</label>
+                                    <div class="controls">
+                                        <input type="text" name="pic_2_name_de" value="{$row.pic_2_name_de}" class="htaccessField form-control form-control-sm text-tip" id="pic_2_name_de" title="{#picture#} 2 {#name#} DE">
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label" for="pic_2_name_ro">{#picture#} 2 {#name#} RO</label>
+                                    <div class="controls">
+                                        <input type="text" name="pic_2_name_ro" value="{$row.pic_2_name_ro}" class="htaccessField form-control form-control-sm text-tip" id="pic_2_name_ro" title="{#picture#} 2 {#name#} RU">
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label" for="pic_2_name_ru">{#picture#} 2 {#name#} RU</label>
+                                    <div class="controls">
+                                        <input type="text" name="pic_2_name_ru" value="{$row.pic_2_name_ru}" class="htaccessField form-control form-control-sm text-tip" id="pic_2_name_ru" title="{#picture#} 2 {#name#} RU">
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                        <div class="widget-box">
+                            <div class="alert alert-error fade in" id="generalHTACCESSerror">
+                                {if 0}<button data-dismiss="alert" class="close" type="button">×</button>{/if}
+                                <strong>{#general_error_heading#}</strong><br /> {#general_error_text#}
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            {literal}
+                                <script>
+                                    $(document).ready(function () {
+                                        $("button[name=Submit], input[name=SaveAndStay]").bind("click", function () {
+                                            var prompted_error = 0;
+                                            $(".errorHTACCESS").each(function (e, i) {
+                                                if ($(this).css("display") == "block") {
+                                                    prompted_error = 1;
+                                                }
+                                            });
+
+                                            if (prompted_error == 1) {
+                                                $("#generalHTACCESSerror").show();
+                                                return false;
+                                            } else {
+                                                $("#generalHTACCESSerror").hide();
+                                            }
+                                        });
+                                    });
+                                </script>
+                            {/literal}
+                            <button type="submit" name="Submit" class="btn btn-primary">{#save_changes#}</button>
+                            <input type="submit" name="SaveAndStay" class="btn btn-info" value="{#save_and_stay#}" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {*<div class="nonboxy-widget d-flex flex-column">
+            <div class="widget-head">
+                <hr><h5>Banner Zones</h5><hr>
+            </div>
+            <div class="row d-flex flex-row justify-content-between flex-wrap">
+                <div class="control-group col">
+                    <label class="control-label" for="banner_zones_bg">Български: </label>
+                    <div class="controls">
+                        <textarea class="inputField form-control" name="banner_zones_bg" id="banner_zones_bg">{$row.banner_zones_bg}</textarea>
+                    </div>
+                </div>
+                <div class="control-group col">
+                    <label class="control-label" for="banner_zones_en">Английски: </label>
+                    <div class="controls">
+                        <textarea class="inputField form-control" name="banner_zones_en" id="banner_zones_en">{$row.banner_zones_en}</textarea>
+                    </div>
+                </div>
+                <div class="control-group col">
+                    <label class="control-label" for="banner_zones_de">Немски: </label>
+                    <div class="controls">
+                        <textarea class="inputField form-control" name="banner_zones_de" id="banner_zones_de">{$row.banner_zones_de}</textarea>
+                    </div>
+                </div>
+                <div class="control-group col">
+                    <label class="control-label" for="banner_zones_ro">Румънски: </label>
+                    <div class="controls">
+                        <textarea class="inputField form-control" name="banner_zones_ro" id="banner_zones_ro">{$row.banner_zones_ro}</textarea>
+                    </div>
+                </div>
+                <div class="control-group col">
+                    <label class="control-label" for="banner_zones_ru">Руски: </label>
+                    <div class="controls">
+                        <textarea class="inputField form-control" name="banner_zones_ru" id="banner_zones_ru">{$row.banner_zones_ru}</textarea>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="widget-head">
+                <hr><h5>Banner Zones Mobile</h5><hr>
+            </div>
+            <div class="row d-flex flex-row justify-content-between flex-wrap">
+                <div class="control-group col">
+                    <label class="control-label" for="banner_zones_mobile_bg">Български: </label>
+                    <div class="controls">
+                        <textarea class="inputField form-control" name="banner_zones_mobile_bg" id="banner_zones_mobile_bg">{$row.banner_zones_mobile_bg}</textarea>
+                    </div>
+                </div>
+                <div class="control-group col">
+                    <label class="control-label" for="banner_zones_mobile_en">Английски: </label>
+                    <div class="controls">
+                        <textarea class="inputField form-control" name="banner_zones_mobile_en" id="banner_zones_mobile_en">{$row.banner_zones_mobile_en}</textarea>
+                    </div>
+                </div>
+                <div class="control-group col">
+                    <label class="control-label" for="banner_zones_mobile_de">Немски: </label>
+                    <div class="controls">
+                        <textarea class="inputField form-control" name="banner_zones_mobile_de" id="banner_zones_mobile_de">{$row.banner_zones_mobile_de}</textarea>
+                    </div>
+                </div>
+                <div class="control-group col">
+                    <label class="control-label" for="banner_zones_mobile_ro">Румънски: </label>
+                    <div class="controls">
+                        <textarea class="inputField form-control" name="banner_zones_mobile_ro" id="banner_zones_mobile_ro">{$row.banner_zones_mobile_ro}</textarea>
+                    </div>
+                </div>
+                <div class="control-group col">
+                    <label class="control-label" for="banner_zones_mobile_ru">Руски: </label>
+                    <div class="controls">
+                        <textarea class="inputField form-control" name="banner_zones_mobile_ru" id="banner_zones_mobile_ru">{$row.banner_zones_mobile_ru}</textarea>
+                    </div>
+                </div>
+            </div>
+        </div>*}
+        {include file="admin/metaInformation.html"}
+    </form>
+</div>
+
+{include file="admin/footer.html"}

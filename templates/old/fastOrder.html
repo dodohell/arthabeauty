@@ -1,0 +1,139 @@
+<article class="card">
+    <div id="fastOrderForm" class="card-body p-5">
+        <h1>{#fast_order#}</h1>
+        <div class="py-4">{$fast_order.description}</div>
+        <form role="form">
+            <div class="form-group">
+                <label for="name">{#your_name#}</label>
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="fa fa-user"></i></span>
+                    </div>
+                    <input type="text" class="form-control" name="name" placeholder="" required="">
+                </div> <!-- input-group.// -->
+                <div id="error1" class="errorMessage2">
+					{#invalid_name#}
+				</div>
+            </div> <!-- form-group.// -->
+            <div class="form-group">
+                <label for="phone">{#phone#}</label>
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="fas fa-phone"></i></span>
+                    </div>
+                    <input type="tel" class="form-control" name="phone" placeholder="" required="">
+                </div> <!-- input-group.// -->
+                <div id="error2" class="errorMessage2">
+					{#invalid_phone#}
+				</div>
+            </div> <!-- form-group.// -->
+            <div class="form-group">
+                <label for="email">{#email#}</label>
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="far fa-envelope"></i></span>
+                    </div>
+                    <input type="email" class="form-control" name="email" placeholder="">
+                </div> <!-- input-group.// -->
+                <div id="error3" class="errorMessage2">
+					{#invalid_email#}
+				</div>
+            </div> <!-- form-group.// -->
+            <label for="agree_terms" class="form-check">
+                <input class="form-check-input" type="checkbox" name="agree_terms" value="1" required>
+                <span class="form-check-label">
+                    {#i_agree#} <a href="/{#htaccess_info#}/8" target="_blank"><strong>{#the_terms#}</strong></a> {#terms_of#}
+                </span>
+            </label> <!-- form-check.// -->
+            <div class="errorMessage" id="agree_terms_Error">{#invalid_agree_terms#}</div><br />
+            <label for="agree_terms_gdpr" class="form-check">
+                <input class="form-check-input" type="checkbox" name="agree_terms_gdpr" value="1" required>
+                <span class="form-check-label">
+                    {#i_agree_gdpr#} <a href="/{#htaccess_info#}/8" target="_blank"><strong>{#the_gdpr_policy#}</strong></a> {#terms_of#}
+                </span>
+            </label> <!-- form-check.// -->
+            <div class="errorMessage" id="agree_terms_gdpr_Error">{#invalid_agree_terms_gdpr#}</div>
+            <input type="hidden" value="{$product_id}" name="product_id" />
+            <input type="hidden" value="{$variant_id}" name="variant_id" />
+            <input type="hidden" value="{$quantity}" name="quantity" />
+            <button id="submitFastOrder" class="subscribe btn btn-primary btn-block" type="button"> {#submitFastOrder#}  </button>
+        </form>
+    </div> <!-- card-body.// -->
+    <div id="messageDescription2"></div>
+</article> <!-- card.// -->
+<script>
+$(document).ready(function(){
+    $("#submitFastOrder").bind("click", function(e){
+        e.preventDefault();
+        //$(this).attr("disabled", false);
+        var name = $("input[name=name]").val();
+        var phone = $("input[name=phone]").val();
+        var email = $("input[name=email]").val();
+        var agree_terms = 0;
+        var agree_terms_gdpr = 0;
+        
+        //var error1 = false;
+        var error2 = false;
+        //var error3 = false;
+        var error4 = false;
+        var error5 = false;
+        /*
+        if (name == ""){
+            error1 = false;
+            $("#error1").show();
+        }else{
+            error1 = true;
+            $("#error1").hide();
+        }
+        */
+        if (phone == ""){
+            error2 = false;
+            $("#error2").show();
+        }else{
+            error2 = true;
+            $("#error2").hide();
+        }
+        /*
+        if (email == ""){
+            error3 = false;
+            $("#error3").show();
+        }else{
+            error3 = true;
+            $("#error3").hide();
+        }
+        */
+        if ( $("input[name=agree_terms]").is(":checked") == false ){
+            error4 = false;
+            $("#agree_terms_Error").show();
+        }else{
+            error4 = true;
+            agree_terms = 1;
+            $("#agree_terms_Error").hide();
+        }
+        if ( $("input[name=agree_terms_gdpr]").is(":checked") == false ){
+            error5 = false;
+            $("#agree_terms_gdpr_Error").show();
+        }else{
+            error5 = true;
+            agree_terms_gdpr = 1;
+            $("#agree_terms_gdpr_Error").hide();
+        }
+        if (/*error1 && */ error2 /*&& error3*/ && error4 && error5){
+            $(this).html("{#submitFastOrderPleaseWait#}");
+            $(this).attr("disabled", true);
+            var quantity = $("input[name=quantity]").val();
+            $.ajax({
+                type: "POST",
+                url: "/post-fast-order",
+                data: "name="+name+"&email="+email+"&phone="+phone+"&agree_terms="+agree_terms+"&agree_terms_gdpr="+agree_terms_gdpr+"&quantity="+quantity+"&product_id={$product_id}"+"&variant_id={$variant_id}",
+                success: function(html){
+                    $("#messageDescription2").html(html);
+                    $("#fastOrderForm").slideUp();
+                    $("#messageDescription2").slideDown();
+                }
+            });
+        }
+        
+    });
+});
+</script>

@@ -1,0 +1,102 @@
+{include file="admin/header.html"}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb p-0">
+            <li class="breadcrumb-item">
+                <a href="./">
+                    <span class="mdi mdi-home"></span>                
+                </a>
+            </li>
+            <li class="breadcrumb-item">
+                <a href="./{$php_self}">{#fast_orders#}</a>
+            </li>
+            <li class="breadcrumb-item" aria-current="page">{$row.phone}</li>
+        </ol>
+    </nav>
+    <div class="row-fluid">
+        <div class="row">
+			<div class="col-sm-6 well">
+				<div class="nonboxy-widget">
+					<div class="widget-head">
+						<h5>{#fast_order_number#} {$row.id}</h5>
+					</div>
+					<div class="widget-content">
+						<div class="widget-box">
+                            <div class="control-group">
+                                {*<label class="control-label" for="name">{#name#}</label>
+                                <div class="controls">
+                                    <input type="text" name="name" value="{$row.name}" class="form-control form-control-sm text-tip" id="name" readonly>
+                                </div>*}
+                                <label class="control-label" for="phone">{#phone#}</label>
+                                <div class="controls">
+                                    <input type="text" name="phone" value="{$row.phone}" class="form-control form-control-sm text-tip" id="phone" readonly>
+                                </div>
+                                
+																<label class="control-label" for="product_id">{#product#}</label>
+		                            <div class="controls">
+		                            		{$product.barcode}, {$product.name_en}, {$product.brand_name}, {$product.col_name}
+		                            		<br />
+		                            		{$product.name}
+		                            		<br /><br />
+		                            		<img src="/files/tntn/{$product.pic}">
+		                            		<br />
+		                                <a href="{$host}productbg/{$row.product_id}" target="_blank">{$host}productbg/{$row.product_id}</a>
+		                            </div>
+		                            <br />
+									
+		                            <div class="controls">
+		                                <span>Option: {$row.variant_name}</span>
+		                                <span>(ID: {$row.variant_id})</span>
+		                            </div>
+		                            <br />
+		                            <label class="control-label" for="quantity">{#quantity#}</label>
+		                            <div class="controls">
+		                                <input type="text" name="quantity" value="{$row.quantity}" class="form-control form-control-sm text-tip" id="quantity" readonly>
+		                            </div>
+                                
+                                {*<label class="control-label" for="email">{#email#}</label>
+                                <div class="controls">
+                                    <input type="text" name="email" value="{$row.email}" class="form-control form-control-sm text-tip" id="email" readonly>
+                                </div>*}
+                                <label class="control-label" for="ip">{#ip#}</label>
+                                <div class="controls">
+                                    {$row.ip}
+                                </div>
+                            </div>
+						</div>
+					</div>
+				</div>
+			</div>
+		
+			<div class="col-sm-6 well">
+				<div class="nonboxy-widget">
+					<div class="widget-head">
+						<h5>{#settings#}</h5>
+					</div>
+					<div class="widget-content">
+						<div class="widget-box">
+							<fieldset>
+								<div class="control-group">
+									{*<label class="checkbox inline"><input type="checkbox" value="1" name="active" {if $row.active}checked{/if}> {#active#}</label>*}
+                                    <a href="{if $row.cart_created}javascript: void(0);{else}fast_order_create_cart.php?act=create_order&fast_order_id={$row.id}{/if}" class="btn {if $row.cart_created}disabled{else}btn-primary{/if}">{if $row.cart_created}Имате създадена поръчка{else}Създай поръчка{/if}</a>
+                                </div>
+							</fieldset>
+						</div>
+					</div>
+					<div class="widget-head">
+						<h5>{#general_information#}</h5>
+					</div>
+					<div class="widget-content">
+						<div class="widget-box">
+							<label class="control-label" for="postdate">{#postdate#}</label>
+                            <div class="controls">
+                                {$row.postdate|date_format:"%d.%m.%Y %H:%M"}
+                            </div>
+                            <br />
+
+						</div>
+					</div>
+				</div>
+			</div>
+        </div>
+    </div>
+	{include file="admin/footer.html"}

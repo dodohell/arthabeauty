@@ -1,0 +1,9 @@
+{
+    "require": {
+        "maelsoucaze/flarum-ext-french": "^1.0",
+        "vingle/flarum-configure-smtp": "^0.2.0",
+        "flarum/flarum": "^0.1.0@beta"
+    },
+	"minimum-stability": "beta",	
+	"prefer-stable": true
+}

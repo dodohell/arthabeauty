@@ -1,0 +1,192 @@
+{include file="admin/header.html"}
+    <ul class="breadcrumb">
+      <li><a href="./index.php">{#home_breadcrumbs#}</a><span class="divider">&raquo;</span></li>
+      <li><a href="./users_traders.php">{#users_traders#}</a><span class="divider">&raquo;</span></li>
+      <li class="active">{$row.name}</li>
+    </ul>
+    <div class="row-fluid">
+		<form method="post" enctype="multipart/form-data">
+			<div class="col-sm-7 well">
+				<div class="nonboxy-widget">
+					<div class="widget-head">
+						<h5>{#user_type#}</h5>
+					</div>
+					<div class="widget-content">
+						<div class="widget-box">
+							{if $row.facebook}{#user_type_facebook#}{else}{#user_type_regular#}{/if}
+							<br /><br />
+						</div>
+					</div>
+					<div class="widget-head">
+						<h5>{#settings#}</h5>
+					</div>
+					<div class="widget-content">
+						<div class="widget-box">
+							<fieldset>
+								<div class="control-group">
+									<label class="checkbox inline"><input type="checkbox" value="1" name="active" {if $row.active}checked{/if}> {#active#}</label>
+									<label class="checkbox inline"><input type="checkbox" value="1" name="shop" {if $row.shop}checked{/if}> {#shop_user#}</label>
+									<label class="checkbox inline"><input type="checkbox" value="1" name="shop_special_delivery" {if $row.shop_special_delivery}checked{/if}> {#shop_special_delivery#}</label>
+								</div>
+							</fieldset>
+						</div>
+					</div>
+					<div class="widget-head">
+						<h5>{#general_information#}</h5>
+					</div>
+					<div class="widget-content">
+						<div class="widget-box">
+							
+							<div class="control-group">
+								<label class="control-label" for="name">{#name#}</label>
+								<div class="controls">
+									<input type="text" name="name" value="{$row.name}" class="input-xlarge text-tip" id="name" title="{#enter#} {#name#}">
+								</div>
+							</div>
+							
+							<div class="control-group">
+								<label class="control-label" for="phone">{#phone#}</label>
+								<div class="controls">
+									<input type="text" name="phone" value="{$row.phone}" class="input-xlarge text-tip" id="phone" title="{#enter#} {#phone#}">
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label" for="commission">{#commission#}</label>
+								<div class="controls">
+									<input type="text" name="commission" value="{$row.commission}" class="input-xlarge text-tip" id="commission" title="{#enter#} {#commission#}">
+								</div>
+							</div>
+							
+						</div>
+					</div>
+					<div class="widget-head">
+						<h5>Настройки на магазин</h5>
+					</div>
+					<div class="widget-content">
+						<div class="widget-box">
+							
+							<div class="control-group">
+								<label class="control-label" for="delivery_provider_id">{#delivery_providers#}</label>
+								<div class="controls">
+									<select name="delivery_provider_id" class="input-xlarge text-tip" id="delivery_provider_id">
+										<option value="">---------------</option>
+										{section name=dp loop=$delivery_providers}
+										<option value="{$delivery_providers[dp].id}" {if $shop_settings.delivery_provider_id == $delivery_providers[dp].id} selected{/if}>{$delivery_providers[dp].name}</option>
+										{/section}
+									</select>
+								</div>
+							</div>
+							
+							<div class="control-group">
+								<label class="control-label" for="delivery_price">{#delivery_price#}</label>
+								<div class="controls">
+									<input type="text" name="delivery_price" value="{$shop_settings.delivery_price}" class="input-xlarge text-tip" id="delivery_price" title="{#enter#} {#delivery_price#}">
+								</div>
+							</div>
+							
+							<div class="control-group">
+								<label class="control-label" for="delivery_free_above">{#delivery_free_above#}</label>
+								<div class="controls">
+									<input type="text" name="delivery_free_above" value="{$shop_settings.delivery_free_above}" class="input-xlarge text-tip" id="delivery_free_above" title="{#enter#} {#delivery_free_above#}">
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label" for="commission">{#common_information#}</label>
+								<div class="controls">
+									<textarea name="common_information" class="input-xlarge">{$shop_settings.common_information}</textarea>
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label" for="commission">{#delivery_terms#}</label>
+								<div class="controls">
+									<textarea name="delivery_terms" class="input-xlarge">{$shop_settings.delivery_terms}</textarea>
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label" for="commission">{#return_policy#}</label>
+								<div class="controls">
+									<textarea name="return_policy" class="input-xlarge">{$shop_settings.return_policy}</textarea>
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label" for="commission">{#warranty#}</label>
+								<div class="controls">
+									<textarea name="warranty" class="input-xlarge">{$shop_settings.warranty}</textarea>
+								</div>
+							</div>
+							<div class="control-group">
+								<label class="control-label" for="commission">{#privacy_policy#}</label>
+								<div class="controls">
+									<textarea name="privacy_policy" class="input-xlarge">{$shop_settings.privacy_policy}</textarea>
+								</div>
+							</div>
+							
+						</div>
+					</div>
+				</div>
+			</div>
+		
+			<div class="col-sm-5 well">
+				<div class="nonboxy-widget">
+					
+					<div class="widget-head">
+						<h5>{#access_passwords#}</h5>
+					</div>
+					<div class="widget-content">
+						<div class="widget-box">
+							<fieldset>
+								<div class="control-group">
+									<label class="control-label" for="email">{#email#}</label>
+									<div class="controls">
+										<input type="text" name="email" value="{$row.email}" class="input-xlarge text-tip" id="email" title="{#enter#} {#email#}">
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label" for="password">{#password#}</label>
+									<div class="controls">
+										<input type="password" name="password" class="input-xlarge text-tip" id="password" title="{#enter#} {#password#}">
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label" for="confirm_password">{#confirm_password#}</label>
+									<div class="controls">
+										<input type="password" name="confirm_password" class="input-xlarge text-tip" id="confirm_password" title="{#enter#} {#confirm_password#}">
+									</div>
+									<div class="errorMessage" id="error1">{#passwords_dont_match#}</div>
+									
+								</div>
+							</fieldset>
+						</div>
+					</div>
+					<div class="widget-content">
+						<div class="form-actions">
+							{literal}
+								<script>
+									$(document).ready(function(){
+										$("button[name=Submit]").bind("click", function(){
+											var password = $("input[name=password]").val();
+											var confirm_password = $("input[name=confirm_password]").val();
+											if ( password.trim() != "" ){
+												if ( password != confirm_password ){
+													alert("here");
+													$("#error1").show();
+													return false;
+												}else{
+													$("#error1").hide();
+												}
+											}
+										});
+									});
+								</script>
+							{/literal}
+							<button type="submit" name="Submit" class="btn btn-info">{#save_changes#}</button>
+							<br /><br /><br />
+							<a href="{$host}admin/users.php?act=login_like_user&id={$row.id}" target="_blank">{#login_like_user#}</a>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="clear"></div>
+		</form>
+    </div>
+	{include file="admin/footer.html"}

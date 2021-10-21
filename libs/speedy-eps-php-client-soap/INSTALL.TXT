@@ -1,0 +1,9 @@
+====================================================================================
+PHP Speedy Web Service client library 3.5.1
+====================================================================================
+
+INSTALLATION INSTRUCTIONS
+-------------------------
+
+1. Unzip distribution in your php workspace and include php sources in "speedy-eps-lib" directory.
+See examples in "examples" directory for reference

@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<response>
+  <result>
+    <e>
+      <loading_id>2018080000009448</loading_id>
+      <loading_num>1051601408282</loading_num>
+      <courier_request_id></courier_request_id>
+      <delivery_date>2018-08-15</delivery_date>
+      <loading_price>
+        <C>65.17</C>
+        <CD>0.68</CD>
+        <total>65.85</total>
+        <sender_total>0</sender_total>
+        <receiver_total>65.85</receiver_total>
+        <other_total>0</other_total>
+        <currency>лв</currency>
+        <currency_code>BGN</currency_code>
+      </loading_price>
+      <loading_discount>
+        <amount>-17.51</amount>
+        <description>Отстъпка -21%</description>
+        <percent>21</percent>
+      </loading_discount>
+      <CD_percent>2.4</CD_percent>
+      <error></error>
+      <error_code></error_code>
+      <pdf_url>http://demo.econt.com/ee/api_export.php?exportMethod=printLoading&amp;loading_num=1051601408282&amp;_key=d55d4aabfa7d1d0ce36db5d5137cfd92cff283a3&amp;</pdf_url>
+      <return_reason/>
+      <prev_parcel_num/>
+      <next_parcels/>
+    </e>
+  </result>
+  <pdf>
+    <blank_yes><![CDATA[
+http://demo.econt.com/e-econt/api/api_pdf_shipment.php?user=afyabg08&print_media=template&nums[]=1051601408282
+]]></blank_yes>
+    <blank_no><![CDATA[
+http://demo.econt.com/e-econt/api/api_pdf_shipment.php?user=afyabg08&print_media=double&nums[]=1051601408282
+]]></blank_no>
+  </pdf>
+</response>

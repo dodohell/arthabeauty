@@ -1,0 +1,267 @@
+{include file="admin/header.html"}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb p-0">
+        <li class="breadcrumb-item">
+            <a href="./">
+                <span class="mdi mdi-home"></span>                
+            </a>
+        </li>
+        <li class="breadcrumb-item">
+            <a href="./{$php_self}">{#attributes#}</a>
+        </li>
+        <li class="breadcrumb-item" aria-current="page">{$page_heading}</li>
+    </ol>
+</nav>
+<form method="post" enctype="multipart/form-data">
+    <div class="row">
+        <div class="col-sm-6 well">
+            <div class="nonboxy-widget">
+                <div class="widget-head">
+                    <h5>{#settings#}</h5>
+                </div>
+                <div class="widget-content">
+                    <div class="widget-box">
+                        <fieldset>
+                            <div class="control-group">
+                                <label class="checkbox inline"><input type="checkbox" value="1" name="active" {if $row.active}checked{/if}> {#active#}</label>
+                                <label class="checkbox inline"><input type="checkbox" value="1" name="is_filterable" {if $row.is_filterable}checked{/if}> {#is_filterable#}</label>
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+                <div class="widget-head">
+                    <h5>{#general_information#}</h5>
+                </div>
+                <div class="widget-content">
+                    <div class="widget-box">
+                        <fieldset>
+                            <div class="control-group">
+                                <label class="control-label" for="name_bg">{#name#} BG</label>
+                                <div class="controls">
+                                    <input type="text" name="name_bg" value="{$row.name_bg}" class="form-control form-control-sm text-tip" id="name_bg" title="{#enter#} {#name#} BG">
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label" for="name_en">{#name#} EN</label>
+                                <div class="controls">
+                                    <input type="text" name="name_en" value="{$row.name_en}" class="form-control form-control-sm text-tip" id="name_en" title="{#enter#} {#name#} EN">
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label" for="name_de">{#name#} DE</label>
+                                <div class="controls">
+                                    <input type="text" name="name_de" value="{$row.name_de}" class="form-control form-control-sm text-tip" id="name_de" title="{#enter#} {#name#} DE">
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label" for="name_ro">{#name#} RO</label>
+                                <div class="controls">
+                                    <input type="text" name="name_ro" value="{$row.name_ro}" class="form-control form-control-sm text-tip" id="name_ro" title="{#enter#} {#name#} RO">
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label" for="name_ru">{#name#} RU</label>
+                                <div class="controls">
+                                    <input type="text" name="name_ru" value="{$row.name_ru}" class="form-control form-control-sm text-tip" id="name_ru" title="{#enter#} {#name#} RU">
+                                </div>
+                            </div>
+                            <hr />
+                            {*<div class="control-group">
+                                <label class="control-label" for="code">{#code#}</label>
+                                <div class="controls">
+                                    <input type="text" name="code" value="{$row.code}" class="form-control form-control-sm text-tip" id="code" title="{#enter#} {#code#}">
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label" for="unit">{#unit#}</label>
+                                <div class="controls">
+                                    <input type="text" name="unit" value="{$row.unit}" class="form-control form-control-sm text-tip" id="unit" title="{#enter#} {#unit#}">
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label" for="attribute_type_id">{#attribute_type#}:</label>
+                                <select name="attribute_type_id" class="form-control form-control-sm">
+                                    <optgroup label="Въведени стойности">
+                                        <option value="1"{if $row.attribute_type_id == 1} selected{/if}>Текст</option>
+                                        <option value="4"{if $row.attribute_type_id == 4} selected{/if}>Много-езичен текст</option>
+                                        <option value="2"{if $row.attribute_type_id == 2} selected{/if}>Списък в падащо меню</option>
+                                        <option value="3"{if $row.attribute_type_id == 3} selected{/if}>Радио бутони</option>
+                                        <option value="5"{if $row.attribute_type_id == 5} selected{/if}>Множествен избор</option>
+                                        <option value="6"{if $row.attribute_type_id == 6} selected{/if}>Oтметка</option>
+                                    </optgroup>
+                                    <optgroup label="Система">
+                                        <option value="101"{if $row.attribute_type_id == 101} selected{/if}>Цена</option>
+                                        <option value="102"{if $row.attribute_type_id == 102} selected{/if}>Марка</option>
+                                        <option value="103"{if $row.attribute_type_id == 103} selected{/if}>Категория</option>
+                                    </optgroup>
+                                </select>
+                            </div>
+                            Начинът по който атрибутът ще се показва в админ панела.
+                            <hr />*}
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6 well">
+            <div class="nonboxy-widget">
+                <div class="widget-head">
+                    <h5>{#options#}</h5>
+                </div>
+                <div class="widget-content">
+                    <div class="widget-box">
+                        <fieldset>
+                            <div class="control-group">
+                                <div id="optionsHolder">
+                                </div>
+                                <div id="postNewOption" class="mt-3" style="cursor: hand; cursor: pointer; background-color: #ff0000; border-radius: 3px; padding: 10px; float: right; line-height: 15px; color: #fff; font-weight: bold">Добави нова опция</div>
+{*                                <script type="text/javascript" src="../js/ui.core.js"></script>
+                                <script type="text/javascript" src="../js/ui.sortable.js"></script>*}
+                                
+                                <script>
+                                    var already_clicked = 0;
+
+                                    function postNewOptionTemplate(attribute_id){
+                                        var html = "";
+                                        html += '<li class="listOptions">';
+                                        html += '   <div class="listOptionsName">';
+                                        html += '       <input type="text" name="option_text_bg" value="" class="inputField form-control form-control-sm mb-2" title="{#enter#} BG" placeholder="{#enter#} BG"/>';
+                                        html += '       <input type="text" name="option_text_en" value="" class="inputField form-control form-control-sm mb-2" title="{#enter#} EN" placeholder="{#enter#} EN"/>';
+                                        html += '       <input type="text" name="option_text_de" value="" class="inputField form-control form-control-sm mb-2" title="{#enter#} DE" placeholder="{#enter#} DE"/>';
+                                        html += '       <input type="text" name="option_text_ru" value="" class="inputField form-control form-control-sm mb-2" title="{#enter#} RU" placeholder="{#enter#} RU"/>';
+                                        html += '       <input type="text" name="option_text_ro" value="" class="inputField form-control form-control-sm" title="{#enter#} RO" placeholder="{#enter#} RO"/>';
+                                        html += '       <div class="optionsButtons mt-3"><div class="listOptionsButton btn btn-sm btn-primary" name="add">Запази</div></div>';
+                                        html += '   </div>';
+                                        html += '</li>';
+                                        $("#listOptions").append(html);
+                                        postNewOption();
+                                    }
+
+                                    function postNewOption(){
+                                        $(".listOptionsButton").bind("click", function(){
+                                            var index = $(".listOptionsButton").index(this);
+                                            var action = $(this).attr("name");
+                                            var listOptionsNameObj = $(this).parent().parent();
+                                            var option_text_bg = listOptionsNameObj.children("input[name=option_text_bg]").val();
+                                            var option_text_en = listOptionsNameObj.children("input[name=option_text_en]").val();
+                                            var option_text_de = listOptionsNameObj.children("input[name=option_text_de]").val();
+                                            var option_text_ru = listOptionsNameObj.children("input[name=option_text_ru]").val();
+                                            var option_text_ro = listOptionsNameObj.children("input[name=option_text_ro]").val();
+                                            var id = $(".listOptions:eq("+index+")").attr("name");
+                                            var attribute_id = $("#listOptions").attr("name");
+                                            {*console.log("index: ", index);
+                                            console.log("action: ", action);
+                                            console.log("listOptionsNameObj: ", listOptionsNameObj);
+                                            console.log("option_text_bg: ", option_text_bg);
+                                            console.log("option_text_en: ", option_text_en);
+                                            console.log("id: ", id);
+                                            console.log("attribute_id: ", attribute_id);*}
+                                            
+                                            $.ajax({
+                                                type: "POST",
+                                                url: "postAttributeOptionAction.php",
+                                                data: "option_text_bg="+option_text_bg+"&option_text_en="+option_text_en+"&option_text_de="+option_text_de+"&option_text_ru="+option_text_ru+"&option_text_ro="+option_text_ro+"&action="+action+"&attribute_id="+attribute_id+"&id="+id,
+                                                success: function(html){
+													//console.log(html);
+                                                    getOptions(attribute_id);
+                                                    //$("html, body").animate({ scrollTop: ($('.listOptions:eq(0)').offset().top)-80 }, 500);
+                                                }
+                                            })
+                                        });
+                                    }
+
+                                    function deleteOption(){
+                                        $(".listOptionsButtonDelete").bind("click", function(){
+                                            var index = $(".listOptionsButtonDelete").index(this);
+                                            var id = $(".listOptions:eq("+index+")").attr("name");
+                                            var attribute_id = $("#listOptions").attr("name");
+                                            $.ajax({
+                                                type: "POST",
+                                                url: "postAttributeOptionAction.php",
+                                                data: "action=delete&id="+id,
+                                                success: function(html){
+                                                    getOptions(attribute_id);
+                                                }
+                                            })
+                                        });
+                                    }
+
+                                    function onStopOptions() {
+                                        var params = "";
+                                        var options = $(".listOptions");
+                                        $.each(options, function(i){
+                                            params += "optionsID[]=" + i + "_" + $(this).attr("name");
+                                            if(options[i+1]) params += "&";
+                                        });
+                                        $.ajax({
+                                            type: "GET",
+                                            url: "postAttributeOptionAction.php",
+                                            data: "action=move&" + params,
+											success: function(html){
+												//console.log(html);
+											}
+                                        });
+                                    }
+
+                                    function getOptions(attribute_id){
+                                        //console.log(attribute_id);
+                                        $.ajax({
+                                            type: "POST",
+                                            url: "getAttributeOptions.php",
+                                            data: "attribute_id="+attribute_id,
+                                            dataType: "json",
+                                            success: function(response){
+                                                $("#optionsHolder").empty();
+                                                var html = "";
+                                                html += "<ul id='listOptions' name='{$row.id}'>";
+                                                for( var i = 0 ; i < response.length ; i++ ){
+                                                    html += '<li class="listOptions" name="'+response[i].id+'">';
+                                                    html += '   <div class="listOptionsName">';
+                                                    html += '       <input type="text" name="option_text_bg" value="'+response[i].option_text_bg+'" class="inputField form-control form-control-sm mb-2" title="{#enter#} BG" placeholder="{#enter#} BG" />';
+                                                    html += '       <input type="text" name="option_text_en" value="'+response[i].option_text_en+'" class="inputField form-control form-control-sm mb-2" title="{#enter#} EN" placeholder="{#enter#} EN" />';
+                                                    html += '       <input type="text" name="option_text_de" value="'+response[i].option_text_de+'" class="inputField form-control form-control-sm mb-2" title="{#enter#} DE" placeholder="{#enter#} DE" />';
+                                                    html += '       <input type="text" name="option_text_ru" value="'+response[i].option_text_ru+'" class="inputField form-control form-control-sm mb-2" title="{#enter#} RU" placeholder="{#enter#} RU" />';
+                                                    html += '       <input type="text" name="option_text_ro" value="'+response[i].option_text_ro+'" class="inputField form-control form-control-sm" title="{#enter#} RO" placeholder="{#enter#} RO" />';
+                                                    html += '       <div class="optionsButtons mt-3">';
+                                                    html += '           <div class="listOptionsButton btn btn-sm btn-primary" name="edit">Запази</div>';
+                                                    html += '           <div class="listOptionsButtonDelete btn btn-sm btn-danger">Изтрий</div>';
+                                                    html += '       </div>';
+                                                    html += '   </div>';
+                                                    html += '</li>';
+                                                }
+                                                html += "</ul>";
+                                                
+                                                $("#optionsHolder").append(html);
+                                                $("#listOptions").sortable({ "stop": onStopOptions });
+                                                postNewOption();
+                                                deleteOption()
+                                            }
+                                        });
+                                        $("#listOptions").sortable({ "stop": onStopOptions} );
+                                    }
+                                    $(document).ready(function(){
+                                        getOptions('{$row.id}');
+                                        $("#listOptions").sortable({ "stop": onStopOptions });
+                                        $("#postNewOption").bind("click", function(){
+                                            postNewOptionTemplate('{$row.id}');
+                                        });
+                                    });
+                                </script>
+                                
+                                <div class="clear"></div>
+                                <hr />
+                            </div>
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="clear"></div>
+    
+    <button type="submit" name="Submit" class="btn btn-primary">{#save_changes#}</button>
+    <input type="submit" name="SaveAndStay" class="btn btn-info" value="{#save_and_stay#}" />
+</form>
+
+
+{include file="admin/footer.html"}

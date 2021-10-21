@@ -1,0 +1,148 @@
+				<div class="contactsRow">
+					<div class="left">
+						<h3 class="title">{#heading_contact_form#}</h3>
+						<div class="formContainer">
+							<div class="form-container alert alert-success" id="contactCustomerSuccess">
+								{#contact_thank_you#}
+							</div>
+							<form id="contactCustomer">
+								<div class="inputRow">
+									<div class="inputCol12">
+										<label for="subject">{#contact_subject#}</label>
+										<input id="subject" type="text" name="contact_subject" placeholder="{#enter_contact_subject#}" class="required">
+									</div>
+								</div>
+								<div class="inputRow">
+									<div class="inputCol6">
+										<label for="firstName">{#contact_name#}</label>
+										<input id="firstName" type="text" name="contact_fname" placeholder="{#enter_contact_fname#}" class="required">
+									</div>
+									<div class="inputCol6">
+										<label for="lastName">{#contact_fname#}</label>
+										<input id="lastName" type="text" name="contact_lname" placeholder="{#enter_contact_lname#}" class="required">
+									</div>
+								</div>
+								<div class="inputRow">
+									<div class="inputCol12">
+										<label for="email">{#contact_email#}</label>
+										<input id="email" type="text" name="contact_email" placeholder="{#enter_contact_email#}" class="required">
+									</div>
+								</div>
+								<div class="inputRow">
+									<div class="inputCol12">
+										<label>{#contact_message#}</label>
+										<textarea name="contact_message" class="mesage required"  placeholder="{#enter_contact_message#}"></textarea>
+									</div>
+								</div>
+								<div class="inputRow">
+									<script src="https://www.google.com/recaptcha/api.js?render={$recaptcha_site_key}"></script>
+									<input type="hidden" name="g-recaptcha-response" id="g-recaptcha-response">
+								</div>
+
+								<div class="submitBtnHolder">
+									<input class="submitBtn" type="submit" id="buttonSendContact" name="submitBtn" value="{#contact_send#}">
+								</div>
+							</form>
+							<script>
+								function checkEmailAddress(email){
+									var pattern=/^([a-zA-Z0-9_.-])+@([a-zA-Z0-9_.-])+\.([a-zA-Z])*([a-zA-Z])/;
+									 if(pattern.test(email)){
+										return true;
+									}else{
+										return false;
+									}
+								}
+								$(document).ready(function () {
+									$("#buttonSendContact").bind("click", function (ev) {
+										ev.preventDefault();
+										$("#buttonSendContact").hide();
+										$("#preloader").show();
+										var errors = 0;
+
+										grecaptcha.ready(function() {
+											grecaptcha.execute('{$recaptcha_site_key}', { action: 'sendContact' }).then(function(token) {
+												$('#g-recaptcha-response').val(token);
+
+												$("#contactCustomer .required").removeClass("errorField");
+												$("#contactCustomer input").each(function (e, i) {
+													if ($(this).hasClass("required")) {
+														if ($(this).val().trim() == "") {
+															errors++;
+															$(this).addClass("errorField");
+
+														}
+														if ($(this).attr("name") == "contact_email" && checkEmailAddress($(this).val()) == false) {
+															errors++;
+															$(this).addClass("errorField");
+														}
+													}
+												});
+
+												$("#contactCustomer textarea").each(function (e, i) {
+													if ($(this).hasClass("required")) {
+														if ($(this).val().trim() == "") {
+															errors++;
+															$(this).addClass("errorField");
+
+														}
+													}
+												});
+
+												if (errors == 0) {
+													console.log("param=post-contact&" + $("#contactCustomer").serialize());
+													$.ajax({
+														type: "POST",
+														url: "/",
+														data: "param=post-contact&" + $("#contactCustomer").serialize(),
+														success: function (res) {
+															console.log(res);
+															if (res == "1") {
+																$("#contactCustomerSuccess").slideDown();
+																$("#contactCustomer").slideUp();
+															}
+														}
+													});
+													return false;
+												} else {
+													$(".errorField:eq(0)").focus();
+													$("#preloader").hide();
+													$("#buttonSendContact").show();
+													return false;
+												}
+
+											});
+										});
+
+
+									});
+								});
+							</script>
+						</div>
+					</div>
+					<div class="right">
+						<h3 class="title">{#heading_contact_form_right#}</h3>
+						<div class="contactBox">
+							<div class="emailImg"></div>
+							<div class="content">
+								<span class="heading">{#contact_right_1_heading#}</span>
+								<span class="text">{#contact_right_1_text#}</span>
+							</div>
+						</div>
+						<div class="contactBox">
+							<div class="phoneImg"></div>
+							<div class="content">
+								<span class="heading">{#contact_right_2_heading#}</span>
+								<span class="text">{#contact_right_2_text#}</span><br>
+								<span class="heading">{#contact_right_4_heading#}</span>
+								<span class="text">{#contact_right_4_text#}</span>
+							</div>
+						</div>
+						<div class="contactBox">
+							<div class="clockImg"></div>
+							<div class="content">
+								<span class="heading">{#contact_right_3_heading#}</span>
+								<span class="text">{#contact_right_3_text#}</span>
+							</div>
+						</div>
+					</div>
+				</div>

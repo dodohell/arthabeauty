@@ -1,0 +1,168 @@
+{include file="admin/header.html"}
+<ul class="breadcrumb">
+    <li><a href="./index.php">{#home_breadcrumbs#}</a><span class="divider">&raquo;</span></li>
+    <li><a href="./users_admin.php">{#users_admin#}</a><span class="divider">&raquo;</span></li>
+    <li class="active">{$row.name}</li>
+</ul>
+<div class="row-fluid">
+    <form method="post" enctype="multipart/form-data">
+        <div class="row">
+            <div class="col-sm-5 well">
+                <div class="nonboxy-widget">
+                    <div class="widget-head">
+                        <h5>{#settings#}</h5>
+                    </div>
+                    <div class="widget-content">
+                        <div class="widget-box">
+                            <fieldset>
+                                <div class="control-group">
+                                    <label class="checkbox inline"><input type="checkbox" value="1" name="active" {if $row.active}checked{/if}> {#active#}</label>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                    <div class="widget-head">
+                        <h5>{#access_passwords#}</h5>
+                    </div>
+                    <div class="widget-content">
+                        <div class="widget-box">
+                            <fieldset>
+                                <div class="control-group">
+                                    <label class="control-label" for="uname">{#username#}</label>
+                                    <div class="controls">
+                                        <input type="text" name="uname" value="{$row.uname}" class="form-control form-control-sm text-tip" id="uname" title="{#enter#} {#username#}">
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label" for="password">{#password#}</label>
+                                    <div class="controls">
+                                        <input type="password" name="password" class="form-control form-control-sm text-tip" id="password" title="{#enter#} {#password#}">
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label" for="confirm_password">{#confirm_password#}</label>
+                                    <div class="controls">
+                                        <input type="password" name="confirm_password" class="form-control form-control-sm text-tip" id="confirm_password" title="{#enter#} {#confirm_password#}">
+                                    </div>
+                                    <div class="errorMessage" id="error1">{#passwords_dont_match#}</div>
+
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+
+                    <div class="widget-head">
+                        <h5>{#general_information#}</h5>
+                    </div>
+                    <div class="widget-content">
+                        <div class="widget-box">
+                            <div class="control-group">
+                                <label class="control-label" for="firstname">{#firstname#}</label>
+                                <div class="controls">
+                                    <input type="text" name="firstname" value="{$row.firstname}" class="form-control form-control-sm text-tip" id="firstname" title="{#enter#} {#firstname#}">
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label" for="lastname">{#lastname#}</label>
+                                <div class="controls">
+                                    <input type="text" name="lastname" value="{$row.lastname}" class="form-control form-control-sm text-tip" id="lastname" title="{#enter#} {#lastname#}">
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label" for="email">{#email#}</label>
+                                <div class="controls">
+                                    <input type="text" name="email" value="{$row.email}" class="form-control form-control-sm text-tip" id="email" title="{#enter#} {#email#}">
+                                </div>
+                            </div>
+                            <div class="control-group">
+                                <label class="control-label" for="email">{#level#}</label>
+                                <div class="controls">
+                                    <select name="level" class="form-control form-control-sm text-tip" id="level" title="{#enter#} {#level#}">
+                                        <option value="">---------------------------</option>
+                                        <option value="2"{if $row.level == 2} selected{/if}>{#level_admin#}</option>
+                                        <option value="1"{if $row.level == 1} selected{/if}>{#level_restricted#}</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="widget-content">
+                        <div class="form-actions">
+                            {literal}
+                                <script>
+                                    $(document).ready(function () {
+                                        $("button[name=Submit]").bind("click", function () {
+                                            var password = $("input[name=password]").val();
+                                            var confirm_password = $("input[name=confirm_password]").val();
+                                            if (password.trim() != "") {
+                                                if (password != confirm_password) {
+                                                    alert("here");
+                                                    $("#error1").show();
+                                                    return false;
+                                                } else {
+                                                    $("#error1").hide();
+                                                }
+                                            }
+                                        });
+                                    });
+                                </script>
+                            {/literal}
+                            <button type="submit" name="Submit" class="btn btn-info">{#save_changes#}</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-7 well">
+                <div class="nonboxy-widget">
+                    <div class="widget-head">
+                        <h5>Достъп</h5>
+                    </div>
+                    <div class="BoxForm">
+                        <table width="100%" cellpadding="5">
+                            <tr>
+                                <td>Меню</td>
+                                <td>Преглед</td>
+                                <td>Редакция</td>
+                                <td>Пълен достъп</td>
+                            </tr>
+                            {section name=lm loop=$fullmenu}
+
+                                {if $fullmenu[lm].url != "#"}
+                                    <tr>
+                                        <td><label for="access_menu_{$fullmenu[lm].menu_id}" class="labelStyle">{$fullmenu[lm].name}:</label> </td>
+                                        <td><input type="checkbox" name="read_menu[{$fullmenu[lm].menu_id}]" {if $fullmenu[lm].access>0} checked{/if} value="1" /> </td>
+                                        <td><input type="checkbox" name="edit_menu[{$fullmenu[lm].menu_id}]"  {if $fullmenu[lm].access>1} checked{/if} value="1" /> </td>
+                                        <td><input type="checkbox" name="full_menu[{$fullmenu[lm].menu_id}]"  {if $fullmenu[lm].access>2}  checked{/if} value="1" /> </td>
+                                    </tr>
+                                {else}
+                                    <tr>
+                                        <td colspan="4" style="border-bottom: 1px solid lightgray"></td>
+                                    </tr>
+                                    <tr>
+                                        <td><label for="access_menu_{$fullmenu[lm].menu_id}" class="labelStyle"><strong>{$fullmenu[lm].name}</strong></label> </td>
+                                        <td><input type="checkbox" name="read_menu[{$fullmenu[lm].menu_id}]" {if $fullmenu[lm].access>0} checked{/if} value="1" /> </td>
+                                        <td><input type="checkbox" name="edit_menu[{$fullmenu[lm].menu_id}]"  {if $fullmenu[lm].access>1} checked{/if} value="1" /> </td>
+                                        <td><input type="checkbox" name="full_menu[{$fullmenu[lm].menu_id}]"  {if $fullmenu[lm].access>2}  checked{/if} value="1" /> </td>
+                                    </tr>
+                                    {if $fullmenu[lm].submenu}
+                                        {section name=lms loop=$fullmenu[lm].submenu}
+                                            <tr>
+                                                <td><label for="access_menu_{$fullmenu[lm].submenu[lms].menu_id}" class="labelStyle">{$fullmenu[lm].submenu[lms].name}:</label> </td>
+                                                <td><input type="checkbox" name="read_menu[{$fullmenu[lm].submenu[lms].menu_id}]" {if $fullmenu[lm].submenu[lms].access>0}checked{/if} value="1" /> </td>
+                                                <td><input type="checkbox" name="edit_menu[{$fullmenu[lm].submenu[lms].menu_id}]" {if $fullmenu[lm].submenu[lms].access>1}checked{/if} value="1" /> </td>
+                                                <td><input type="checkbox" name="full_menu[{$fullmenu[lm].submenu[lms].menu_id}]" {if $fullmenu[lm].submenu[lms].access>2}checked{/if} value="1" /> </td>
+                                            </tr>
+                                        {/section}
+                                    {/if}
+                                {/if}
+
+                            {/section}
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+{include file="admin/footer.html"}

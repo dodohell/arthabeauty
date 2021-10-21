@@ -1,0 +1,9 @@
+{
+    "require": {
+        "maelsoucaze/flarum-ext-french": "^1.0",
+        "flarum/flarum": "^0.1.0@beta",
+        "facebook/graph-sdk": "~5.0"
+    },
+	"minimum-stability": "beta",	
+	"prefer-stable": true
+}

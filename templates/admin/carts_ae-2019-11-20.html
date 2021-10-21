@@ -1,0 +1,919 @@
+{include file="admin/header.html"}
+{*<script type="text/javascript" src="../js/jquery-2.1.4.min.js"></script>
+<script type="text/javascript" src="../js/jquery-ui-1.11.4.custom/jquery-ui.js"></script>
+<link href="/js/jquery-ui-1.11.4.custom/jquery-ui.css" rel="stylesheet">*}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb p-0">
+        <li class="breadcrumb-item">
+            <a href="./">
+                <span class="mdi mdi-home"></span>                
+            </a>
+        </li>
+        <li class="breadcrumb-item">
+            <a href="./{$php_self}">{#carts_page#}</a>
+        </li>
+        <li class="breadcrumb-item" aria-current="page">{$row.id}</li>
+    </ol>
+</nav>
+<div class="row-fluid">
+    <legend id="legendStyle">Колички и поръчки - Поръчка номер {$row.id} от дата {$row.postdate|date_format:"%d.%m.%Y %H:%M"}</legend>
+    {if $act == "edit"}
+        Смени статуса на заявката:
+        <script language="javascript" type="text/javascript">
+            $(document).ready(function () {
+                $("select[name=order_status]").bind("change", function () {
+                    window.location = $(this).val();
+                });
+            });
+        </script>
+        <select name="order_status" class="inputField form-control">
+            <option value="">Избери статус</option>
+            {section name=os loop=$order_statuses}
+                <option value="./carts_ae.php?id={$row.id}&act=change_status&status={$order_statuses[os].id}" {if $order_statuses[os].id == $row.status}selected{/if} >{$order_statuses[os].name}</option>
+            {/section}
+        </select>
+    {/if}
+    <form method="post" action="#">
+        {if $act == "add"}
+            <div class="clear"></div>
+            <br />
+            <strong>Намери регистриран потребител:</strong><br />
+            <input type="text" id="searchUser" name="searchUser" class="inputField form-control">
+            <div id="suggestedUser">
+            </div>
+            <div id="selectedUser">
+            </div>
+            <script>
+                function getUserInfo(user_id) {
+                    $("input[name=user_id]").val(user_id);
+                    $.ajax({
+                        type: "POST",
+                        url: "getUser.php",
+                        data: "user_id=" + user_id,
+                        dataType: "json",
+                        success: function (response) {
+                            $("#suggestedUser").empty();
+                            $("#searchUser").val("");
+                            $("input[name=email]").val(response.row.email);
+
+                            // SET THE BILLING INFORMATION BASED ON A SELECTED USER
+                            if(response.delivery_address){
+                                $("input[name=delivery_first_name]").val(response.delivery_address.firstname);
+                                $("input[name=delivery_last_name]").val(response.delivery_address.lastname);
+                                $("input[name=delivery_address_1]").val(response.delivery_address.address_line_1);
+                                $("input[name=delivery_address_2]").val(response.delivery_address.address_line_2);
+                                $("input[name=delivery_phone]").val(response.delivery_address.phone);
+                                $("input[name=delivery_postcode]").val(response.delivery_address.postcode);
+                                
+                                $("select[name=delivery_region]").val(response.delivery_address.district_id);
+                                
+                                $.ajax({
+                                    type: "POST",
+                                    url: "/admin/getCities.php",
+                                    data: "district_id=" + response.delivery_address.district_id,
+                                    dataType: "json",
+                                    success: function (response_city) {
+                                        $("select[name=delivery_city_id]").empty();
+                                        $("select[name=delivery_city_id]").append('<option value="">{#please_select#}</option>');
+                                        for (rc = 0; rc < response_city.length; rc++) {
+                                            var selected = "";
+                                            if (response_city[rc].id == response.delivery_address.city_id) {
+                                                selected = " selected";
+                                            }
+                                            $("select[name=delivery_city_id]").append('<option value="' + response_city[rc].id + '" ' + selected + '>' + response_city[rc].name + '</option>');
+                                        }
+                                    }
+                                });
+                                
+                            }
+                            
+                            // SET THE BILLING INFORMATION BASED ON A SELECTED USER
+                            if(response.billing_address){
+                                $("input[name=billing_first_name]").val(response.billing_address.firstname);
+                                $("input[name=billing_last_name]").val(response.billing_address.lastname);
+                                $("input[name=billing_address_1]").val(response.billing_address.address_line_1);
+                                $("input[name=billing_address_2]").val(response.billing_address.address_line_2);
+                                $("input[name=billing_phone]").val(response.billing_address.phone);
+                                $("input[name=billing_postcode]").val(response.billing_address.postcode);
+                                
+                                $("select[name=billing_region]").val(response.billing_address.district_id);
+                                
+                                $.ajax({
+                                    type: "POST",
+                                    url: "/admin/getCities.php",
+                                    data: "district_id=" + response.billing_address.district_id,
+                                    dataType: "json",
+                                    success: function (response_city) {
+                                        $("select[name=billing_city_id]").empty();
+                                        $("select[name=billing_city_id]").append('<option value="">{#please_select#}</option>');
+                                        for (rc = 0; rc < response_city.length; rc++) {
+                                            var selected = "";
+                                            if (response_city[rc].id == response.billing_address.city_id) {
+                                                selected = " selected";
+                                            }
+                                            $("select[name=billing_city_id]").append('<option value="' + response_city[rc].id + '" ' + selected + '>' + response_city[rc].name + '</option>');
+                                        }
+                                    }
+                                });
+                            }
+                        },
+                        error: function (er1){
+                            //console.log(er1)
+                        }
+                    });
+                }
+                $(document).ready(function () {
+                    $("#searchUser").bind("keyup", function (event) {
+                        event.preventDefault();
+                        var term = $(this).val();
+                        if (term.length > 3) {
+                            $.ajax({
+                                type: "POST",
+                                url: "searchUser.php",
+                                data: "term=" + term,
+                                dataType: "json",
+                                success: function (response) {
+                                    var html = "";
+                                    html += '<div class="card card-default">';
+                                    html +=     '<div class="slimScrollDiv">';
+                                    html +=         '<div class="card-body slim-scroll">';
+                                    for (var i = 0; i < response.length; i++) {
+                                        html += '<div class="lineUser media py-3 align-items-center justify-content-between">';
+                                        html += '    <div class="d-flex rounded-circle align-items-center justify-content-center mr-3 media-icon iconbox-45 bg-primary text-white">';
+                                        html += '        <i class="mdi mdi-account font-size-20"></i>';
+                                        html += '    </div>';
+                                        html += '    <div class="media-body pr-3">';
+                                        html += '        <span class="mt-0 mb-1 font-size-15 text-dark" href="#"><span class="lineUserFirstName">' + response[i].first_name + '</span> <span class="lineUserLastName">' + response[i].last_name + '</span></span>';
+                                        html += '        <p class="lineUserEmail">' + response[i].email + '</p>';
+                                        html += '    </div>';
+                                        html += '    <span name="' + response[i].user_id + '" class="lineUserSelect btn btn-primary d-inline-block">Избери</span>';
+                                        html += '</div>';
+                                    }
+                                    html +=         '</div>';
+                                    html +=         '<div class="slimScrollBar"></div>';
+                                    html +=         '<div class="slimScrollRail"></div>';
+                                    html +=     '</div>';
+                                    html +=     '<div class="mt-3"></div>';
+                                    html += '</div>';
+                                    
+                                    $("#suggestedUser").empty();
+                                    $("#suggestedUser").append(html);
+                                    
+                                    $(".lineUserSelect").bind("click", function () {
+                                        var user_id = $(this).attr("name");
+                                        getUserInfo(user_id);
+                                    });
+                                },
+                                error: function(er){
+                                    //console.log(er);
+                                }
+                            });
+                        }
+                    })
+                });
+            </script>
+        {/if}
+        {if $act == "edit"}
+        <input type="submit" value="Изпрати е-мейл със статуса" name="sendStatusEmail" class="btn btn-sm btn-primary my-2">
+        {/if}
+        <div class="row mt-4">
+            <div class="col-sm-6 well">
+                <div class="nonboxy-widget">
+                    <div class="widget-head">
+                        <h5>Данни за доставка</h5>
+                    </div>
+                    <div class="widget-content">
+                        <div class="widget-box">
+                            <div class="form-group input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"> <i class="mdi mdi-account"></i> </span>
+                                </div>
+                                <input type="text" class="inputField form-control" name="delivery_first_name" value="{$row.delivery_first_name}" placeholder="Име">
+                            </div> <!-- form-group// -->
+                            <div class="form-group input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"> <i class="mdi mdi-account"></i> </span>
+                                </div>
+                                <input type="text" class="inputField form-control" name="delivery_last_name" value="{$row.delivery_last_name}" placeholder="Фамилия">
+                            </div> <!-- form-group// -->
+                            <div class="form-group input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"> <i class="mdi mdi-cellphone-android"></i> </span>
+                                </div>
+                                <input type="text" class="inputField form-control" name="delivery_phone" value="{$row.delivery_phone}" placeholder="Телефон" disabled>
+                            </div> <!-- form-group// -->
+                            <div class="form-group input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"> <i class="mdi mdi-city-variant"></i> </span>
+                                </div>
+                                <select class="inputField form-control" name="delivery_region">
+                                    <option value="">Изберете Област</option>
+                                    {section name=r loop=$districts}
+                                        <option value="{$districts[r].id}" {if $districts[r].id == $row.delivery_region_id}selected{/if}>{$districts[r].name}</option>
+                                    {/section}
+                                </select>
+                            </div> <!-- form-group end.// -->
+                            <script>
+                                $(document).ready(function () {
+                                    $("select[name=billing_region]").bind("change", function () {
+                                        var billing_region = $(this).val();
+                                        //var selected_region = $("select[name=billing_region] option[value=" + billing_region + "]").text();
+
+                                        $.ajax({
+                                            type: "POST",
+                                            url: "/admin/getCities.php",
+                                            data: "district_id=" + billing_region,
+                                            dataType: "json",
+                                            success: function (response) {
+                                                $("select[name=billing_city_id]").empty();
+                                                $("select[name=billing_city_id]").append('<option value="">{#please_select#}</option>');
+                                                for (i = 0; i < response.length; i++) {
+                                                    $("select[name=billing_city_id]").append('<option value="' + response[i].id + '">' + response[i].name + '</option>');
+                                                }
+                                            }
+                                        });
+                                    });
+                                    $("select[name=delivery_region]").bind("change", function () {
+                                        var delivery_region = $(this).val();
+                                        //var selected_region = $("select[name=delivery_region] option[value=" + delivery_region + "]").text();
+                                        $.ajax({
+                                            type: "POST",
+                                            url: "/admin/getCities.php",
+                                            data: "district_id=" + delivery_region,
+                                            dataType: "json",
+                                            success: function (response) {
+                                                $("select[name=delivery_city_id]").empty();
+                                                $("select[name=delivery_city_id]").append('<option value="">{#please_select#}</option>');
+                                                for (i = 0; i < response.length; i++) {
+                                                    $("select[name=delivery_city_id]").append('<option value="' + response[i].id + '">' + response[i].name + '</option>');
+                                                }
+                                            },
+                                            error: function (e) {
+                                                //console.log(e);
+                                            }
+                                        });
+                                    });
+
+                                });
+                            </script>
+                            <div class="form-group input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"> <i class="mdi mdi-office-building"></i> </span>
+                                </div>
+                                <select class="inputField form-control" name="delivery_city_id">
+                                    <option value="">Изберете Населено място</option>
+                                    {section name=dc loop=$delivery_cities}
+                                        <option data-deliverycityid="{$delivery_cities[dc].id}" value="{$delivery_cities[dc].id}" {if $delivery_cities[dc].id == $row.delivery_city_id}selected{/if}>{$delivery_cities[dc].name}</option>
+                                    {/section}
+                                </select>
+                            </div> <!-- form-group end.// -->
+                            <div class="form-group input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"> <span class="mdi mdi-home-map-marker"> 1</span> </span>
+                                </div>
+                                <input type="text" class="inputField form-control" name="delivery_address_1" value='{$row.delivery_address_1}' placeholder="Адрес 1">
+                            </div> <!-- form-group// -->
+                            <div class="form-group input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"> <span class="mdi mdi-home-map-marker"> 2</span> </span>
+                                </div>
+                                <input type="text" class="inputField form-control" name="delivery_address_2" value='{$row.delivery_address_2}' placeholder="Адрес 2">
+                            </div> <!-- form-group// -->
+                            <div class="form-group input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"> <i class="mdi mdi-email"></i> </span>
+                                </div>
+                                <input disabled type="text" class="inputField form-control" name="delivery_postcode" value="{$row.delivery_postcode}" placeholder="Пощенски код">
+                            </div> <!-- form-group// -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 well">
+                <div class="nonboxy-widget">
+                    <div class="widget-head">
+                        <h5>Данни за плащане</h5>
+                    </div>
+                    <div class="widget-content">
+                        <div class="widget-box">
+                            <div class="form-group input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"> <i class="mdi mdi-account"></i> </span>
+                                </div>
+                                <input type="text" class="inputField form-control" name="billing_first_name" value="{$row.billing_first_name}" placeholder="Име">
+                            </div> <!-- form-group// -->
+                            <div class="form-group input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"> <i class="mdi mdi-account"></i> </span>
+                                </div>
+                                <input type="text" class="inputField form-control" name="billing_last_name" value="{$row.billing_last_name}" placeholder="Презиме">
+                            </div> <!-- form-group// -->
+                            <div class="form-group input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"> <i class="mdi mdi-cellphone-android"></i> </span>
+                                </div>
+                                <input type="text" class="inputField form-control" name="billing_phone" value="{$row.billing_phone}" placeholder="Телефон">
+                            </div> <!-- form-group// -->
+                            <div class="form-group input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"> <i class="mdi mdi-city-variant"></i> </span>
+                                </div>
+                                <select class="inputField form-control" name="billing_region">
+                                    <option value="">Изберете Област</option>
+                                    {section name=r loop=$districts}
+                                        <option value="{$districts[r].id}" {if $districts[r].id == $row.billing_region_id}selected{/if}>{$districts[r].name}</option>
+                                    {/section}
+                                </select>
+                            </div> <!-- form-group end.// -->
+                            <script>
+                                $(document).ready(function () {
+                                    $("select[name=delivery_city_id]").bind("change", function () {
+                                        var deliveryCityId = $(this).find(':selected').data('deliverycityid');
+                                        $("input[name=delivery_city_id]").val(deliveryCityId);
+                                    });
+
+                                    $("select[name=billing_region]").bind("change", function () {
+                                        var billing_district_id = $(this).val();
+                                        //var selected_region = $("select[name=billing_region] option[value=" + billing_region + "]").text();
+                                        $.ajax({
+                                            type: "POST",
+                                            url: "/admin/getCities.php",
+                                            data: "district_id=" + billing_district_id,
+                                            dataType: "json",
+                                            success: function (response) {
+                                                $("select[name=billing_city_id]").empty();
+                                                $("select[name=billing_city_id]").append('<option value="">{#please_select#}</option>');
+                                                for (i = 0; i < response.length; i++) {
+                                                    $("select[name=billing_city_id]").append('<option value="' + response[i].id + '">' + response[i].name + '</option>');
+                                                }
+                                            }
+                                        });
+                                    });
+
+                                    $("select[name=delivery_region]").bind("change", function () {
+                                        var delivery_district_id = $(this).val();
+                                        //var selected_region = $("select[name=delivery_region] option[value=" + delivery_region + "]").text();
+                                        $.ajax({
+                                            type: "POST",
+                                            url: "/admin/getCities.php",
+                                            data: "district_id=" + delivery_district_id,
+                                            dataType: "json",
+                                            success: function (response) {
+                                                $("select[name=delivery_city_id]").empty();
+                                                $("select[name=delivery_city_id]").append('<option value="">{#please_select#}</option>');
+                                                for (i = 0; i < response.length; i++) {
+                                                    $("select[name=delivery_city_id]").append('<option value="' + response[i].id + '">' + response[i].name + '</option>');
+                                                }
+                                            }
+                                        });
+                                    });
+                                });
+                            </script>
+                            <div class="form-group input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"> <i class="mdi mdi-office-building"></i> </span>
+                                </div>
+                                <select class="inputField form-control" name="billing_city_id">
+                                    <option value="">Изберете Населено място</option>
+                                    {section name=bc loop=$billing_cities}
+                                        <option value="{$billing_cities[bc].id}" {if $billing_cities[bc].id == $row.billing_city_id}selected{/if}>{$billing_cities[bc].name}</option>
+                                    {/section}
+                                </select>
+                            </div> <!-- form-group end.// -->
+                            <div class="form-group input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"> <span class="mdi mdi-home-map-marker"> 1</span> </span>
+                                </div>
+                                <input type="text" class="inputField form-control" name="billing_address_1" value='{$row.billing_address_1}' placeholder="Адрес 1">
+                            </div> <!-- form-group// -->
+                            <div class="form-group input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"> <span class="mdi mdi-home-map-marker"> 2</span> </span>
+                                </div>
+                                <input type="text" class="inputField form-control" name="billing_address_2" value='{$row.billing_address_2}' placeholder="Адрес 2">
+                            </div> <!-- form-group// -->
+                            <div class="form-group input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"> <i class="mdi mdi-email"></i> </span>
+                                </div>
+                                <input disabled type="text" class="inputField form-control" name="billing_postcode" value="{$row.billing_postcode}" placeholder="Пощенски код">
+                            </div> <!-- form-group// -->
+                            <div class="form-group input-group">
+                                <div class="input-group-prepend">
+                                    <span class="input-group-text"> <span class="mdi mdi-email-mark-as-unread"> </span> </span>
+                                </div>
+                                <input type="email" class="inputField form-control" name="email" value="{$row.email}" placeholder="e-mail">
+                            </div> <!-- form-group// -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+</div>
+<div class="clear"></div>
+<br />
+<strong>Потребителски коментар / Скрит коментар / Допълнителни изисквания:</strong>
+<br />
+<textarea class="inputField form-control" style="height: 80px;" name="user_comments">{$row.user_comments}</textarea>
+<div class="clear"></div>
+<br />
+<input type="hidden" name="user_id" value="{$row.user_id}">
+<button type="submit" name="Submit" class="btn btn-info">{#save_changes#}</button>
+<div class="clear"></div>
+
+<br />
+{if $act == "edit"}
+    <table width="100%" border="1" cellspacing="0" cellpadding="5" class="tableStyle">
+        <tr>
+            <td width="20%">
+                Метод на доставка:
+            </td>
+            <td width="80%">
+                <strong>{if $row.delivery_type_id == 1}Спиди до адрес{elseif $row.delivery_type_id == 2}Спиди до офис{/if}</strong>
+            </td>
+        </tr>
+        <tr>
+            <td width="20%">
+                Номер на товарителница:
+            </td>
+            <td class="bol-cont">
+                <div class="inputs">
+                    <input type="text" class="col inputField form-control" name="delivery_tracking_number" value="{$row.delivery_tracking_number}">
+                    <select name="delivery_tracking_office" class="col inputField form-control">
+                        <option value="" >От адрес</option>
+                        {if $row.delivery_type_id == 1 || $row.delivery_type_id == 2}
+                        <option value="55" {if $row.delivery_tracking_office == "55"}selected{/if}>Speedy Ямбол</option>
+                        <option value="814" {if $row.delivery_tracking_office == "814"}selected{/if}>Speedy Бургас Изгрев (ЖК)</option>
+                        {else if $row.delivery_type_id == 3 || $row.delivery_type_id == 4}
+                        <option value="1022" {if $row.delivery_tracking_office == "1022"}selected{/if}>Econt София Цариградско шосе</option>
+                        <option value="8002" {if $row.delivery_tracking_office == "8002"}selected{/if}>Econt Бургас Славейков</option>
+                        {/if}
+                    </select>
+                    <input type="text" id="delivery_tracking_info" class="col inputField form-control" name="delivery_tracking_info" value="{$row.delivery_tracking_info}" placeholder="Описание на пратка">
+                    {if $row.delivery_type_id == 1 || $row.delivery_type_id == 2}
+                    <select name="deferred_delivery_work_days" class="col inputField form-control" title="С колко работни дни да се отложи доставката?">
+                        <option value="0" {if $row.deferred_delivery_work_days == "0"}selected{/if}>0</option>
+                        <option value="1" {if $row.deferred_delivery_work_days == "1"}selected{/if}>1</option>
+                        <option value="2" {if $row.deferred_delivery_work_days == "2"}selected{/if}>2</option>
+                    </select>
+                    {/if}
+                    <input class="col" type="checkbox" name="options_before_payment" value="1" title="Опции преди плащане (Прегледай преди да платиш)" {if $row.delivery_tracking_pdf}{if $row.options_before_payment == 1}checked{/if}{else}checked{/if}>
+                </div>
+                <div class="buttons">
+                    {if !$row.delivery_tracking_pdf}
+                        <input type="submit" class="submitField btn btn-warning" name="saveTrackingNumber" value="Запази Номер на товарителницата">
+                        <input type="submit" class="submitField btn btn-secondary" name="generateBOL" value="Генерирай">
+                    {else}
+                        <button type="submit" class="submitField btn btn-sm btn-danger" name="generateBOLDelete"><i class="mdi mdi-delete-forever-outline"></i> Изтрий ТОВАРИТЕЛНИЦАТА</button>
+                        <div class="shipmentInfoCont">
+                            <ul>
+                                {section name=info loop=$shipmentInfoArr}
+                                    <li>{$shipmentInfoArr[info].moment} - {$shipmentInfoArr[info].operationDescription} | {$shipmentInfoArr[info].operationComment}</li>
+                                {/section}
+                            </ul>
+                            {if $deliveryError}
+                                <span class="error">{$deliveryError}</span>
+                            {/if}
+                        </div>
+                    {/if}
+                    {if $row.delivery_tracking_pdf}<br><a href="{$row.delivery_tracking_pdf}" class="btn btn-sm btn-success mt-1" target="_blank"><i class="mdi mdi-file-pdf"></i> [ Прегледай ТОВАРИТЕЛНИЦАТА ]</a>{/if}
+                    <script>
+                        $(".submitField").click(function () {
+                            if ($(this).is("#generateBOLButton")) {
+                                $("#delivery_tracking_info").prop('required', true);
+                            } else {
+                                $("#delivery_tracking_info").prop('required', false);
+                            }
+                        });
+                    </script>
+                </div>
+                {if $errorMessage}
+                <div class="alert alert-warning p-2 mt-3">{if $errorMessage == "invalidAddress"}Невалиден адрес{else}{$errorMessage}{/if}</div>
+                {/if}
+            </td>
+        </tr>
+        {if $row.econt_error && !$row.delivery_tracking_number && !$row.delivery_tracking_pdf}
+            <tr>
+                <td colspan="2">
+                    <span style="color: #ff0000; font-weight: bold;">{$row.econt_error}</span>
+                </td>
+            </tr>
+        {/if}
+    </table>
+{/if}
+{if $id}<input type="hidden" name="id" value="{$id}" />{/if}		
+{if $act}<input type="hidden" name="act" value="{$act}" />{/if}			
+<input type="hidden" name="user_id" value="{$row.user_id}">
+</form>
+
+{if $act == "edit"}
+    <hr />
+    <br />
+    {if $present_product}
+    <div class="alert alert-info" role="alert">
+        Потребителят е избрал подаръчен продукт с <strong>ID: {$row.present_product_id}</strong> ( {$present_product.name} )
+    </div>
+    <br>
+    {/if}
+    {if $row.customer_currency_code && $row.customer_currency_code != "BGN"}
+    <div class="alert alert-info" role="alert">
+        При правене на поръчката потребителят е използвал валута <strong>{$row.customer_currency_code}</strong> при курс <strong>{$row.customer_currency_rate}</strong>
+    </div>
+    {/if}
+    <table width="100%" cellpadding="5" border="1" cellspacing="0" class="tableStyle">
+        <tr bgcolor="#eeeeee">
+            <td>
+            </td>
+            <td width="400" valign="top">
+                Продукт
+            </td>
+            <td width="100" valign="top">
+                Количество
+            </td>
+            <td width="100" valign="top">
+                Ед. цена в лева
+            </td>
+            <td width="100" valign="top" align="right">
+                Обща сума
+            </td>
+        </tr>
+        <form method="post" action="#" name="formUpdateQuantities">
+            {section name=c loop=$cart}
+                <tr>
+                    <td width="30" class="deleteCartProduct">
+                        {if $row.payment_type_id != 2}<a href="?id={$row.id}&product_id={$cart[c].product.id}&act=delete_from_cart"><i class="mdi mdi-delete-forever-outline"></i></a>{else}&nbsp;{/if}
+                    </td>
+
+                    <td width="400" valign="top">
+                    	<div class="product">
+	                     	<div class="col-sm-3">
+	                        <div class="productImage" style="background-image: url(/files/tntn/{$cart[c].pic});"></div>
+	                    	</div>
+	                    	<div class="col-sm-9">
+	                        <a href="{$host}admin/products_ae.php?id={$cart[c].product.id}&act=edit" target="_blank"><strong>{$cart[c].product.name}</strong></a><br />
+	                        {if $cart[c].product.barcode}Код: {$cart[c].product.barcode}{/if}
+	                        <br />
+	                        {if $cart[c].option}
+	                            {$cart[c].option.name}
+	                        {/if}
+	
+	                        {if $cart[c].product.goes_with}
+	                            <hr />
+	                            <i>+ {$cart[c].product.goes_with}</i>
+	                        {/if}
+	                      </div>
+	                    </div>
+                    </td>
+                    <td width="100" valign="top">
+                        <input type="text" class="inputField form-control" name="quantity{$cart[c].product_id}{$cart[c].option.id}" size="3" value="{$cart[c].quantity}" style="text-align: center;" />
+                    </td>
+                    <td width="100" valign="top">
+                        <span id="price{$cart[c].id}">{$cart[c].tmp_product_price|number_format: 2}</span> лв.
+                    </td>
+                    <td width="100" valign="top" align="right">
+                        <span id="priceTotal{$cart[c].id}">{$cart[c].tmp_total_amount|number_format: 2}</span> лв.
+                    </td>
+                </tr>
+            {/section}
+            {if $id}<input type="hidden" name="id" value="{$id}" />{/if}		
+            {if $act}<input type="hidden" name="act" value="{$act}" />{/if}			
+            <input type="hidden" name="buttonUpdateQuantities" value="1" />
+        </form>
+        <tr>
+            <td colspan="5" align="center">
+                <!-- Modal -->
+                <div class="modal fade" id="dialog" tabindex="-1" role="dialog" aria-labelledby="modalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Избор на продукт за формиране на количка</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+                                <input type="text" id="searchProduct" class="form-control" placeholder="Започни да пишеш името на продукта тук...">
+                                <div id="selectedProduct">
+
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Затвори</button>
+                                {*<button type="button" class="btn btn-primary">Save changes</button>*}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {*<div id="dialog" title="Избор на продукт за формиране на количка">
+                    <input type="text" id="searchProduct" placeholder="Започни да пишеш името на продукта тук...">
+                    <div id="selectedProduct">
+
+                    </div>
+                </div>*}
+                {if $row.payment_type_id != 2}
+                    <!-- Button trigger modal -->
+                    <button type="button" id="buttonAddProducts" class="btn btn-sm btn-primary" data-toggle="modal" data-target="#dialog">
+                        Добави продукти
+                    </button>
+                    {*<div id="buttonAddProducts" class="btn btn-sm btn-primary"><span class="mdi mdi-cart-plus"></span> Добави продукти</div>*}
+                    <div id="buttonUpdateQuantities" class="btn btn-sm btn-success"><span class="mdi mdi-refresh"></span> Актуализирай количествата</div>
+                {else}
+                    Тази поръчка се плаща с КАРТА и опциите за добавяне на продукти и актуализиране на количествата са ограничени!
+                {/if}
+
+                <script>
+                    $(function () {
+                        {*$("#dialog").dialog({
+                            autoOpen: false,
+                            width: 800,
+                            height: 500,
+                            show: {
+                                effect: "blind",
+                                duration: 1000
+                            },
+                            hide: {
+                                effect: "explode",
+                                duration: 1000
+                            }
+                        });*}
+
+                        function split(val) {
+                            return val.split(/,\s*/);
+                        }
+                        function extractLast(term) {
+                            return split(term).pop();
+                        }
+
+                        $("#searchProduct").bind("keydown", function (event) {
+                            if (event.keyCode === $.ui.keyCode.TAB && $(this).autocomplete("instance").menu.active) {
+                                event.preventDefault();
+                            }
+                        })
+                            .autocomplete({
+                                minLength: 3,
+                                source: function (request, response) {
+                                    $.getJSON("search.php", {
+                                        term: extractLast(request.term)
+                                    }, response);
+                                },
+                                search: function () {
+                                    var term = extractLast(this.value);
+                                    if (term.length < 2) {
+                                        return false;
+                                    }
+                                },
+                                focus: function () {
+                                    return false;
+                                },
+                                select: function (event, ui) {
+                                    var terms = split(this.value);
+
+                                    terms.pop();
+                                    terms.push(ui.item.label);
+                                    terms.push("");
+                                    $.ajax({
+                                        type: "POST",
+                                        url: "getProduct.php",
+                                        data: "id=" + ui.item.value + "&cart_id={$row.id}",
+                                        success: function (html) {
+                                            //alert(html);
+                                            $("#selectedProduct").empty();
+                                            $("#selectedProduct").html(html);
+                                            $("#searchProduct").val("");
+                                        }
+                                    });
+                                    this.value = terms;
+                                    return false;
+                                }
+                            });
+
+                        {*$("#buttonAddProducts").button().click(function (event) {
+                            $("#dialog").dialog("open");
+                        });*}
+
+                        $("#buttonUpdateQuantities").button().click(function (event) {
+                            document.formUpdateQuantities.submit();
+                        });
+                    });
+                </script>
+            </td>
+        </tr>
+        {if $row.bonus_points_amount > 0.0}
+            <tr>
+                <td valign="top" colspan="4">
+                    Използват се {$row.bonus_points_number} бонус точки 
+                </td>
+                <td valign="top" align="right">
+                    -{$row.bonus_points_amount} лв.
+                </td>
+            </tr>
+        {/if}
+        {*{if $row.subtotal_amount}
+            <tr>
+                <td valign="top" colspan="4">
+                    Сума нето
+                </td>
+                <td valign="top" align="right">
+                    {$row.subtotal_amount} лв.
+                </td>
+            </tr>
+        {/if}*}
+        {if $row.subtotal_amount}
+            <tr>
+                <td valign="top" colspan="4">
+                    Сума
+                </td>
+                <td valign="top" align="right">
+                    {($row.subtotal_amount-$row.discount_amount)|number_format: 2} лв.
+                </td>
+            </tr>
+        {/if}
+        {if $row.promo_code && $row.discount_promo_code_amount}
+            <tr>
+                <td valign="top" colspan="4">
+                    Промо код: ({$row.promo_code})
+                </td>
+                <td valign="top" align="right">
+                    -{$row.discount_promo_code_amount|number_format:2} {#currency#}
+                </td>
+            </tr>
+        {/if}
+        {if $row.discount_amount_delivery > 0.0 && $row.discount_free_delivery}
+            <tr>
+                <td valign="top" colspan="4">
+                    Отстъпка 2% при поръчка над 100 лева
+                </td>
+                <td valign="top" align="right">
+                    -{$row.discount_amount_delivery} лв.
+                </td>
+            </tr>
+        {/if}
+        {if $row.pharmacy_id}
+            <tr>
+                <td valign="top" colspan="4">
+                    Вземане от аптека "{$pharmacy.name}"<br />
+                </td>
+                <td align="right">
+                    0.00 лв.
+                </td>
+            </tr>
+        {/if}
+        <tr>
+            <td valign="top" colspan="4">
+                <form method="post" action="#" name="formUpdateDeliveryType" class="d-flex flex-row justify-content-between flex-wrap">
+                    <select name="delivery_type" id="updateDeliveryTypeSelect" class="col inputField form-control">
+                        <option value="">Избери вид доставка</option>
+                        {*<option value="1" {if $row.delivery_type_id == 1}selected{/if} >Спиди до адрес</option>
+                        <option value="2" {if $row.delivery_type_id == 2}selected{/if} >Спиди до офис</option>*}
+                        <option value="3" {if $row.delivery_type_id == 3}selected{/if} >Еконт до адрес</option>
+                        <option value="4" {if $row.delivery_type_id == 4}selected{/if} >Еконт до офис</option>
+                    </select>
+                    <div class="col" id="deliveryTypeOffice" style="{if $row.delivery_type == 2 || $row.delivery_type == 4}display: block;{else}display: none;{/if}">
+                        <select name="delivery_office_id" class="inputField form-control">
+                            <option name="">Изберете офис, до който да се достави</option>
+                        </select>
+                    </div>
+                    {if $row.delivery_office_id}
+                        <script>
+                            $(document).ready(function () {
+                                var initialDeliveryType = parseInt({$row.delivery_type_id});
+                                getCourierOffice(initialDeliveryType);
+                                $("#deliveryTypeOffice").show();
+                            });
+                        </script>
+                    {/if}
+                    <script>
+                        function getCourierOffice(delivery_type) {
+                            var delivery_city_id = $("select[name=delivery_city_id]").val();
+                            var delivery_region_id = $("select[name=delivery_region]").val();
+                            $.ajax({
+                                type: "POST",
+                                url: "getOffices.php",
+                                data: {
+                                    "delivery_type": delivery_type,
+                                    "region_id": delivery_region_id,
+                                    "city_id": delivery_city_id
+                                },
+                                dataType: "json",
+                                success: function (response) {
+                                    $("select[name=delivery_office_id]").empty();
+                                    var str = "";
+                                    for (i = 0; i < response.length; i++) {
+                                        if (response[i].name.trim() != "") {
+                                            if(delivery_type == 2){
+                                                if (response[i].id == '{$row.delivery_office_id}') {
+                                                    var selected = "selected";
+                                                } else {
+                                                    var selected = "";
+                                                }
+                                                str += '<option value="' + response[i].id + '" ' + selected + '>' + response[i].name + '</option>';
+                                            }else if(delivery_type == 4){
+                                                if (response[i].code == '{$row.delivery_office_id}') {
+                                                    var selected = "selected";
+                                                } else {
+                                                    var selected = "";
+                                                }
+                                                str += '<option value="' + response[i].code + '" ' + selected + '>' + response[i].name + '</option>';
+                                            }
+                                        }
+                                    }
+                                    $("select[name=delivery_office_id]").append(str);
+                                },
+                                error: function (er) {
+                                    //console.log(er);
+                                }
+                            });
+                        }
+
+                        $(document).ready(function () {
+                            $("select[name=delivery_type]").bind("change", function () {
+                                var delivery_type = $(this).val();
+                                if (delivery_type == 2 || delivery_type == 4) {
+                                    $("#deliveryTypeOffice").slideDown();
+                                    $("select[name=delivery_city_id]").addClass("required");
+                                    getCourierOffice(delivery_type);
+                                } else {
+                                    $("#deliveryTypeOffice").slideUp();
+                                    $("select[name=delivery_city_id]").removeClass("required");
+                                }
+                            });
+                        });
+                    </script>
+                    {if $id}<input type="hidden" value="{$id}" name="id" />{/if}
+                    {*<input type="hidden" value="1" name="buttonUpdateDeliveryType" />*}
+                    <input type="submit" value="Преизчисли" name="buttonUpdateDeliveryType" class="col submitField btn btn-primary" />
+                    {if $row.payment_type_id != 2}
+                    {/if}
+                </form>
+            </td>
+            <td valign="top" align="right">
+            {if $row.discount_free_delivery}0.00{else}{$row.delivery_amount}{/if} лв.
+            </td>
+        </tr>
+    {if $row.voucher_number}
+        <tr>
+            <td valign="top">
+                Номер на ваучер: "{$row.voucher_number}"
+            </td>
+            <td valign="top">
+                &nbsp;
+            </td>
+            <td valign="top">
+                &nbsp;
+            </td>
+            <td valign="top" align="right">
+                - {$row.voucher_discount} лв.
+            </td>
+        </tr>
+    {/if}
+    {if $row.order_discount_amount > 0}
+        <tr>
+            <td valign="top" colspan="4">
+                Начислена отстъпка върху поръчката: {if $row.order_discount_percent > 0}({$row.order_discount_percent}%){/if}
+            </td>
+            <td valign="top" align="right">
+                - {$row.order_discount_amount} лв.
+            </td>
+        </tr>
+    {/if}
+    <tr>
+        <td valign="top" colspan="4">
+            Общо
+        </td>
+        <td valign="top" align="right">
+            <span id="priceDelivery">{$total_amount|number_format: 2}</span> лв.{if $row.customer_currency_code && $row.customer_currency_code != "BGN"} ({if $abb_before_amount}{$currency_abb}{/if}{$total_amount_customer_currency|number_format: 2} {if !$abb_before_amount}{$currency_abb}{/if}){/if}
+        </td>
+    </tr>
+</table>
+<br>
+{if $row.customer_currency_code && $row.customer_currency_code != "BGN"}
+<div class="alert alert-info" role="alert">
+    При правене на поръчката потребителят е използвал валута <strong>{$row.customer_currency_code}</strong> при курс <strong>{$row.customer_currency_rate}</strong>
+</div>
+<br>
+{/if}
+<form method="post" action="#">
+    <div id="orderDiscount" class="form-row mt-4">
+        <div class="form-group col-md-4">
+            <label for="order_discount_percent"><i class="fas fa-percent"></i> Oтстъпка върху поръчката (процент)</label>
+            <input name="order_discount_percent" value="{$row.order_discount_percent}" type="number" step="0.01" min="0" max="100" class="form-control">
+        </div> <!-- form-group end.// -->
+        <div class="form-group col-md-4">
+            <label for="order_discount_amount"><i class="fas fa-money-bill-wave"></i> Oтстъпка върху поръчката (стойност)</label>
+            <input name="order_discount_amount" value="{$row.order_discount_amount}" type="number" step="0.01" min="0" max="{$total_amount}" class="form-control">
+        </div> <!-- form-group end.// -->
+        <div class="form-group col-md-4">
+            <label>&nbsp;</label>
+            <button type="submit" name="order_discount_button" class="btn btn-primary d-block w-100">Начисли</button>
+        </div>
+    </div> <!-- form-row.// -->
+</form>
+<a href="carts_pdf.php?id={$row.id}" class="d-block btn btn-sm btn-success mt-3"><i class="mdi mdi-file-pdf"></i> Изтегли PDF на поръчката</a>
+{/if}
+<hr />
+
+Дата на поръчката: {$row.postdate|date_format:"%Y-%m-%d %H:%M:%S"}
+&nbsp;&nbsp;&nbsp;
+IP адрес: {$row.ip}
+
+{include file="admin/footer.html"}

@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+						<request>
+						 <client>
+						  <username>afyabg08</username>
+						  <password>slojnaparola</password>
+						 </client><request_type>cancel_shipments</request_type><cancel_shipments><num>1051601408404</num></cancel_shipments></request>

@@ -1,0 +1,107 @@
+{include file="admin/header.html"}
+    <ul class="breadcrumb">
+      <li><a href="./index.php">{#home_breadcrumbs#}</a><span class="divider">&raquo;</span></li>
+      <li><a href="./delivery_types.php">{#delivery_types#}</a><span class="divider">&raquo;</span></li>
+      <li class="active">{$page_heading}</li>
+    </ul>
+    <div class="row-fluid">
+		<form method="post" enctype="multipart/form-data">
+			<div class="col-sm-6 well">
+				<div class="nonboxy-widget">
+					<div class="widget-head">
+						<h5>{#general_information#}</h5>
+					</div>
+					<div class="widget-content">
+						<div class="widget-box">
+							<fieldset>
+								<div class="control-group">
+									<label class="control-label" for="name_bg">{#name#} BG</label>
+									<div class="controls">
+										<input type="text" name="name_bg" value="{$row.name_bg}" class="input-xlarge text-tip" id="name_bg" title="{#enter#} {#name#} BG">
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label" for="name_en">{#name#} EN</label>
+									<div class="controls">
+										<input type="text" name="name_en" value="{$row.name_en}" class="input-xlarge text-tip" id="name_en" title="{#enter#} {#name#} EN">
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label" for="name_de">{#name#} DE</label>
+									<div class="controls">
+										<input type="text" name="name_de" value="{$row.name_de}" class="input-xlarge text-tip" id="name_de" title="{#enter#} {#name#} DE">
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label" for="name_ro">{#name#} RO</label>
+									<div class="controls">
+										<input type="text" name="name_ro" value="{$row.name_ro}" class="input-xlarge text-tip" id="name_ro" title="{#enter#} {#name#} RO">
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label" for="name_ru">{#name#} RU</label>
+									<div class="controls">
+										<input type="text" name="name_ru" value="{$row.name_ru}" class="input-xlarge text-tip" id="name_ru" title="{#enter#} {#name#} RU">
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label" for="code">{#code#}</label>
+									<div class="controls">
+										<input type="text" name="code" value="{$row.code}" class="input-xlarge text-tip" id="postcode" title="{#enter#} {#code#}">
+									</div>
+								</div>
+								
+							</fieldset>
+						</div>
+					</div>
+				</div>
+				<div class="clear"></div>
+			</div>
+            
+			<div class="col-sm-6 well">
+				<div class="nonboxy-widget">
+					<div class="widget-head">
+						<h5>{#settings#}</h5>
+					</div>
+					<div class="widget-content">
+						<div class="widget-box">
+							<fieldset>
+								<div class="control-group">
+									<label class="checkbox inline"><input type="checkbox" value="1" name="active" {if $row.active}checked{/if}> {#active#}</label>
+								</div>
+							</fieldset>
+						</div>
+					</div>
+                    <div class="widget-head">
+						<h5></h5>
+					</div>
+					<div class="widget-content">
+						<div class="widget-box">
+							<fieldset>
+								<div class="control-group">
+									<label class="control-label" for="postdate">{#postdate#}</label>
+									<div class="controls">
+                                        <input type="text" name="postdate" value="{if $row.postdate}{$row.postdate|date_format:'%d.%m.%Y %H:%M'}{/if}" class="input-xlarge text-tip" id="postdate" readonly>
+									</div>
+                                    <label class="control-label" for="updated_at">{#updated_at#}</label>
+                                    <div class="controls">
+                                        <input type="text" name="updated_at" value="{if $row.updated_at}{$row.updated_at|date_format:'%d.%m.%Y %H:%M'}{/if}" class="input-xlarge text-tip" id="updated_at" readonly>
+									</div>
+								</div>
+							</fieldset>
+						</div>
+					</div>
+					<div class="widget-content">
+						<div class="form-actions">
+							<button type="submit" name="Submit" class="btn btn-primary">{#save_changes#}</button>
+                            <input type="submit" name="SaveAndStay" class="btn btn-info" value="{#save_and_stay#}" />
+						</div>
+					</div>
+					<div class="clear"></div>
+				</div>
+			</div>
+			<div class="clear"></div>
+		</form>
+    </div>
+	
+	{include file="admin/footer.html"}

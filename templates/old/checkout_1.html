@@ -1,0 +1,271 @@
+{include file="header.html"}
+    <div>
+        <div class="row mt-3">
+            <div class="col-sm-12">
+                <article class="box">
+                    <figure class="itemside">
+                        <div class="aside align-self-center">
+                            <span class="icon-wrap icon-md round bg-primary text-white">
+                                <i class="fas fa-flag-checkered"></i>
+                            </span>
+                        </div>
+                        <figcaption class="text-wrap">
+                            <h5 class="title">{#your_final_order#}</h5>
+                            <p class="text-muted">{#your_final_order_description#}</p>
+                        </figcaption>
+                    </figure> <!-- iconbox // -->
+                </article> <!-- panel-lg.// -->
+            </div><!-- col // -->
+        </div>
+        {$breadcrumbs}
+        <div class="boxDescription">
+            <br />
+            {if $no_delivery_at_all}
+                Sorry the products(s) in your cart  that are not for international delivery are:<br />
+                {section name=ndp loop=$no_delivery_products}
+                    <strong>&middot; {$no_delivery_products[ndp].product_name}</strong><br />
+                {/section}
+
+            {else}
+                <div class="d-flex flex-row justify-content-between flex-wrap">
+                    <div class="box col-sm-5">
+                        <h5>Информация за доставката</h5>
+                        <dl class="dlist-inline">
+                            <dt>{#name#}:</dt>
+                            <dd>{$user_info.delivery_name} {$user_info.delivery_last_name}</dd>
+                        </dl>
+                        <dl class="dlist-inline">
+                            <dt>{#address#}:</dt>
+                            <dd>{$user_info.delivery_address_1}</dd>
+                        </dl>
+                        {if $user_info.delivery_address_2}
+                        <dl class="dlist-inline">
+                            <dt>{#address_2#}: </dt>
+                            <dd>{$user_info.delivery_address_2}</dd>
+                        </dl>
+                        {/if}
+                        <dl class="dlist-inline">
+                            <dt>{#delivery_city#}:</dt>
+                            <dd>{$user_info.delivery_city}</dd>
+                        </dl>
+                        <dl class="dlist-inline">
+                            <dt>{#delivery_postcode#}:</dt>
+                            <dd>{$user_info.delivery_postcode}</dd>
+                        </dl>
+                        {*<dl class="dlist-inline">
+                            <dt>{#email#}:</dt>
+                            <dd>{$user_info.email}</dd>
+                        </dl>*}
+                    </div> <!-- box.// -->
+
+                    <div class="box col-sm-5">
+                        <h5>Информация за плащането</h5>
+                        <dl class="dlist-inline">
+                            <dt>{#name#}:</dt>
+                            <dd>{$user_info.billing_first_name} {$user_info.billing_last_name}</dd>
+                        </dl>
+                        <dl class="dlist-inline">
+                            <dt>{#phone#}:</dt>
+                            <dd>{$user_info.billing_phone}</dd>
+                        </dl>
+                        <dl class="dlist-inline">
+                            <dt>{#address#}:</dt>
+                            <dd>{$user_info.billing_address_1}</dd>
+                        </dl>
+                        {if $user_info.billing_address_2}
+                        <dl class="dlist-inline">
+                            <dt>{#address_2#}: </dt>
+                            <dd>{$user_info.billing_address_2}</dd>
+                        </dl>
+                        {/if}
+                        <dl class="dlist-inline">
+                            <dt>{#billing_city#}:</dt>
+                            <dd>{$user_info.billing_city}</dd>
+                        </dl>
+                        <dl class="dlist-inline">
+                            <dt>{#billing_postcode#}:</dt>
+                            <dd>{$user_info.billing_postcode}</dd>
+                        </dl>
+                        <dl class="dlist-inline">
+                            <dt>{#email#}:</dt>
+                            <dd>{$user_info.email}{*{$user_info.billing_email}*}</dd>
+                        </dl>
+                    </div> <!-- box.// -->
+                </div>
+                
+                {if $cart}
+                <div class="card p-2 my-2">
+                    <div class="cart-buttons justify-content-center">
+                        {if $active_payment}
+                            {if $row.payment_type_id == 1}
+                                <form method="post" action="/checkout_2.php">
+                                    <button type="submit" value="{#finalise_final#}" name="finalise" class="btn btn-outline-primary">{#finalise_final#}</button>
+                                </form>
+                            {else}
+                                <form method="post" action="/checkout_2.php">
+                                    <button type="submit" value="{#proceed_to_payment#}" name="finalisePay" class="btn btn-outline-primary">{#proceed_to_payment#}</button>
+                                </form>
+                            {/if}
+                        {else}
+                            <form method="post" action="/finalise-order">
+                                <button type="submit" value="finalise-button" name="finalise" class="buttonFinalise btn btn-outline-primary">{#finalise_final#}</button>
+                                <div id="preloader" style="display: none;">
+                                    <img src="/images/preloader.gif">
+                                    Изпращане на поръчката<br />
+                                    Моля, изчакайте
+                                </div>
+                            </form>
+                        {/if}
+                    </div>
+                </div>
+                <div class="card mt-2">
+                    <table class="table table-hover shopping-cart-wrap">
+                        <thead class="text-muted">
+                            <tr>
+                                <th scope="col">{#product#}</th>
+                                <th scope="col" width="120">{#quantity#}</th>
+                                <th scope="col" width="110">{#price#}</th>
+                                <th scope="col" width="110">{#price_total#}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {section name=c loop=$cart}
+                            <tr>
+                                <td>
+                                    <figure class="media">
+                                        <div class="img-wrap"><img src="{if $cart[c].pic}/files/tntn/{$cart[c].pic}{else}/images/noImage.png{/if}" class="img-thumbnail img-sm"></div>
+                                        <figcaption class="media-body">
+                                            <h6 class="title text-truncate">{$cart[c].product_name} {if $cart[c].product_code}({#code#}: {$cart[c].product_code}){/if}</h6>
+                                            {if $cart[c].option.id}
+                                            <dl class="dlist-inline small">
+                                                {if $cart[c].option.option_group_name}
+                                                    <dt>{$cart[c].option.option_group_name}: </dt>
+                                                {/if}
+                                                <dd>{$cart[c].option.name}</dd>
+                                            </dl>
+                                            {/if}
+                                        </figcaption>
+                                    </figure>
+                                </td>
+                                <td>
+                                    <div class="text-center">
+                                        <span>{$cart[c].quantity}</span>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="price-wrap">
+                                        <small class="text-muted unit-price">
+                                            {if $cart[c].product_price_discount > 0.0 && $cart[c].product_price_discount != $cart[c].product_price}
+                                                <span class="oldPrice">{$cart[c].product_price|number_format:2} {#currency#}</span>
+                                            {/if}
+                                            <span class="currentPrice">
+                                                <span class="price" id="price{$cart[c].product_id}{$cart[c].option.id}">
+                                                    {if $cart[c].product_price_discount > 0.0 && $cart[c].product_price_discount != $cart[c].product_price}
+                                                        {$cart[c].product_price_discount|number_format:2} {#currency#}
+                                                    {else}
+                                                        {$cart[c].product_price|number_format:2} {#currency#}
+                                                    {/if}
+                                                </span>
+                                            </span>
+
+                                        </small>
+                                    </div> <!-- price-wrap .// -->
+                                </td>
+                                <td>
+                                    <div class="price-wrap">
+                                        <var class="price total-price">
+                                            {if $cart[c].product_price_discount > 0.0 && $cart[c].product_price_discount != $cart[c].product_price}
+                                            <span class="oldPrice">{($cart[c].product_price*$cart[c].quantity)|number_format:2} {#currency#}</span>
+                                            {/if}
+                                            <span class="currentPrice">
+                                                <span class="priceTotal" id="priceTotal{$cart[c].product_id}{$cart[c].option.id}">
+                                                    {$cart[c].product_price_total|number_format:2} {#currency#}
+                                                </span>
+                                            </span>
+                                        </var>
+                                    </div> <!-- price-wrap .// -->
+                                </td>
+                            </tr>
+                            {sectionelse}
+                                <td class="text-center"> 
+                                    {#no_items_ordered#}
+                                </td>
+                            {/section}
+                            <tr>
+                                <td>Сума нето:</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td align="right">{$subtotal_amount|number_format:2} {#currency#}</td>
+                            </tr>
+                            {if $row.promo_code && $row.discount_promo_code_amount}
+                            <tr>
+                                <td>Промо код: ({$row.promo_code})</td>
+                                <td align="left" colspan="2">{$promo_code_name}</td>
+                                <td align="right">-{$row.discount_promo_code_amount|number_format:2} {#currency#}</td>
+                            </tr>
+                            {/if}
+                            <tr>
+                                <td>
+                                    {if $row.discount_free_delivery}
+                                        Безплатна доставка
+                                    {else}
+                                        Доставка до {if $row.delivery_type_id == 1 || $row.delivery_type_id == 3}адрес{else}офис{/if} {if $row.payment_type_id != 5}(Заплаща се в момента на получаване){/if}
+                                    {/if}
+                                </td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td align="right">
+                                    {if $row.discount_free_delivery}
+                                        0.00 {#currency#}
+                                    {else}
+                                        {$row.delivery_amount|number_format:2} {#currency#}
+                                    {/if}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>{#total_amount#}</td>
+                                <td>&nbsp;</td>
+                                <td>&nbsp;</td>
+                                <td align="right">{$total_amount_corrected|number_format:2} {#currency#}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div> <!-- card.// -->
+                <div class="card p-2 my-2">
+                    <div class="cart-buttons justify-content-center">
+                        {if $active_payment}
+                            {if $row.payment_type_id == 1}
+                                <form method="post" action="/checkout_2.php">
+                                    <button type="submit" value="{#finalise_final#}" name="finalise" class="btn btn-outline-primary">{#finalise_final#}</button>
+                                </form>
+                            {else}
+                                <form method="post" action="/checkout_2.php">
+                                    <button type="submit" value="{#proceed_to_payment#}" name="finalisePay" class="btn btn-outline-primary">{#proceed_to_payment#}</button>
+                                </form>
+                            {/if}
+                        {else}
+                            <form method="post" action="/finalise-order" id="finaliseForm">
+                                <input type="hidden" name="finalise" value="finalise-button">
+                                <button type="submit" class="buttonFinalise btn btn-outline-primary">{#finalise_final#}</button>
+                                <div id="preloader2" style="display: none;">
+                                    <img src="/images/preloader.gif">
+                                    Изпращане на поръчката<br />
+                                    Моля, изчакайте
+                                </div>
+                            </form>
+                        {/if}
+                    </div>
+                </div>
+                <script>
+                    $(".buttonFinalise").bind("click", function (ev) {
+                        ev.preventDefault();
+                        $(".buttonFinalise").hide();
+                        $("#preloader, #preloader2").show();
+                        $("#finaliseForm").submit();
+                    });
+                </script>
+                {/if}
+            {/if}
+        </div>
+    </div>
+{include file="footer.html"}

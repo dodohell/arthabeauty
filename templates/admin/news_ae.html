@@ -1,0 +1,583 @@
+{include file="admin/header.html"}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb p-0">
+        <li class="breadcrumb-item">
+            <a href="./">
+                <span class="mdi mdi-home"></span>                
+            </a>
+        </li>
+        <li class="breadcrumb-item">
+            <a href="./{$php_self}">{#news#}</a>
+        </li>
+        <li class="breadcrumb-item" aria-current="page">{$row.name}</li>
+    </ol>
+</nav>
+<div class="row-fluid">
+    <form method="post" enctype="multipart/form-data">
+        <div class="row">
+            <div class="col-sm-7 well">
+                <div class="nonboxy-widget">
+                    <div class="widget-head">
+                        <h5>{#short_description#}</h5>
+                    </div>
+                    <div class="widget-content">
+                        <div class="widget-box">
+                            {$editorExcerpt}
+                        </div>
+                    </div>
+                </div>
+                <div class="nonboxy-widget">
+                    <div class="widget-head">
+                        <h5>{#description#}</h5>
+                    </div>
+                    <div class="widget-content">
+                        <div class="widget-box">
+                            {$editor}
+                        </div>
+                    </div>
+                </div>
+                {if $act == "edit"}
+                <div class="nonboxy-widget">
+                    <div class="widget-head">
+                        <h5>{#record_images#}</h5>
+                    </div>
+                    <div class="widget-content">
+                        <div class="widget-box">
+                            {literal}
+                                <script>
+                                    $(document).ready(function () {
+                                        getImages();
+                                    });
+                                    function getImages() {
+                                        $.ajax({
+                                            url: "news_images.php",
+                                            data: "news_id={/literal}{$row.id}{literal}&act=show",
+                                            dataType: "json",
+                                            success: function (response) {
+                                                var str = "";
+                                                str += '<ul class="imagesList">';
+                                                for (var i = 0; i < response.length; i++) {
+                                                    str += '<li name="' + response[i].id + '">';
+                                                    str += '<span class="imageHolder"><img src="/files/tntn/' + response[i].file + '" border="0" ></span>';
+                                                    str += '<span class="clear"></span>'
+                                                    str += '<div class="deleteImage text-danger" name="'+response[i].id+'"><i class="mdi mdi-delete-forever-outline"></i></div>'
+                                                    str += '<a href="#editImage" class="editImage btn-modal" data-toggle="modal" name="'+response[i].id+'"><i class="mdi mdi-square-edit-outline"></i></a>';
+                                                    str += '</li>';
+                                                }
+                                                str += '</ul>';
+                                                $("#files").empty().append(str);
+                                                $(".deleteImage").bind("click", function () {
+                                                    var id = $(this).attr("name");
+                                                    deleteImage(id);
+                                                });
+                                                $(".editImage").bind("click", function () {
+                                                    var id = $(this).attr("name");
+                                                    editImage(id);
+                                                });
+
+                                                $("#files ul").sortable({stop: function () {
+                                                        var commonData = $(this).attr("name");
+                                                        var items = $("li");
+                                                        var params = "";
+
+                                                        $.each(items, function (i, element) {
+                                                            params += "items[]=" + i + "@@_@@" + $("#files ul li:eq(" + i + ")").attr("name");
+                                                            if (items[i + 1])
+                                                                params += "&";
+
+                                                        });
+
+                                                        $.ajax({
+                                                            type: "POST",
+                                                            url: "move.php",
+                                                            data: "commonData=news_images_table|&" + params,
+                                                            success: function (html) {
+                                                            }
+                                                        });
+                                                    }
+                                                });
+                                            }
+                                        });
+
+                                        $(".deleteImage").bind("click", function () {
+                                            var id = $(this).attr("name");
+                                            deleteImage(id);
+                                        });
+                                        $(".editImage").bind("click", function(){
+                                            var id = $(this).attr("name");
+                                            editImage(id);
+                                        });
+                                    }
+                                    function deleteImage(id) {
+                                        $.ajax({
+                                            url: "news_images.php",
+                                            data: "id=" + id + "&act=delete",
+                                            success: function (html) {
+                                                getImages();
+                                            }
+                                        });
+                                    }
+                                    function editImage(id){
+                                        $.ajax({
+                                            url: "news_images.php",
+                                            data: "id="+id+"&act=getImageForm",
+                                            success: function(html){
+                                                $("#holderEditImage").empty();
+                                                $("#holderEditImage").append(html);
+                                            }
+                                        });
+                                    }
+                                    /*jslint unparam: true */
+                                    /*global window, $ */
+                                    $(function () {
+                                        'use strict';
+                                        // Change this to the location of your server-side upload handler:
+                                        var url = window.location.hostname === 'blueimp.github.io' ?
+                                            '//jquery-file-upload.appspot.com/' : 'fileuploader.php';
+                                        $('#fileupload').fileupload({
+                                            url: url,
+                                            dataType: 'json',
+                                            done: function (e, data) {
+                                                $.each(data.result.files, function (index, file) {
+                                                    $('<p/>').text(file.name).appendTo('#files');
+                                                    $.ajax({
+                                                        url: "news_images.php",
+                                                        data: "file=" + file.name + "&news_id={/literal}{$row.id}{literal}&act=add",
+                                                        success: function (html) {
+                                                            getImages();
+                                                        }
+                                                    });
+                                                });
+                                            },
+                                            progressall: function (e, data) {
+                                                var progress = parseInt(data.loaded / data.total * 100, 10);
+                                                $('#progress .progress-bar').css(
+                                                    'width',
+                                                    progress + '%'
+                                                    );
+                                            }
+                                        }).prop('disabled', !$.support.fileInput)
+                                            .parent().addClass($.support.fileInput ? undefined : 'disabled');
+                                    });
+                                </script>
+                            {/literal}
+                            <span class="btn btn-success fileinput-button">
+                                <i class="glyphicon glyphicon-plus"></i>
+                                <span>{#select_files#}</span>
+                                <!-- The file input field used as target for the file upload widget -->
+                                <input id="fileupload" type="file" name="files[]" multiple>
+                            </span>
+                            <div class="clear"></div>
+                            <br />
+                            <!-- The global progress bar -->
+                            <div id="progress" class="progress mb-3">
+                                <span class="progress-bar progress-bar-success green" style="height: 18px; width: 0px;"></span>
+                            </div>
+                            <!-- The container for the uploaded files -->
+                            <div id="files" class="files"></div>
+                        </div>
+                    </div>
+                </div>
+                {/if}
+            </div>
+
+            <div class="col-sm-5 well">
+                <div class="nonboxy-widget">
+                    <div class="widget-head">
+                        <h5>{#settings#}</h5>
+                    </div>
+                    <div class="widget-content">
+                        <div class="widget-box">
+                            <fieldset>
+                                <div class="control-group">
+                                    <label class="checkbox inline"><input type="checkbox" value="1" name="active" {if $row.active}checked{/if}> {#active#}</label>
+                                    <label class="checkbox inline"><input type="checkbox" value="1" name="accent" {if $row.accent}checked{/if}> {#accent#}</label>
+                                    <label class="checkbox inline"><input type="checkbox" value="checked" name="contactsform" {if $row.contactsform}checked{/if}> {#contactsform#}</label>
+                                    {*<label class="checkbox inline"><input type="checkbox" value="checked" name="dont_open" {if $row.dont_open}checked{/if}> {#dont_open#}</label>*}
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                    <div class="widget-head">
+                        <h5>{#general_information#}</h5>
+                    </div>
+                    <div class="widget-content">
+                        <div class="widget-box">
+                            <fieldset>
+                                <div class="control-group">
+                                    <label class="control-label" for="publishdate">{#publishdate#}</label>
+                                    <div class="controls">
+                                        <input type="text" name="publishdate" value="{$row.publishdate_value}" class="form-control form-control-sm text-tip" id="publishdate" title="{#enter#} {#name#} BG">
+                                        {literal}
+                                            <script>
+                                                $(function () {
+                                                    $("#publishdate").datepicker();
+                                                });
+                                            </script>
+                                        {/literal}
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label" for="name_bg">{#name#} BG</label>
+                                    <div class="controls">
+                                        <input type="text" name="name_bg" value="{$row.name_bg}" class="form-control form-control-sm text-tip" id="name_bg" title="{#enter#} {#name#} BG">
+                                    </div>
+									{if !$row.htaccess_url_bg}
+										{literal}
+											<script>
+												function generateHtaccessString(){
+													var string = $("input[name=name_bg]").val();
+													$.ajax({
+														type: "POST",
+														url: 'getHtaccessString.php',
+														data: 'string='+string,
+														success: function(html){
+															$('input[name=htaccess_url_bg]').val(html);
+														}
+													});
+												}
+												$(document).ready(function(){
+													$("input[name=name_bg]").keyup(function(){
+														generateHtaccessString();
+													});
+												});
+											</script>
+										{/literal}
+									{/if}
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label" for="name_en">{#name#} EN</label>
+                                    <div class="controls">
+                                        <input type="text" name="name_en" value="{$row.name_en}" class="form-control form-control-sm text-tip" id="name_en" title="{#enter#} {#name#} EN">
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label" for="name_de">{#name#} DE</label>
+                                    <div class="controls">
+                                        <input type="text" name="name_de" value="{$row.name_de}" class="form-control form-control-sm text-tip" id="name_de" title="{#enter#} {#name#} DE">
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label" for="name_ro">{#name#} RO</label>
+                                    <div class="controls">
+                                        <input type="text" name="name_ro" value="{$row.name_ro}" class="form-control form-control-sm text-tip" id="name_ro" title="{#enter#} {#name#} RO">
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label" for="name_ru">{#name#} RU</label>
+                                    <div class="controls">
+                                        <input type="text" name="name_ru" value="{$row.name_ru}" class="form-control form-control-sm text-tip" id="name_ru" title="{#enter#} {#name#} RU">
+                                    </div>
+                                </div>
+								<div class="control-group">
+									<label class="control-label" for="news_author_id">{#news_authors#}</label>
+									<div class="controls">
+										<select name="news_author_id" class="form-control form-control-sm" id="news_author_id">
+											<option value="">--------------</option>
+											{section name=na loop=$news_authors}
+											<option value="{$news_authors[na].id}" {if $news_authors[na].id == $row.news_author_id}selected{/if}>{$news_authors[na].name}</option>
+											{/section}
+										</select>
+									</div>
+								</div>
+								{*
+                                <div class="control-group">
+                                    <label class="control-label" for="author_bg">{#author#} BG</label>
+                                    <div class="controls">
+                                        <input type="text" name="author_bg" value="{$row.author_bg}" class="form-control form-control-sm text-tip" id="author_bg" title="{#enter#} {#name#} BG">
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label" for="author_en">{#author#} EN</label>
+                                    <div class="controls">
+                                        <input type="text" name="author_en" value="{$row.author_en}" class="form-control form-control-sm text-tip" id="author_en" title="{#enter#} {#name#} EN">
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label" for="author_de">{#author#} DE</label>
+                                    <div class="controls">
+                                        <input type="text" name="author_de" value="{$row.author_de}" class="form-control form-control-sm text-tip" id="author_de" title="{#enter#} {#name#} DE">
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label" for="author_ro">{#author#} RO</label>
+                                    <div class="controls">
+                                        <input type="text" name="author_ro" value="{$row.author_ro}" class="form-control form-control-sm text-tip" id="author_ro" title="{#enter#} {#name#} RO">
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label" for="author_ru">{#author#} RU</label>
+                                    <div class="controls">
+                                        <input type="text" name="author_ru" value="{$row.author_ru}" class="form-control form-control-sm text-tip" id="author_ru" title="{#enter#} {#name#} RU">
+                                    </div>
+                                </div>
+								*}
+                                <div class="control-group">
+                                    <label class="control-label" for="resource_bg">{#resource#} BG</label>
+                                    <div class="controls">
+                                        <input type="text" name="resource_bg" value="{$row.resource_bg}" class="form-control form-control-sm text-tip" id="resource_bg" title="{#enter#} {#name#} BG">
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label" for="resource_en">{#resource#} EN</label>
+                                    <div class="controls">
+                                        <input type="text" name="resource_en" value="{$row.resource_en}" class="form-control form-control-sm text-tip" id="resource_en" title="{#enter#} {#name#} EN">
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label" for="resource_de">{#resource#} DE</label>
+                                    <div class="controls">
+                                        <input type="text" name="resource_de" value="{$row.resource_de}" class="form-control form-control-sm text-tip" id="resource_de" title="{#enter#} {#name#} DE">
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label" for="resource_ro">{#resource#} RO</label>
+                                    <div class="controls">
+                                        <input type="text" name="resource_ro" value="{$row.resource_ro}" class="form-control form-control-sm text-tip" id="resource_ro" title="{#enter#} {#name#} RO">
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label" for="resource_ru">{#resource#} RU</label>
+                                    <div class="controls">
+                                        <input type="text" name="resource_ru" value="{$row.resource_ru}" class="form-control form-control-sm text-tip" id="resource_ru" title="{#enter#} {#name#} RU">
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label" for="url_bg">{#url#} BG</label>
+                                    <div class="controls">
+                                        <input type="text" name="url_bg" value="{$row.url_bg}" class="form-control form-control-sm text-tip" id="url_bg" title="{#enter#} {#url#} BG">
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label" for="url_en">{#url#} EN</label>
+                                    <div class="controls">
+                                        <input type="text" name="url_en" value="{$row.url_en}" class="form-control form-control-sm text-tip" id="url_en" title="{#enter#} {#url#} EN">
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label" for="url_de">{#url#} DE</label>
+                                    <div class="controls">
+                                        <input type="text" name="url_de" value="{$row.url_de}" class="form-control form-control-sm text-tip" id="url_de" title="{#enter#} {#url#} DE">
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label" for="url_ro">{#url#} RO</label>
+                                    <div class="controls">
+                                        <input type="text" name="url_ro" value="{$row.url_ro}" class="form-control form-control-sm text-tip" id="url_ro" title="{#enter#} {#url#} RO">
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label" for="url_ru">{#url#} RU</label>
+                                    <div class="controls">
+                                        <input type="text" name="url_ru" value="{$row.url_ru}" class="form-control form-control-sm text-tip" id="url_ru" title="{#enter#} {#url#} RU">
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label" for="url_target">{#url_target#}</label>
+                                    <div class="controls">
+                                        <select name="url_target" class="form-control form-control-sm" id="url_target">
+                                            <option value="_self" {if $row.url_target == "_self"}selected{/if}>{#target_self#}</option>
+                                            <option value="_blank" {if $row.url_target == "_blank"}selected{/if}>{#target_blank#}</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                    <div class="widget-head">
+                        <h5>{#htaccess_settings#}</h5>
+                    </div>
+                    <div class="widget-content">
+                        <div class="widget-box">
+                            <fieldset>
+                                <div class="control-group">
+                                    <label class="control-label" for="htaccess_url_bg">{#htaccess_url#} BG</label>
+                                    <div class="controls">
+                                        <input type="text" name="htaccess_url_bg" value="{$row.htaccess_url_bg}" class="htaccessField form-control form-control-sm text-tip" id="htaccess_url_bg" title="{#enter#} {#htaccess_url#} BG" autocomplete="new-password">
+                                        <div class="errorHTACCESS">{#invalid_or_duplicate_htaccess#}</div>
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label" for="htaccess_url_en">{#htaccess_url#} EN</label>
+                                    <div class="controls">
+                                        <input type="text" name="htaccess_url_en" value="{$row.htaccess_url_en}" class="htaccessField form-control form-control-sm text-tip" id="htaccess_url_en" title="{#enter#} {#htaccess_url#} EN" autocomplete="new-password">
+                                        <div class="errorHTACCESS">{#invalid_or_duplicate_htaccess#}</div>
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label" for="htaccess_url_de">{#htaccess_url#} DE</label>
+                                    <div class="controls">
+                                        <input type="text" name="htaccess_url_de" value="{$row.htaccess_url_de}" class="htaccessField form-control form-control-sm text-tip" id="htaccess_url_de" title="{#enter#} {#htaccess_url#} DE" autocomplete="new-password">
+                                        <div class="errorHTACCESS">{#invalid_or_duplicate_htaccess#}</div>
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label" for="htaccess_url_ro">{#htaccess_url#} RO</label>
+                                    <div class="controls">
+                                        <input type="text" name="htaccess_url_ro" value="{$row.htaccess_url_ro}" class="htaccessField form-control form-control-sm text-tip" id="htaccess_url_ro" title="{#enter#} {#htaccess_url#} RU" autocomplete="new-password">
+                                        <div class="errorHTACCESS">{#invalid_or_duplicate_htaccess#}</div>
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label" for="htaccess_url_ru">{#htaccess_url#} RU</label>
+                                    <div class="controls">
+                                        <input type="text" name="htaccess_url_ru" value="{$row.htaccess_url_ru}" class="htaccessField form-control form-control-sm text-tip" id="htaccess_url_ru" title="{#enter#} {#htaccess_url#} RU" autocomplete="new-password">
+                                        <div class="errorHTACCESS">{#invalid_or_duplicate_htaccess#}</div>
+                                    </div>
+                                </div>
+                                {literal}
+                                    <script>
+                                        $(document).ready(function () {
+                                            $(".htaccessField").bind("keyup", function () {
+                                                var use_index = $(".htaccessField").index(this);
+                                                var lang = $(".htaccessField:eq(" + use_index + ")").attr("name").replace("htaccess_url_", "");
+                                                var fieldValue = $(".htaccessField:eq(" + use_index + ")").val().trim();
+
+                                                if (fieldValue == "") {
+                                                    $(".errorHTACCESS:eq(" + use_index + ")").hide();
+                                                } else {
+                                                    $.ajax({
+                                                        type: "POST",
+                                                        url: "checkHtaccess.php",
+                                                        data: "type=menu&lang_check=" + lang + "&record_id={/literal}{$row.id}{literal}&htaccess_url=" + $(this).val(),
+                                                        success: function (html) {
+                                                            // $("#errorTracker").empty();
+                                                            // $("#errorTracker").append(html);
+                                                            if (html != 0) {
+                                                                if (html == 2) {
+                                                                    $(".errorHTACCESS:eq(" + use_index + ")").hide();
+                                                                } else {
+                                                                    $(".errorHTACCESS:eq(" + use_index + ")").show();
+                                                                }
+                                                            } else {
+                                                                $(".errorHTACCESS:eq(" + use_index + ")").hide();
+                                                            }
+                                                        }
+                                                    });
+                                                }
+                                            });
+                                        });
+                                    </script>
+                                {/literal}
+                            </fieldset>
+                        </div>
+                    </div>
+                    <div class="widget-head">
+                        <h5>{#general_images#}</h5>
+                    </div>
+                    <div class="widget-content">
+                        <div class="widget-box">
+                            <fieldset>
+								<div>
+									<span>{#picture_header#}</span>
+									<div class="custom-file">
+										<input type="file" name="pic_header" class="custom-file-input" id="pic_header">
+										<label class="custom-file-label" for="pic_header">{if $row.pic_header}{$row.pic_header}{else}{#picture_header#}{/if}</label>
+									</div>
+									<p class="help-block">
+										<strong>{#notice#}:</strong> {#notice_leading_image#}
+									</p>
+									{if $row.pic_header}
+										<img src="/files/tn/{$row.pic_header}" class="picView">
+										<a href="news_ae.php?act=delete&field=pic_header&id={$id}&menu_pos={$menu_pos}"><i class="mdi mdi-trash-can-outline"></i>{#delete#}</a>
+									{/if}
+								</div>
+                                <div>
+                                    <span>{#picture#}</span>
+                                    <div class="custom-file">
+                                        <input type="file" name="pic" class="custom-file-input" id="pic">
+                                        <label class="custom-file-label" for="pic">{if $row.pic}{$row.pic}{else}{#picture#}{/if}</label>
+                                    </div>
+                                    {if $row.pic}
+                                        <img src="/files/tn/{$row.pic}" class="picView">
+                                        <a href="news_ae.php?act=delete&field=pic&id={$id}"><i class="mdi mdi-trash-can-outline"></i>{#delete#}</a>
+                                    {/if}
+                                </div>
+                                <script>
+                                    $('#pic').on('change',function(){
+                                        //get the file name
+                                        var fileName = $(this).val();
+                                        //replace the "Choose a file" label
+                                        $(this).next('.custom-file-label').html(fileName);
+                                    })
+                                </script>
+                            </fieldset>
+                        </div>
+                        <div class="form-actions pt-4">
+                            <button type="submit" name="Submit" class="btn btn-primary">{#save_changes#}</button>
+                            <input type="submit" name="SaveAndStay" class="btn btn-info" value="{#save_and_stay#}" />
+                        </div>
+                    </div>
+                    <div class="widget-head">
+                        <h5>{#news_categories#}</h5>
+                    </div>
+                    <div class="widget-content">
+                        <div class="widget-box">
+                            <fieldset>
+                                <div class="control-group">
+                                    <label class="control-label" for="pic_header">{#please_select#}</label>
+                                    <div class="controls">
+                                        {section name=nc loop=$news_categories}
+                                            <label class="checkbox"><input type="checkbox" value="{$news_categories[nc].id}" {$news_categories[nc].checked} name="news_categories[]"> {$news_categories[nc].name}</label>
+                                            {/section}
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                        <div class="widget-box">
+                            <div class="alert alert-error fade in" id="generalHTACCESSerror">
+                                {if 0}<button data-dismiss="alert" class="close" type="button">×</button>{/if}
+                                <strong>{#general_error_heading#}</strong><br /> {#general_error_text#}
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            {literal}
+                                <script>
+                                    $(document).ready(function () {
+                                        $("button[name=Submit], input[name=SaveAndStay]").bind("click", function () {
+                                            var prompted_error = 0;
+                                            $(".errorHTACCESS").each(function (e, i) {
+                                                if ($(this).css("display") == "block") {
+                                                    prompted_error = 1;
+                                                }
+                                            });
+
+                                            if (prompted_error == 1) {
+                                                $("#generalHTACCESSerror").show();
+                                                return false;
+                                            } else {
+                                                $("#generalHTACCESSerror").hide();
+                                            }
+                                        });
+                                    });
+                                </script>
+                            {/literal}
+                            <button type="submit" name="Submit" class="btn btn-primary">{#save_changes#}</button>
+                            <input type="submit" name="SaveAndStay" class="btn btn-info" value="{#save_and_stay#}" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {include file="admin/metaInformation.html"}
+    </form>
+</div>
+<div class="modal hide fade" id="editImage">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">{#edit_image#}</h4>
+                <button type="button" class="close" data-dismiss="modal" id="buttonCloseEventClient">×</button>
+            </div>
+            <div class="modal-body">
+                <p id="holderEditImage">
+
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">{#close#}</button>
+            </div>
+        </div>
+    </div>
+</div>
+{include file="admin/footer.html"}

@@ -1,0 +1,505 @@
+{include file="header.html"}
+<div class="breadcrumbsContainer">
+    <div class="container">
+        <div class="breadcrubsRow">
+            {$breadcrumbs}
+        </div>
+    </div>
+</div>
+
+<div class="catBackgroundGradient">
+    <div class="container" id="successProductCart">
+        <div class="alert alert-success successProductToCart">
+        </div>
+    </div>
+    <div class="bannerTop">
+        <div class="container">
+            <div class="backgroundImage h180">
+                <img src="/images/banners/long-banner.png" class="w100p" alt="Оферти">
+                <h1 class="heading newCol" >Оферти</h1>
+                {if $row.excerpt}{$row.excerpt}{/if}
+            </div>
+        </div>
+    </div>
+
+    <div class="mobileCategories">
+        <div class="container">
+            <div class="headButtons">
+				{if 0}
+                <div class="topRow">
+                    <span class="catTopBtn">{$row.name} <span class="icon"><img src="/images/arrow-down-gray.svg" alt=""></span></span>
+                    <ul class="listCat">
+						{section name=s loop=$subcategories}
+							<li>
+								<a href="{if $subcategories[s].url}{$subcategories[s].url}{else}{if $subcategories[s].htaccess_url}{$subcategories[s].htaccess_url}{else}/{#htaccess_categories#}/{$subcategories[s].id}{/if}{/if}">{$subcategories[s].name}</a>
+							</li>
+						{/section}
+                    </ul>
+                </div>
+				{/if}
+                <div class="downSection">
+                    <div class="bottomRow">
+                        <span class="leftSortBtn">{#sort#} <span class="icon"><img src="/images/arrow-down-gray.svg" alt=""></span></span>
+                        <span class="filterBtn">{#filters#}</span>
+                    </div>
+                    <div class="hiddenSections">
+                        <div class="hiddenSort">
+                            <a class="mobile-sortBy" data-sortBy="price-asc">{#cheapest#}</a>
+                            <a class="mobile-sortBy" data-sortBy="price-desc">{#most_expensive#}</a>
+                            <a class="mobile-sortBy" data-sortBy="postdate-desc">{#newest#}</a>
+                            <a class="mobile-sortBy" data-sortBy="postdate-asc">{#oldest#}</a>
+                        </div>
+                        <div class="filterWrapper">
+                            <form id="hiddenFilter" type="post" action="/advanced-search">
+                            		<button type="submit" id="mobileFilterSubmit">{#show_products#}</button>
+                                <ul class="hiddenFiltersList">
+                                    <li class="filterLi closeFilter"><span class="closeFilterBtn">{#filters#}</span> <span class="clearWholeForm" onclick="uncheckAllcheckboxes('#hiddenFilter')">{#clear#}</span></li>
+
+
+									{section name=a loop=$attributes}
+										{if $attributes[a].attribute_options}
+											<li class="filterLi">
+												<span class="filterLink hasSubFilter" href="">{$attributes[a].name|truncate:60}</span>
+												<span class="selectedItems"></span>
+												<div id="index{$smarty.section.a.index}" class="subFilterHolder">
+													<ul class="subFilter">
+														{section name=ao loop=$attributes[a].attribute_options}
+														<li class="subfilterLi">
+															<label>
+																{$attributes[a].attribute_options[ao].option_text}
+																<input type="checkbox" name="attribute_options[]" value="{$attributes[a].attribute_options[ao].id}" {$attributes[a].attribute_options[ao].selected} data-value="{$attributes[a].attribute_options[ao].option_text}">
+																<span class="checkmark"></span>
+															</label>
+														</li>
+														{/section}
+													</ul>
+												</div>
+											</li>
+										{/if}
+									{/section}
+									<li class="filterLi">
+                                        <span class="filterLink hasSubFilter" href="">{#brands#}</span>
+                                        <span class="selectedItems"></span>
+                                        <div id="index2" class="subFilterHolder">
+                                            <ul class="subFilter">
+												{section name=bs loop=$brands_selected}
+													<li class="subfilterLi">
+														<label>
+															{$brands_selected[bs].name}
+															<input type="checkbox" name="brands[]" {$brands_selected[bs].selected} value="{$brands_selected[bs].id}" data-value="{$brands_selected[bs].name}">
+															<span class="checkmark"></span>
+														</label>
+													</li>
+												{/section}
+                                            </ul>
+                                        </div>
+                                    </li>
+                                    {*<li class="filterLi">
+                                        <span class="filterLink hasSubFilter" href="">Цена</span>
+                                        <span id="priceTextFilter" class="selectedItems"></span>
+                                        <div id="index5" class="subFilterHolder">
+                                            <ul class="subFilter">
+                                                <li class="subfilterLi">
+                                                </li>
+                                            </ul>
+                                            <div class="selector">
+                                                <div class="price-slider">
+                                                    <div id="slider-range2" class="ui-slider ui-corner-all ui-slider-horizontal ui-widget ui-widget-content">
+                                                        <div class="ui-slider-range ui-corner-all ui-widget-header"></div>
+                                                        <span tabindex="0" class="ui-slider-handle ui-corner-all ui-state-default"></span><span tabindex="0" class="ui-slider-handle ui-corner-all ui-state-default"></span>
+                                                    </div>
+                                                    <span id="min-price2" data-currency="лв." data-min="{$price_min}" class="slider-price">{$price_min}</span>
+                                                    <span id="max-price2" data-currency="лв." data-max="{$price_max}" class="slider-price">{$price_max}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </li>*}
+                                </ul>
+								{if 0}
+								<span id="min-price-mobile" data-currency="лв." data-min="{$price_min}" class="slider-price">{$price_min}</span>
+                                <span id="max-price-mobile" data-currency="лв." data-max="{$price_max}"  class="slider-price">{$price_max}</span>
+								{/if}
+                                <input type="hidden" value="" name="sort_by" id="sortBy-mobile">
+                                <input type="hidden" value="" name="price_min" id="min-price-mobile">
+								<input type="hidden" value="" name="price_max" id="max-price-mobile">
+								<input type="hidden" value="{$row.id}" name="category_id">
+                                <input type="hidden" value="process-advanced-search" name="param">
+                                <script>
+                                    $(document).ready(function(){
+                                        $(".sortBy").change(function(){
+                                            var sortBy = $(this).val();
+                                            window.location = "/offers&sort_by="+sortBy;
+                                        });
+                                    });
+                                </script>
+                                <input type="hidden" name="sort_by" id="sort_by_field">
+                            </form>
+                            <script>
+                                $("#mobileFilterSubmit").click(function(ev){
+                                    ev.preventDefault();
+                                    $("#min-price-mobile").val($("#min-price2").text());
+                                    $("#max-price-mobile").val($("#max-price2").text());
+                                    $("#hiddenFilter").submit();
+                                });
+                                $(".mobile-sortBy").click(function(ev){
+                                    ev.preventDefault();
+                                    $("#sortBy-mobile").val($(this).attr("data-sortBy"));
+                                    //console.log($(this).attr("data-sortBy"));
+                                    $("#mobileFilterSubmit").trigger("click");
+                                });
+                            </script>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="categoriesWrapper">
+        <div class="container">
+            <div class="filterContainer">
+                <div class="formContainer mt-3">
+                    <img src="/images/banners/black-weekend-banner.png" alt="">
+                </div>
+            </div>
+            <div class="productsSection">
+				{if $subcategories}
+				<div class="holderCategories">
+					<div class="topRow mt-3">
+                        <div class="heading">Оферти</div>
+					</div>
+					<div class="productsRow">
+						{section name=sc loop=$subcategories}
+						<div class="singleItem">
+							<a class="product" href="{if $subcategories[sc].htaccess_url}{$subcategories[sc].htaccess_url}{else}/{#htaccess_categories#}/{$subcategories[sc].id}{/if}">
+								<div class="imgContainer" style="background-image: url({if $subcategories[sc].pic_1}/files/tn/{$subcategories[sc].pic_1}{else}/images/noImage.png{/if});"></div>
+								<h3 class="name">{$subcategories[sc].name}</h3>
+							</a>
+						</div>
+						{/section}
+					</div>
+                </div>
+				{/if}
+                <div class="topRow mt-3">
+                    <div class="heading">{#products#} <span class="subHeading">{if $resultsCount > 0}({$resultsCount}){/if}</span></div>
+                    <div class="sortByContainer">
+                        <span class="text">{#sort_by#}:</span>
+                        <div class="sortByBox">
+                            <select name="sort_by" class="sortBy">
+                                <option value="price-asc" {if $sort_by == "price-asc" || ($sort_by != "postdate-desc" && $sort_by != "price-desc" && $sort_by != "postdate-asc")}selected{/if}>{#cheapest#}</option>
+                                <option value="price-desc" {if $sort_by == "price-desc"}selected{/if}>{#most_expensive#}</option>
+                                <option value="postdate-desc" {if $sort_by == "postdate-desc"}selected{/if}>{#newest#}</option>
+                                <option value="postdate-asc" {if $sort_by == "postdate-asc"}selected{/if}>{#oldest#}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="productsRow" id="holderProducts">
+                {if $items}
+										<script>
+										gtag('event', 'view_item_list', {
+										  "items": [
+										  	{section name=i loop=$items}
+										    {
+										      "id": "{$items[i].id}",
+										      "name": "{$items[i].name_en}, {$items[i].name}",
+										      "list_name": "Category Results",
+										      "brand": "{$items[i].brand_name}",
+										      "category": "{$row.name}",
+										      "list_position": {$smarty.section.i.iteration},
+										      "quantity": 1,
+										      "price": {if $items[i].price_specialoffer > 0.0}{$items[i].price_specialoffer|number_format: 2}{elseif $items[i].price > 0.0}{$items[i].price|number_format: 2}{/if}
+										    }{if $smarty.section.i.last}{else},{/if}
+										    {/section}
+										  ]
+										});
+										</script>
+								{/if}
+                    {section name=i loop=$items}
+                    <div class="singleItem">
+                        <a class="product" href="{if $items[i].htaccess_url}{$items[i].htaccess_url}{else}/{#htaccess_product#}/{$items[i].id}{/if}">
+                            <div class="imgContainer" style="background-image: url({if $items[i].mainPic}/files/tn/{$items[i].mainPic}{else}/images/noImage.png{/if});">
+                                <span class="likedBox {if $items[i].in_favourites} likedBoxRed{/if}" name="{$items[i].id}"></span>
+                                {if $items[i].discountPic}<img class="discountImgBox" src="/files/{$items[i].discountPic}" alt="promo">{/if}
+                            </div>
+                            <h3 class="name">{$items[i].brand_name}</h3>
+                            {if $lng != "en"}<span class="excerpt" style="color: #212E27; font-weight: bold;">{$items[i].name_en}</span>{/if}
+                            <span class="excerpt">{$items[i].name}</span>
+                            {if $items[i].price_specialoffer > 0.0 AND $items[i].price_specialoffer != $items[i].price}
+                                <span class="d-flex flex-row justify-content-around">
+                                    <del class="price-old">{if $abb_before_amount}{$currency_abb}{/if}{$items[i].price|number_format: 2} {if !$abb_before_amount}{$currency_abb}{/if}</del>
+                                    <span class="price color-red">{if $abb_before_amount}{$currency_abb}{/if}{$items[i].price_specialoffer|number_format: 2} {if !$abb_before_amount}{$currency_abb}{/if}</span>
+                                </span>
+                            {elseif $items[i].price > 0.0}
+                                <span class="price">{if $abb_before_amount}{$currency_abb}{/if}{$items[i].price|number_format: 2} {if !$abb_before_amount}{$currency_abb}{/if}</span>
+                            {/if}
+                        </a>
+                        <!-- rating-wrap -->
+                        <div class="rating-wrap">
+                            <div class="starsRow" id="rating-{$items[i].id}"></div>
+                            {*{if $items[i].reviews_count > 0 && $items[i].comments > 0}
+                                {if $items[i].reviews_count > 0}<div class="label-rating"><small>{$items[i].reviews_count} {if $items[i].reviews_count > 1}{#reviews#}{else}{#review#}{/if}</small></div>{/if}
+                                {if $items[i].comments > 0}<div class="label-rating"><small>{$items[i].comments} {if $items[i].comments > 1}{#comments#}{else}{#comment#}{/if}</small></div>{/if}
+                            {else}
+                                <div class="label-rating"><small>Все още няма ревюта.</small></div>
+                            {/if}*}
+                        </div> <!-- rating-wrap.// -->
+                        {if $items[i].number_of_options < 2 && $items[i].quantity > 0}
+                            <form method="POST" action="/add-to-cart" name="formAddToCart" id="formAddToCart-{$items[i].id}">
+                                {if $items[i].option_groups}
+                                    {section name=og loop=$items[i].option_groups}
+                                        {if $items[i].option_groups[og].display_in_list}
+                                            {section name=o loop=$items[i].option_groups[og].options}
+                                                {if $items[i].option_groups[og].options[o].selected_values}
+                                                    {if $items[i].display_options_as_buttons && !$items[i].option_groups[og].info.buttons}
+                                                    {else}
+                                                        {if $items[i].number_of_options == 1}
+                                                            <input type="hidden" name="option_id" value="{$items[i].option_groups[og].options[o].id}">
+                                                        {/if}
+                                                    {/if}
+                                                {/if}
+                                            {/section}
+                                        {/if}
+                                    {/section}
+                                {/if}
+                                <input type="hidden" name="quantity" value="1">
+                                <input type="hidden" name="lang" value="{$lng}">
+                                <input type="hidden" name="product_id" value="{$items[i].id}">
+                                <input type="hidden" name="product_name" value="{$items[i].name}">
+                                {if $items[i].price_specialoffer > 0.0 AND $items[i].price_specialoffer != $items[i].price}
+                                    <input type="hidden" name="price" value="{if $abb_before_amount}{/if}{$items[i].price_specialoffer|number_format: 2} {if !$abb_before_amount}{/if}">
+                                {elseif $items[i].price > 0.0}
+                                    <input type="hidden" name="price" value="{if $abb_before_amount}{/if}{$items[i].price|number_format: 2} {if !$abb_before_amount}{/if}">
+                                {/if}
+                                <button type="button" name="AddToCart" class="goTo" onclick="addToCart({$items[i].id});">{#add_to_cart#}</button>
+                            </form>
+                        {else}
+                            <a href="{if $items[i].htaccess_url}{$items[i].htaccess_url}{else}/{#htaccess_product#}/{$items[i].id}{/if}" class="goTo">Виж повече </a>
+                        {/if}
+
+                        <script>
+                            $(document).ready(function () {
+                                $.fn.raty.defaults.path = '/js/raty/img';
+                                $('#rating-{$items[i].id}').raty({
+                                    readOnly:  true,
+                                    starType:    'png', // Element used to represent a star.
+                                    starHalf:    'star-half.png', // The name of the half star image.
+                                    starOff:     'star-off.png',  // Name of the star image off.
+                                    starOn:      'star-on.png',   // Name of the star image on.
+                                    half:  true,
+                                    start: parseFloat({$items[i].rating})
+                               });
+                            });
+                        </script>
+
+                        {if $items[i].option_groups}
+                            {counter start=0 print=FALSE assign="colorsShown"}
+                            {section name=og loop=$items[i].option_groups}
+                                {if $items[i].option_groups[og].display_in_list}
+									{if $items[i].option_groups[og].info.buttons}
+                                        <div class="d-flex flex-row justify-content-center mt-2">
+										{section name=o loop=$items[i].option_groups[og].options}
+                                                {if $colorsShown < 3}
+                                                    {if $items[i].option_groups[og].options[o].pic}
+                                                    <div class="itemButton">
+                                                        <div class="buttonImage" style="background-image: url('{if $items[i].option_groups[og].options[o].pic}/files/tntn/{$items[i].option_groups[og].options[o].pic}{/if}');"></div>
+                                                    </div>
+                                                    {else}
+                                                    <div class="itemButton">
+                                                        <div class="buttonColor" style="background-color: {$items[i].option_groups[og].options[o].color}"></div>
+                                                    </div>
+                                                    {/if}
+                                                {*{elseif $colorsShown == 3}
+                                                    <div class="itemButton">
+                                                        <div class="buttonPlus"><i class="fas fa-plus"></i></div>
+                                                    </div>*}
+                                                {/if}
+                                                {counter print=FALSE}
+										{/section}
+                                        </div>
+									{/if}
+								{/if}
+                            {/section}
+                        {/if}
+                    </div>
+                    {/section}
+                </div>
+                <script>
+                    function lickedBox (){
+                        $("a.product").click(function(ev){
+                            ev.preventDefault();
+                            var link = $(this).prop("href");
+                            var target = $(ev.target);
+                            if (target.is(".likedBox")) {
+                                var likedBox = $(this).find(".likedBox");
+                                likedBox.click();
+                            }else{
+                                window.location = link;
+                            }
+                        });
+
+                        $(".likedBox").bind("click", function(){
+                            {if !$user.id}
+                                swal({
+                                    title: "{#error_login#}",
+                                    text: "{#error_login_text_2#}",
+                                    type: "warning",
+                                    confirmButtonText: "{#proceed_login#}",
+                                    showCancelButton: true,
+                                    cancelButtonText: "{#cancel_liked_box#}",
+                                    closeOnConfirm: true,
+                                    closeonCancel: true
+                                },
+                                function(){
+                                    $("#loginFormButton").trigger("click");
+                                });
+                            {else}
+                                if ( $(this).hasClass("likedBoxRed") ){
+                                    $.ajax({
+                                        type: "POST",
+                                        url: "/",
+                                        data: "param=post-product-to-favourites&act=remove&product_id="+$(this).attr("name"),
+                                        dataType: "json",
+                                        success: function(res){
+                                            $("#favouritesQuantityTopButton").html(res.total_count);
+                                        }
+                                    });
+                                    $(this).removeClass("likedBoxRed");
+                                }else{
+                                    $.ajax({
+                                        type: "POST",
+                                        url: "/",
+                                        data: "param=post-product-to-favourites&act=add&product_id="+$(this).attr("name"),
+                                        dataType: "json",
+                                        success: function(res){
+                                            $("#favouritesQuantityTopButton").html(res.total_count);
+                                        }
+                                    });
+                                    $(this).addClass("likedBoxRed");
+                                }
+                            {/if}
+                            return false;
+                        });
+                    }
+
+                    lickedBox();
+                </script>
+                <div class="bottomRow">
+                    <div class="excerpt">
+                        {if $row.description && !$page}{$row.description}{/if}
+                    </div>
+                    <div class="pagination">
+                        {$pages}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+
+    function addCommas(nStr) {
+        nStr += '';
+        x = nStr.split('.');
+        x1 = x[0];
+        x2 = x.length > 1 ? '.' + x[1] : '';
+        var rgx = /(\d+)(\d{literal}{3}{/literal})/;
+        while (rgx.test(x1)) {
+            x1 = x1.replace(rgx, '$1' + ',' + '$2');
+        }
+        return x1 + x2;
+    }
+    
+    function getFormData($form){
+        var unindexed_array = $form.serializeArray();
+        var indexed_array = {};
+
+        $.map(unindexed_array, function(n, i){
+            indexed_array[n['name']] = n['value'];
+        });
+
+        return indexed_array;
+    }
+
+    function addToCart(id){
+        var serializedForm = $("#formAddToCart-"+id).serialize();
+        var serializedObjectForm = getFormData($("#formAddToCart-"+id));
+        $.ajax({
+            type: "POST",
+            url: "/",
+            data: "param=add-to-cart&"+serializedForm,
+            success: function(html){
+                $.ajax({
+                    type: "POST",
+                    url: "/",
+                    data: "param=cart-ajax",
+                    dataType: "json",
+                    success: function(response){
+                        var html = '';
+                        $("#cartProductsQuantityTop").empty().append(response.cart_items);
+                        $("#cartProductsQuantityTopMobile").empty().append(response.cart_items);
+                        if ( response.products.length ){
+                            for ( var i = 0; i < response.products.length; i++ ){
+                                html += '<li>';
+                                html += '	<div class="productImage">';
+                                html += '		<div class="image" style="background-image: url(/files/tn/'+response.products[i].pic+');"></div>';
+                                html += '	</div>';
+                                html += '	<div class="productInfo">';
+                                html += '		<span class="name">'+response.products[i].product_name+'</span>';
+                                /*html += '		<span class="excerpt">'+response.products[i].excerpt+'</span>';*/
+                                html += '	</div>';
+                                html += '	<div class="productPrice">';
+                                html += '		'+response.products[i].quantity+' x '+response.products[i].product_price_total+' {#currency#}';
+                                html += '	</div>';
+                                html += '</li>';
+
+                            }
+                            $("#cartDropDownTotal").empty();
+                            $("#cartDropDownTotal").append(response.total_amount);
+                            $("#productsDropDown").empty();
+                            $("#productsDropDown").append(html);
+
+                        }
+                        $(".successProductToCart").empty().append('<i class="fas fa-check"></i> {#add_to_cart_1#} <strong>{$row.name}</strong> {#add_to_cart_2#} <a href="/{#htaccess_cart#}/" class="btn btn-success">{#proceed_to_cart#}</a>');
+                        $("#successProductCart").show();
+                        $("html, body").animate({ scrollTop: 0 }, "slow");
+                    }
+                });
+            }
+        });
+        gtag('event', 'add_to_cart', {
+            "items": [
+                {
+                    "id": serializedObjectForm.product_id,
+                    "name": serializedObjectForm.product_name,
+                    "list_name": "Product page",
+                    "brand": "{$brand.name}",
+                    "category": "{$categoryMain.name}",
+                    "list_position": 1,
+                    "quantity": 1,
+                    "price": serializedObjectForm.price
+                }
+            ]
+        });
+
+        gtag('event','add_to_cart', {
+            'value': serializedObjectForm.price,
+            'items':[{
+                'id':serializedObjectForm.product_id,
+                'location_id': '',
+                'google_business_vertical': 'custom',
+            }]
+        });
+        fbq('track', 'AddToCart', {
+            'content_name': serializedObjectForm.product_name, 
+            'content_category': '{$categoryMain.name}',
+            'content_ids': [serializedObjectForm.product_id],
+            'content_type': 'product',
+            'value': serializedObjectForm.price,
+            'currency': 'BGN' 
+        });
+    }
+
+</script>
+{include file="footer.html"}

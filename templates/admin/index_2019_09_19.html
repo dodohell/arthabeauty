@@ -1,0 +1,134 @@
+<!DOCTYPE HTML>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>KAK Development CMS - Smart Web Ltd.</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Admin Panel Template">
+<meta name="author" content="Westilian: Kamrujaman Shohel">
+<!-- styles -->
+<link href="assets/css/bootstrap.css" rel="stylesheet">
+<link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+{*<link href="assets/css/jquery.jqplot.css" rel="stylesheet">*}
+<link href="assets/css/prettify.css" rel="stylesheet">
+{*<link href="assets/css/elfinder.min.css" rel="stylesheet">
+<link href="assets/css/elfinder.theme.css" rel="stylesheet">*}
+<link href="assets/css/fullcalendar.css" rel="stylesheet">
+<link href="assets/js/plupupload/jquery.plupload.queue/css/jquery.plupload.queue.css" rel="stylesheet">
+{*<link href="assets/css/style.css" rel="stylesheet">*}
+<link href="assets/css/bootstrap-responsive.css" rel="stylesheet">
+<link href="assets/css/icons-sprite.css" rel="stylesheet">
+<link id="themes" href="assets/css/themes.css" rel="stylesheet">
+<!--[if IE 7]>
+<link rel="stylesheet" type="text/css" href="assets/css/ie/ie7.css" />
+<![endif]-->
+<!--[if IE 8]>
+<link rel="stylesheet" type="text/css" href="assets/css/ie/ie8.css" />
+<![endif]-->
+<!--[if IE 9]>
+<link rel="stylesheet" type="text/css" href="assets/css/ie/ie9.css" />
+<![endif]-->
+<!--fav and touch icons -->
+<link rel="shortcut icon" href="assets/ico/favicon.ico">
+<link rel="apple-touch-icon-precomposed" sizes="144x144" href="assets/ico/apple-touch-icon-144-precomposed.png">
+<link rel="apple-touch-icon-precomposed" sizes="114x114" href="assets/ico/apple-touch-icon-114-precomposed.png">
+<link rel="apple-touch-icon-precomposed" sizes="72x72" href="assets/ico/apple-touch-icon-72-precomposed.png">
+<link rel="apple-touch-icon-precomposed" href="assets/ico/apple-touch-icon-57-precomposed.png">
+{config_load file="$language_file"}
+</head>
+<body>
+<div class="navbar navbar-fixed-top">
+	<div class="navbar-inner">
+		<div class="container-fluid">
+			<div class="branding">
+				<div class="logo">
+					<a href="index.html"><img src="assets/images/logo.png" width="168" height="40" alt="Logo"></a>
+				</div>
+			</div>
+			<ul class="nav pull-right">
+				<li><a href="#"><i class="icon-share-alt icon-white"></i> {#go_to_main_site#}</a></li>
+			</ul>
+		</div>
+	</div>
+</div>
+<form method="post" action="login.php">
+<div class="login-container">
+	<div class="well-login">
+		<div class="control-group">
+			<div class="controls">
+				<div>
+					<input type="text" name="username" placeholder="{#password#}" class="login-input user-name">
+				</div>
+			</div>
+		</div>
+		<div class="control-group">
+			<div class="controls">
+				<div>
+					<input type="password" name="password" placeholder="{#password#}" class="login-input user-pass">
+				</div>
+			</div>
+		</div>
+		{*<div class="control-group">
+			<img src="/captcha" alt="">
+		</div>
+		<div class="control-group">
+			<div class="controls">
+				<div>
+					<input type="text" name="code" class="login-input code">
+				</div>
+			</div>
+		</div>*}
+		<div class="clearfix">
+			<button class="btn btn-inverse login-btn" type="submit">{#login#}</button>
+		</div>
+		<div class="remember-me">
+			<input class="rem_me" type="checkbox" value=""> {#remember_me#}
+		</div>
+	</div>
+</div>
+</form>
+<!-- javascript
+================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+<script src="assets/js/jquery-ui-1.8.16.custom.min.js"></script>
+<script src="assets/js/bootstrap.js"></script>
+<script src="assets/js/prettify.js"></script>
+{*<script src="assets/js/jquery.sparkline.min.js"></script>*}
+<script src="assets/js/jquery.nicescroll.min.js"></script>
+<script src="assets/js/accordion.jquery.js"></script>
+<script src="assets/js/smart-wizard.jquery.js"></script>
+<script src="assets/js/vaidation.jquery.js"></script>
+<script src="assets/js/jquery-dynamic-form.js"></script>
+<script src="assets/js/fullcalendar.js"></script>
+<script src="assets/js/raty.jquery.js"></script>
+<script src="assets/js/jquery.noty.js"></script>
+{*<script src="assets/js/cleditor/jquery.cleditor.min.js"></script>*}
+<script src="assets/js/data-table.jquery.js"></script>
+<script src="assets/js/TableTools.min.js"></script>
+<script src="assets/js/ColVis.min.js"></script>
+<script src="assets/js/plupload.full.js"></script>
+{*<script src="assets/js/elfinder/elfinder.min.js"></script>*}
+{*<script src="assets/js/jquery-chosen/chosen.jquery.min.js"></script>*}
+{*<script src="assets/js/uniform.jquery.js"></script>*}
+<script src="assets/js/jquery.tagsinput.js"></script>
+<script src="assets/js/jquery-colorbox/jquery.colorbox-min.js"></script>
+<script src="assets/js/check-all.jquery.js"></script>
+{*<script src="assets/js/inputmask.jquery.js"></script>*}
+{*<script src="http://bp.yahooapis.com/2.4.21/browserplus-min.js"></script>*}
+<script src="assets/js/plupupload/jquery.plupload.queue/jquery.plupload.queue.js"></script>
+<script src="assets/js/excanvas.min.js"></script>
+{*<script src="assets/js/jquery.jqplot.min.js"></script>
+<script src="assets/js/chart/jqplot.highlighter.min.js"></script>
+<script src="assets/js/chart/jqplot.cursor.min.js"></script>
+<script src="assets/js/chart/jqplot.dateAxisRenderer.min.js"></script>*}
+<script src="assets/js/custom-script.js"></script>
+<!-- html5.js for IE less than 9 -->
+<!--[if lt IE 9]>
+	<script src="http://html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+<script src="assets/js/respond.min.js"></script>
+<script src="assets/js/ios-orientationchange-fix.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,127 @@
+{include file="admin/header.html"}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb p-0">
+        <li class="breadcrumb-item">
+            <a href="./index.php">
+                <span class="mdi mdi-home"></span>                
+            </a>
+        </li>
+        <li class="breadcrumb-item" aria-current="page">{$page_heading}</li>
+    </ol>
+</nav>
+
+<div class="d-flex flex-row justify-content-between flex-wrap">
+    <form action="#" method="get">
+        <div class="form-row"> 
+						<div class="col form-group">
+			        <select class="form-control" name="brand_id" style="width: 200px;">
+								<option value="">{#brands#}</option>
+								{section name=b loop=$brands}
+									<option value="{$brands[b].id}" {if $brands[b].id == $brand_id}selected{/if}>{$brands[b].name}</option>
+								{/section}
+							</select>
+						</div>
+            
+            <div class="col form-group">
+                <input type="submit" class="form-control btn btn-primary btn-sm" name="Filter" value="{#filter#}">
+            </div>
+        </div>
+		
+			
+    </form>
+           
+</div>
+
+<div class="row d-flex flex-row justify-content-between flex-wrap mb-2">
+    <span class="col">
+        <a href="{$php_edit}?act=add" class="btn btn-primary btn-add"><i class="mdi mdi-book-multiple-plus"></i>{#add_new#}</a>
+    </span>
+</div>
+
+<!-- List Table -->
+<div class="card card-table-border-none" id="recent-orders">
+    <div class="card-header justify-content-between">
+        <h2>{#list_elements#}</h2>
+        <div class="date-range-report">
+            <span></span>
+        </div>
+    </div>
+    <div class="card-body pt-0 pb-5">
+        <script>
+            $(document).ready(function () {
+                $("#sortTable0").sortable({
+                    "axis": "y",
+                    stop: function () {
+                        var commonData = $(this).attr("name");
+                        var items = $("#sortTable0 tr");
+                        var params = "";
+
+                        $.each(items, function (i) {
+                            params += "&items[]=" + i + "@@_@@" + $(this).attr("name");
+                            //if(items[i+1]) params += "&";
+                        });
+
+                        $.ajax({
+                            type: "POST",
+                            url: "move.php",
+                            data: "commonData=" + commonData + "&" + params
+                        });
+                    }
+                });
+            })
+        </script>
+        <form name="formName" action="{$php_self}" method="post">
+            <table class="table card-table table-responsive table-responsive-large" style="width:100%">
+                <thead>
+                    <tr class="d-flex border-bottom">
+                        <th class="col-sm-1">
+                            <input name="checkbox" type="checkbox" value="" class="checkall-task">
+                        </th>
+                        <th class="col-sm-3 border-right">{#brand#}</th>
+                        <th class="col-sm-4 pl-2">{#name#}</th>
+                        <th class="col-sm-2">{#status#}</th>
+                        <th class="col-sm-1 text-right pr-2">{#actions#}</th>
+                    </tr>
+                </thead>
+                <tbody id="sortTable0" name="collections_table">
+                    {section name=itm loop=$items}
+                        <tr name="{$items[itm].id}" class="d-flex border-bottom">
+                            <td class="col-sm-1 p-0"> <input name="ids[]" type="checkbox" value="{$items[itm].id}"></td>
+                            <td class="col-sm-3 p-0 border-right">
+                                <a class="text-dark" href="{$php_edit}?act=edit&id={$items[itm].id}">{$items[itm].brand_name}</a>
+                            </td>
+                            <td class="col-sm-4 pl-2 p-0 border-right">
+                                <a class="text-dark" href="{$php_edit}?act=edit&id={$items[itm].id}">{$items[itm].name}</a>
+                            </td>
+                            <td class="col-sm-1 pl-2 p-0 ">
+                                {$items[itm].prod_count}
+                            </td>
+                            <td class="col-sm-2 p-0">
+                                {if $items[itm].active}
+                                    <span class="badge badge-success">{#active#}</span>
+                                {else}
+                                    <span class="badge badge-danger">{#inactive#}</span>
+                                {/if}
+                            </td>
+                            <td class="col-sm-1 text-right p-0">
+                                <div class="dropdown show d-inline-block widget-dropdown">
+                                    <a class="dropdown-toggle icon-burger-mini" href="" role="button" id="dropdown-recent-order1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-display="static"></a>
+                                    <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown-recent-order1">
+                                        <li class="dropdown-item">
+                                            <a href="{$php_edit}?act=edit&id={$items[itm].id}"><i class="far fa-edit"></i></a>
+                                        </li>
+                                        <li class="dropdown-item">
+                                            <a href="{$php_self}?act=delete&id={$items[itm].id}"><i class="far fa-trash-alt"></i></a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
+                    {/section}
+                </tbody>
+            </table>
+            {*<input type="submit" class="submitField btn btn-danger" name="mDelete" value="{#delete_selected#}">*}
+        </form>
+    </div>
+</div>
+{include file="admin/footer.html"}

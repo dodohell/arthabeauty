@@ -1,0 +1,10 @@
+
+    {if $submenus}
+	<div style="padding-left: 15px;" >
+	{foreach item=subitm from=$submenus key=sc name=ind}
+		<input type="checkbox" name="categories[]" id="category-{$subitm.id}" class="categoryCheckbox" value ="{$subitm.id}" {$subitm.selected} /> {$subitm.name} <br />
+		<div style="display: none;" id="parent-category-{$subitm.id}">{$subitm.category_id}</div>
+		{include file="admin/categoriescheckboxes.html" submenus=$subitm.submenus}
+	{/foreach}
+	</div>
+	{/if}

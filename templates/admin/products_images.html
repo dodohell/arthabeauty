@@ -1,0 +1,73 @@
+
+<form action="products_images.php" method="post" enctype="multipart/form-data" name="formImages" id="formImages">
+    <div class="col-sm-11 well">
+        <div class="nonboxy-widget">
+            <div class="widget-head">
+                <h5>{#general_information#}</h5>
+            </div>
+            <div class="widget-content">
+                <div class="widget-box">
+                    <fieldset>
+                        <div class="control-group">
+                            <label class="control-label" for="name_bg">{#name#} BG</label>
+                            <div class="controls">
+                                <input type="text" name="name_bg" value="{$row.name_bg}" class="form-control form-control-sm text-tip" id="name_bg" title="{#enter#} {#name#} BG">
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label" for="name_en">{#name#} EN</label>
+                            <div class="controls">
+                                <input type="text" name="name_en" value="{$row.name_en}" class="form-control form-control-sm text-tip" id="name_en" title="{#enter#} {#name#} EN">
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label" for="name_de">{#name#} DE</label>
+                            <div class="controls">
+                                <input type="text" name="name_de" value="{$row.name_de}" class="form-control form-control-sm text-tip" id="name_de" title="{#enter#} {#name#} DE">
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label" for="name_ro">{#name#} RO</label>
+                            <div class="controls">
+                                <input type="text" name="name_ro" value="{$row.name_ro}" class="form-control form-control-sm text-tip" id="name_ro" title="{#enter#} {#name#} RO">
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label" for="name_ru">{#name#} RU</label>
+                            <div class="controls">
+                                <input type="text" name="name_ru" value="{$row.name_ru}" class="form-control form-control-sm text-tip" id="name_ru" title="{#enter#} {#name#} RU">
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+            <div class="form-actions">
+                <input type="hidden" name="id" value="{$row.id}" />
+                <button type="submit" name="SubmitImage" class="btn btn-info">{#save_changes#}</button>
+                {literal}
+                    <script>
+                        $(document).ready(function () {
+                            $("button[name=SubmitImage]").bind("click", function () {
+                                $.ajax({
+                                    type: "POST",
+                                    url: "products_images.php",
+                                    data: "act=updateImage&" + $("#formImages").serialize(),
+                                    success: function () {
+                                        //console.log("success");
+                                        $("#editImage").modal('hide');
+                                    },
+                                    error: function (er) {
+                                        //console.log(er);
+                                    }
+                                });
+                                return false;
+                            });
+                        });
+                    </script>
+                {/literal}
+            </div>
+        </div>
+    </div>
+
+    <div class="clear"></div>
+</form>

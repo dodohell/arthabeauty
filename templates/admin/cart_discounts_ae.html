@@ -1,0 +1,146 @@
+{include file="admin/header.html"}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb p-0">
+        <li class="breadcrumb-item">
+            <a href="./index.php">
+                <span class="mdi mdi-home"></span>                
+            </a>
+        </li>
+        <li class="breadcrumb-item">
+            <a href="./{$php_self}">{#cart_discounts_page#}</a>
+        </li>
+        <li class="breadcrumb-item" aria-current="page">{$row.name}</li>
+    </ol>
+</nav>
+<div class="row-fluid">
+    <form method="post" enctype="multipart/form-data">
+        <div class="row">
+            <div class="col-sm-6 well">
+                <div class="nonboxy-widget">
+                    <div class="widget-head">
+                        <h5>{#general_information#}</h5>
+                    </div>
+                    <div class="widget-content tabbable">
+                        <div class="widget-box">
+                            <fieldset>
+                                <div class="control-group">
+                                    <label class="control-label" for="name_bg">{#name#} BG</label>
+                                    <div class="controls">
+                                        <input type="text" name="name_bg" value="{$row.name_bg}" class="form-control form-control-sm text-tip" id="name_bg" title="{#enter#} {#name#} BG">
+                                    </div>
+
+                                    <label class="control-label" for="name_en">{#name#} EN</label>
+                                    <div class="controls">
+                                        <input type="text" name="name_en" value="{$row.name_en}" class="form-control form-control-sm text-tip" id="name_en" title="{#enter#} {#name#} EN">
+                                    </div>
+
+                                    <label class="control-label" for="name_de">{#name#} DE</label>
+                                    <div class="controls">
+                                        <input type="text" name="name_de" value="{$row.name_de}" class="form-control form-control-sm text-tip" id="name_de" title="{#enter#} {#name#} DE">
+                                    </div>
+
+                                    <label class="control-label" for="name_ro">{#name#} RO</label>
+                                    <div class="controls">
+                                        <input type="text" name="name_ro" value="{$row.name_ro}" class="form-control form-control-sm text-tip" id="name_ro" title="{#enter#} {#name#} RO">
+                                    </div>
+                                    <label class="control-label" for="name_ru">{#name#} RU</label>
+                                    <div class="controls">
+                                        <input type="text" name="name_ru" value="{$row.name_ru}" class="form-control form-control-sm text-tip" id="name_ru" title="{#enter#} {#name#} RU">
+                                    </div>
+                                </div>
+                                {*<hr />
+                                <div class="control-group">
+                                <label class="control-label" for="voucher">{#voucher#}</label>
+                                <div class="controls">
+                                <input type="text" name="voucher" value="{$row.voucher}" class="form-control form-control-sm text-tip" id="voucher" title="{#enter#} {#voucher#}">
+                                </div>
+                                </div>*}
+                            </fieldset>
+                        </div>
+                    </div>
+                    <div class="clear"></div>
+                </div>
+            </div>
+
+            <div class="col-sm-6 well">
+                <div class="nonboxy-widget">
+                    <div class="widget-head">
+                        <h5>{#settings#}</h5>
+                    </div>
+                    <div class="widget-content">
+                        <div class="widget-box">
+                            <fieldset>
+                                <div class="control-group">
+                                    <label class="checkbox inline"><input type="checkbox" value="1" name="active" {if $row.active}checked{/if}> {#active#}</label>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                    <div class="widget-head">
+                        <h5>{#discount_type#}</h5>
+                    </div>
+                    <div class="widget-content">
+                        <div class="widget-box">
+                            <fieldset>
+                                <div class="control-group">
+                                    <label class="checkbox inline">
+                                        <input type="radio" name="cart_discount_type" value="1" {if $row.cart_discount_type == 1}checked{/if} >
+                                        {#free_delivery#}
+                                    </label>
+                                    <label class="checkbox inline">
+                                        <input type="radio" name="cart_discount_type" value="2" {if $row.cart_discount_type == 2}checked{/if} >
+                                        {#delivery_amount#}
+                                    </label>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                    <div class="widget-head">
+                        <h5>{#general_information#}</h5>
+                    </div>
+                    <div class="widget-content">
+                        <div class="widget-box">
+                            <fieldset>
+                                <div class="control-group">
+                                    {*<label class="control-label" for="discount_value">{#discount_value#}</label>
+                                    <div class="controls">
+                                    <input type="text" name="discount_value" value="{$row.discount_value}" class="form-control form-control-sm text-tip" id="discount_value" title="{#enter#} {#discount_value#}">
+                                    </div>*}
+                                    <label class="control-label" for="order_amount_from">{#order_amount_from#}</label>
+                                    <div class="controls">
+                                        <input type="text" name="order_amount_from" value="{$row.order_amount_from}" class="form-control form-control-sm text-tip" id="order_amount_from" title="{#enter#} {#order_amount_from#}">
+                                    </div>
+                                    <label class="control-label" for="order_amount_to">{#order_amount_to#}</label>
+                                    <div class="controls">
+                                        <input type="text" name="order_amount_to" value="{$row.order_amount_to}" class="form-control form-control-sm text-tip" id="order_amount_to" title="{#enter#} {#order_amount_to#}">
+                                    </div>
+                                    <label class="control-label" for="order_weight_from">{#order_weight_from#}</label>
+                                    <div class="controls">
+                                        <input type="text" name="order_weight_from" value="{$row.order_weight_from}" class="form-control form-control-sm text-tip" id="order_weight_from" title="{#enter#} {#order_weight_from#}">
+                                    </div>
+                                    <label class="control-label" for="order_weight_to">{#order_weight_to#}</label>
+                                    <div class="controls">
+                                        <input type="text" name="order_weight_to" value="{$row.order_weight_to}" class="form-control form-control-sm text-tip" id="order_weight_to" title="{#enter#} {#order_weight_to#}">
+                                    </div>
+                                    <hr />
+                                    <label class="control-label" for="value">{#value#}</label>
+                                    <div class="controls">
+                                        <input type="text" name="value" value="{$row.value}" class="form-control form-control-sm text-tip" id="value" title="{#enter#} {#value#}">
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                    <div class="widget-content">
+                        <div class="form-actions">
+                            <button type="submit" name="Submit" class="btn btn-primary">{#save_changes#}</button>
+                            <input type="submit" name="SaveAndStay" class="btn btn-info" value="{#save_and_stay#}" />
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+{include file="admin/footer.html"}

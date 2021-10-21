@@ -1,0 +1,1 @@
+<?php	include("globals.php");        $row = Products::getVariantDetails($params);    	echo json_encode($row);	?>

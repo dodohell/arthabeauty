@@ -1,0 +1,32 @@
+.tabLanguage{
+	float: left;
+	padding: 3px;
+	height: 30px;
+	font-size: 12px;
+	margin-left: 5px;
+	float: left;
+	padding: 7px 10px 5px 10px;
+	background-color: #eee;
+	color: #999;
+	-moz-border-radius-topright: 15px;
+	border-top-right-radius: 15px;
+	-moz-border-radius-topleft: 15px;
+	border-top-left-radius: 15px;
+	cursor: hand;
+	cursor: pointer;
+}
+.activeTab{
+	background-color: #d3d3d3;
+	color: #000;
+	font-weight: bold;
+}
+.tabLanguageEditor{
+	display: none;
+	
+}
+.activeTabEditor{
+	display: block;
+}
+.clear{
+	clear: both;
+}

@@ -1,0 +1,133 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Еконт Експрес куриерски, пощенски и карго услуги</title>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+    <link href="css/common.css" rel="stylesheet" type="text/css" />
+    <link href="css/style.css" rel="stylesheet" type="text/css" />
+
+    <script type="text/javascript" src="js/prototype.js"></script>
+    <script type="text/javascript">
+        //<![CDATA[
+        function jsUpload(fileField) {
+
+            var re_text = /\.xml/i;
+            var fileName = fileField.value;
+
+            // Проверка за допустимост на типа
+            if (!fileName) {
+                alert( "Изберете XML за импортиране!" );
+                $('formUpload').reset();
+                return false;
+            }
+
+            if (fileName.search(re_text) == -1)
+            {
+                alert( "Допустим е само файл от тип XML!" );
+                $('formUpload').reset();
+                return false;
+            }
+            if (confirm ("Моля, потвърдете желанието си за импорт на товарителници от файла?"))  {
+                $('formUpload').submit();
+                $('formUpload').disable();
+                $('img_loader').style.display = 'block';
+            }
+            return true;
+        }
+
+        function print_pdf() {
+            $('form1').submit();
+        }
+
+        function setOperation () {
+
+            switch ($('selOperation').value) {
+
+                case "1":
+                    document.location.href = document.location.href;
+                    break;
+
+                case "2":
+                    check_uncheck (true);
+                    break;
+
+                case "3":
+                    check_uncheck (false);
+                    break;
+
+                case "4":
+                    if (!isOneChecked()) {
+                        alert ("Не е избрана нито една товарителница за печат!");
+                        break;
+                    }
+                    $('print_blank').value = 1;
+                    $('form1').action = "api/api_general.php?action_script=api/api_ready_parcell.php&api_action=export_to_pdf_group";
+                    $('form1').submit();
+                    break;
+
+                case "5":
+                    if (!isOneChecked()) {
+                        alert ("Не е избрана нито една товарителница за печат!");
+                        break;
+                    }
+                    $('print_blank').value = 0;
+                    $('form1').action = "api/api_general.php?action_script=api/api_ready_parcell.php&api_action=export_to_pdf_group";
+                    $('form1').submit();
+                    break;
+
+                default:
+                    alert ("Изберете опция от предложените!");
+            }
+        }
+
+        function check_uncheck (param) {
+            for (var i = 0; i < $('form1').elements.length; i++)
+                if ($('form1').elements[i].type == 'checkbox')
+                    $('form1').elements[i].checked = param;
+        }
+
+        function isOneChecked () {
+
+            for (var i = 0; i < $('form1').elements.length; i++)
+                if ($('form1').elements[i].type == 'checkbox' && $('form1').elements[i].checked)
+                    return true;
+            return false;
+        }
+
+        function loadDirectPDF (id) {
+            $('print_blank').value = 0;
+            $('form1').action="api/api_general.php?action_script=api/api_ready_parcell.php&api_action=export_to_pdf&id=" +id ;
+            $('form1').submit();
+        }
+
+        //]]>
+    </script>
+</head>
+<body>
+
+<form name="formUpload" id="formUpload" enctype="multipart/form-data" method="post" action="/e-econt/xml_parcel_import2.php" >
+    <table align="center">
+        <tr>
+            <td>
+                <br />Посочете XML файл за импорт: <input type="file" name="file" size="50" id="file" style="height: 20px; vertical-align: middle;"/>
+                <input type="button" id="btnUpload" onclick="return jsUpload($('file'));" value="импорт" style="height: 20px; vertical-align: middle;"/>
+            </td>
+        </tr>
+        <tr>
+            <td>
+                <center><img id = "img_loader" src="images/pageloadbar.gif" alt="Зарежда ..." style="display: none;"/></center>
+            </td>
+        </tr>
+    </table>
+</form>
+<form id="form1" action="/e-econt/xml_parcel_import2.php" method="POST" target="_blank">
+    <input type="hidden" name="print_blank" id = "print_blank" />
+
+    <table style="width: 99%" class="transmit">
+
+
+            
+    </table>
+</form>
+</body>
+</html>

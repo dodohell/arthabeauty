@@ -1,0 +1,87 @@
+{include file="admin/header.html"}
+    <ul class="breadcrumb">
+      <li><a href="./index.php">{#home_breadcrumbs#}</a><span class="divider">&raquo;</span></li>
+      <li><a href="./users_websites_templates.php">{#users_websites_templates#}</a><span class="divider">&raquo;</span></li>
+      <li class="active">{$page_heading}</li>
+    </ul>
+	
+	
+    <div class="row-fluid">
+      <div class="col-sm-12">
+        <div class="nonboxy-widget" style="margin-left: 0px;">
+			<div class="widget-head">
+				<span class="col-sm-2">
+					<h5 class="pull-left"><i class="black-icons list_images"></i> {#list_elements#}</h5>
+				</span>
+				<span class="col-sm-2">
+					<a href="{$php_edit}?act=add" class="btn btn-mini btn-add"><i class="icon-file"></i>{#add_new#}</a>
+				</span>
+				<div class="btn-group pull-right">
+					<button data-toggle="dropdown" class="btn dropdown-toggle"><i class="icon-cog "></i><span class="caret"></span></button>
+					<ul class="dropdown-menu">
+						<li><a href="{$php_edit}?act=add"><i class="icon-file"></i>{#add_new#}</a></li>
+						<li><a href="#"><i class="icon-trash"></i>{#delete#}</a></li>
+					</ul>
+				</div>
+			</div>
+			
+			{literal}
+			<script type="text/javascript">
+				$(document).ready(function(){
+					$("#sortTable0").sortable({
+						"axis": "y", 
+						stop: function(){
+							var commonData = $(this).attr("name");
+							var items = $("#sortTable0 li");
+							var params = "";
+							
+							$.each(items, function(i){
+								params += "&items[]=" + i + "@@_@@" + $(this).attr("name");
+								//if(items[i+1]) params += "&";
+								
+							});
+							
+							$.ajax({
+								type: "POST",
+								url: "move.php",
+								data: "commonData=" + commonData + "&" + params
+							});
+						}
+					});
+				})
+			</script>	
+			{/literal}
+			<div class="col-sm-12" style="margin: 0px;">
+				<div class="col-sm-1 pull-left"> <input name="checkbox" type="checkbox" value="" class="checkall-task"></div>
+				<div class="col-sm-7"> {#name#} </div>
+				<div class="center col-sm-2"> {#status#} </div>
+				<div class="center col-sm-2"> {#actions#} </div>
+			</div>
+			<div class="clear"></div>
+			<div class="mainList">
+				<ul class="table table-striped table-bordered" id="sortTable0" name="users_websites_templates_table">
+					{section name=itm loop=$items}
+					<li name="{$items[itm].id}">
+						<div class="col-sm-1 tr-task-check"><input name="checkbox" type="checkbox" value=""></div>
+						<div class="col-sm-7"><a href="{$php_edit}?act=edit&id={$items[itm].id}">{$items[itm].name}</a></div>
+						<div class="col-sm-2 center">
+							{if $items[itm].active}
+								<span class="label label-success">{#active#}</span>
+							{else}
+								<span class="label label-important">{#inactive#}</span>
+							{/if}
+						</div>
+						<div class="col-sm-2">
+							<div class="buttonsActions pull-right">
+								<a href="{$php_edit}?act=edit&id={$items[itm].id}" class="btn pull-left"><i class="icon-edit"></i></a>
+								<a href="{$php_self}?act=delete&id={$items[itm].id}" class="btn pull-left"><i class="icon-trash"></i></a>
+							</div>
+						</div>
+						<div class="clear"></div>
+					</li>
+					{/section}
+				</ul>
+			</div>
+      </div>
+    </div>
+	{include file="admin/footer.html"}

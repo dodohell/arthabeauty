@@ -1,0 +1,85 @@
+{include file="header.html"}
+<div class="row">
+    <div class="col-lg-3">
+        {include file="side_bar.html"}
+    </div>
+    <div class="col-lg-9">
+        <h1 class="mt-2">{if $row.h1}{$row.h1}{else}{$row.name}{/if}</h1>
+        
+        <div class="page-controls">
+            <ol class="breadcrumb">
+                {$breadcrumbs}
+            </ol>
+            
+            {if $row.excerpt || $row.description}
+            <div class="card px-2 my-1">
+                <p>
+                {$row.excerpt}
+                </p>
+                <p>
+                {$row.description}
+                </p>
+            </div>
+            {/if}
+            
+            {include file="search_box.html"}
+            <div class="card order-controls p-2 mt-1">
+                <span class="item label">{#sort_by_price#}:</span>
+                <a class="item" href="{if $row.htaccess_url}{$row.htaccess_url}{else}/{#htaccess_categorytypes#}/{$row.id}{/if}/price-asc">{#ascending#} ↑</a>
+                <a class="item" href="{if $row.htaccess_url}{$row.htaccess_url}{else}/{#htaccess_categorytypes#}/{$row.id}{/if}/price-desc">{#descending#} ↓</a>
+            </div>
+        </div>
+        <div class="row mt-1">
+            {section name=i loop=$items}
+            <div class="col-md-4">
+                <figure class="card card-product">
+                    <div class="img-wrap"><a href="{if $items[i].htaccess_url}{$items[i].htaccess_url}{else}/{#htaccess_product#}/{$items[i].id}{/if}"><img src="{if $items[i].mainPic}/files/tn/{$items[i].mainPic}{else}/images/noImage.png{/if}"></a></div>
+                    <figcaption class="info-wrap">
+                        <h4 class="title">{$items[i].name}</h4>
+                        <p class="desc">{$items[i].excerpt|truncate:100:"..."}</p>
+                        <div class="rating-wrap">
+                            <div id="rating-{$items[i].id}"></div>
+                            {if $items[i].reviews_count > 0 && $items[i].comments > 0}
+                                {if $items[i].reviews_count > 0}<div class="label-rating"><small>{$items[i].reviews_count} {if $items[i].reviews_count > 1}{#reviews#}{else}{#review#}{/if}</small></div>{/if}
+                                {if $items[i].comments > 0}<div class="label-rating"><small>{$items[i].comments} {if $items[i].comments > 1}{#comments#}{else}{#comment#}{/if}</small></div>{/if}
+                            {else}
+                                <div class="label-rating"><small>Все още няма ревюта.</small></div>
+                            {/if}
+                        </div> <!-- rating-wrap.// -->
+                    </figcaption>
+                    <div class="bottom-wrap">
+                        <div class="price-wrap h5">
+                            {if $items[i].price_specialoffer > 0.0}
+                                <span class="price-new text-danger">{$items[i].price_specialoffer} {#currency#}</span> <del class="price-old">{$items[i].price} {#currency#}</del>
+                            {elseif $items[i].price > 0.0}
+                                <span class="price-new">{$items[i].price} {#currency#}</span>
+                            {/if}
+                        </div> <!-- price-wrap.// -->
+                        <div class="button-wrap">
+                            <a href="{if $items[i].htaccess_url}{$items[i].htaccess_url}{else}/{#htaccess_product#}/{$items[i].id}{/if}" class="btn btn-sm btn-primary d-block">{#read_more#}</a>
+                        </div>
+                    </div> <!-- bottom-wrap.// -->
+                    <script>
+                        $(document).ready(function () {
+                            $.fn.raty.defaults.path = '/js/raty/img';
+                            $('#rating-{$items[i].id}').raty({
+                                readOnly:  true,
+                                starType:    'img', // Element used to represent a star.
+                                starHalf:    'star-half.png', // The name of the half star image.
+                                starOff:     'star-off.png',  // Name of the star image off.
+                                starOn:      'star-on.png',   // Name of the star image on.
+                                half:  true,
+                                start: parseFloat({$items[i].rating})
+                           });
+                        });
+                    </script>
+                </figure>
+            </div> <!-- col // -->
+            {/section}
+        </div>
+        <nav aria-label="Page navigation">
+            {$pages}
+        </nav>
+    </div>
+</div>
+{include file="footer.html"}

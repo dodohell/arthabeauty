@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <title>{if $infoTitle}{$infoTitle}{else}{$extraTitle}{$title.description}{/if}{if $pageNum} - {$pageNum}{/if}</title>
+        <meta name="description" content="{if $infoDescr}{$infoDescr}{else}{$description.description}{/if}{if $extraTitle} {$extraTitle}{/if}" />
+        <meta name="keywords" content="{if $infoKeys}{$infoKeys}{else}{$keywords.description}{/if}{if $extraTitle}, {$extraTitle}{/if}" />		
+        {$metatags.description}
+        <link rel="image_src" href="{$host}{if $images[0].pic}files/products/{$images[0].pic}{else}{if $row.pic_1}files/{$row.pic_1}{else}{if $row.pic}files/{$row.pic}{else}images/logo-facebook.png{/if}{/if}{/if}" />
+        <link rel="target_url" href="{$host}{#htaccess_product#}/{$row.id}"/>
+        <link rel="shortcut icon" href="/images/favicon.ico" />
+
+        <meta property="og:locale" content="bg_BG" />
+        <meta property="og:site_name" content="{$title.description}" />
+        <meta property="og:type" content="article" />
+        <meta property="og:title" content="{if $infoTitle}{$infoTitle}{else}{$extraTitle}{$title.description}{/if}{if $pageNum} - {$pageNum}{/if}" />
+        <meta property="og:description" content="{if $infoDescr}{$infoDescr}{else}{$description.description}{/if}{if $extraTitle} {$extraTitle}{/if}" />
+        <meta property="og:image" content="{$host}{if $images[0].pic}files/{$images[0].pic}{else}{if $row.pic_1}files/{$row.pic_1}{else}{if $row.pic}files/{$row.pic}{else}images/logo-facebook.png{/if}{/if}{/if}" />
+        {*<meta property="fb:app_id" content="{$fb_api_key}" />*}
+        <link rel="stylesheet" type="text/css" href="/js/bootstrap_4_3_1/css/bootstrap.min.css">
+        <link rel="stylesheet" href="/js/fontawesome-free-5_7_2-web/css/all.min.css">
+        <link rel="stylesheet" type="text/css" href="/js/fancybox-master/dist/jquery.fancybox.css">
+        <link href="/js/cookieconsent/cookieconsent.min.css" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="/css/ui.css">
+        <link rel="stylesheet" type="text/css" href="/css/responsive.css">
+        <link rel="stylesheet" type="text/css" href="/css/style.css">
+        
+        <script src="/js/jquery-3_3_1-min.js"></script>
+        <script src="/js/bootstrap_4_3_1/js/bootstrap.min.js"></script>
+        <script src="/js/fancybox-master/dist/jquery.fancybox.min.js"></script>
+        <script src="/js/raty/js/jquery.raty.js"></script>
+        
+        <script src="/js/cookieconsent/scriptCookies.js"></script>
+        <script src="/js/cookieconsent/cookieconsent.min.js"></script>
+        
+        <meta name="google-signin-scope" content="profile email">
+        <meta name="google-signin-client_id" content="{$google_client_id}">
+        <script src="https://apis.google.com/js/platform.js" async defer></script>
+        
+    </head>
+    <body>
+        <script>
+            var log = function (message) {
+                h.innerHTML += timeStamp() + message + "<br>";
+                h.scrollTop = h.scrollHeight;
+            }
+
+            cookieconsent.initialise({
+                type: 'info',
+                palette: {
+                    "popup": { "background": "rgba(27,51,130,0.9)", "text": "#ffffff" },
+                    "button": { "background": "#00a650", "text": "#ffffff" },
+                },
+                content: {
+                    "message": "Сайтът използва \"бисквитки\" (cookies), за подобряване на неговата ефективност. Продължавайки използването му, Вие се съгласявате с нашата ",
+                    "dismiss": "Разбрах!",
+                    "link": "Политика за употреба на бисквитк        и",
+                    "href": "/{#htaccess_info#}/684"
+                },
+                onPopupOpen: function () {
+                    console.log('<em>onPopupOpen()</em> called');
+                },
+                onPopupClose: function () {
+                    console.log('<em>onPopupClose()</em> called');
+                },
+                onInitialise: function (status) {
+                    console.log('<em>onInitialise()</em> called with status <em>' + status + '</em>');
+                },
+                onStatusChange: function (status) {
+                    console.log('<em>onStatusChange()</em> called with status <em>' + status + '</em>');
+                },
+                onRevokeChoice: function () {
+                    console.log('<em>onRevokeChoice()</em> called');
+                },
+            }, function (popup) {
+                p = popup;
+            }, function (err) {
+                console.error(err);
+            });
+            
+            {if $showSocialLogins}
+                {*{if $useFacebookLogin}
+                
+                {/if}*}
+                {if $useGoogleLogin}
+                function googleSignOut() {
+                    var auth2 = gapi.auth2.getAuthInstance();
+                    //console.log(auth2);
+                    auth2.signOut().then(function () {
+                        console.log('Google: User signed out.');
+                    });
+                }
+                function onLoad() {
+                    gapi.load('auth2', function () {
+                        gapi.auth2.init();
+                        //console.log("auth2.init()");
+                    });
+                }
+                $(document).ready(function(){
+                    onLoad();
+                });
+                {/if}
+            {/if}
+        </script>
+
+        <!-- Navigation -->
+        <nav class="navbar navbar-expand-lg fixed-top navbar-light bg-light">
+            <div class="container">
+                <a class="navbar-brand" href="/">
+                    <img src="/images/vistamar_logo.svg" alt="">
+                </a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse flex-column" id="navbarResponsive">
+                    <ul class="navbar-nav mt-2">
+                        {if !$user.id}
+                            <li class="nav-item">
+                                <a href="" class="nav-link py-0 pr-3"><i class="fas fa-phone-square"></i> 0888 888 888</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="#" class="nav-link py-0 pr-3"><i class="fas fa-envelope-square"></i> sales@vistamarltd.com</a>
+                            </li>
+                            <span class="d-flex flex-row flex-wrap">
+                                <li class="nav-item">
+                                    <a href="{#htaccess_register#}" class="nav-link py-0 pr-3">{#registration#}</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="/login-page" class="nav-link py-0 pr-3" id="buttonShowLogin">{#login#}</a>
+                                </li>
+                            </span>
+                        {else}
+                            <li class="nav-item">
+                                <a href="{#htaccess_my_profile#}" class="nav-link py-0 pr-3">{#myprofile#}</a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="/" onclick="" id="logoutButton" class="nav-link py-0 pr-3">{#logout#}</a>
+                            </li>
+                            <script>
+                                $("#logoutButton").click(function(ev){
+                                    ev.preventDefault();
+                                    {if $showSocialLogins}
+                                        {*{if $useFacebookLogin}fbLogout();{/if}*}
+                                        {if $useGoogleLogin}googleSignOut();{/if}
+                                    {/if}
+                                    window.location.href = "{#htaccess_logout#}";
+                                });
+                            </script>
+                        {/if}
+                        <span class="d-flex flex-row flex-wrap">
+                            <li class="nav-item">
+                                <a class="nav-link py-0 pr-3" href="#"><i class="fab fa-facebook"></i></a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link py-0 pr-3" href="#"><i class="fab fa-instagram"></i></a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link py-0 pr-3" href="#"><i class="fab fa-twitter"></i></a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="shoppingClick" href="/{#htaccess_cart#}/">
+                                    <div class="icontext">
+                                        <div class="icon-wrap icon-xs bg-primary round text-light">
+                                            <i class="fas fa-shopping-basket"></i>
+                                            {if $cart_items_count}<span class="notify">{$cart_items_count}</span>{/if}
+                                        </div>
+                                        <div class="text-wrap">
+
+                                        </div>
+                                    </div> <!-- icontext.// -->
+                                </a>
+                            </li>
+                        </span>
+                    </ul>
+                    <ul class="navbar-nav">
+                        {section name=hm loop=$header_menus}
+                            {if $header_menus[hm].menu_pos == "0_up"}
+                            <li class="nav-item active">
+                                <a class="nav-link" href="{if $header_menus[hm].dont_open}#{else}{if $header_menus[hm].url}{$header_menus[hm].url}{else}{if $header_menus[hm].htaccess_url}{$header_menus[hm].htaccess_url}{else}/{#htaccess_info#}/{$header_menus[hm].id}{/if}{/if}{/if}" target="{$header_menus[hm].target}">
+                                    {$header_menus[hm].name}
+                                    {*<span class="sr-only">(current)</span>*}
+                                </a>
+                            </li>
+                            {/if}
+                        {/section}
+                    </ul>
+                </div>
+                
+                <div class="languageSelect">
+                    {if $link_bg && $lng != "bg"}<a class="langLink" href="{$link_bg}"><span class="flag-icon flag-icon-bg"> </span>| Български</a> | {/if}
+                    {if $link_en && $lng != "en"}<a class="langLink" href="{$link_en}"><span class="flag-icon flag-icon-en"> </span> {if !$link_bg || $lng == "bg"}|{/if}  English</a> | {/if}
+                </div>
+            </div>
+        </nav>
+
+        <!-- Page Content -->
+        <div class="container">

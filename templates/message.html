@@ -1,0 +1,26 @@
+{include file="header.html"}
+<div class="breadcrumbsContainer">
+    <div class="container">
+        <div class="breadcrubsRow">
+            <a href="{$link_home}">{#home_breadcrumbs#}</a>
+            {*<span>|</span>
+            <span>{#message_breadcrumbs#}</span>*}
+        </div>
+    </div>
+</div>
+<div class="catBackgroundGradient">
+    <div class="contactsContainer">
+        <div class="container">
+            {if $messageCode == 700}
+                <img src="/images/green_logo.png" style="margin: 0px auto; display: block;">
+            {/if}
+            <h1 class="pageTitle">{$message_title}</h1>
+
+            <div class="aboutUsContent">
+                {$message_description}
+
+            </div>
+        </div>
+    </div>
+</div>
+{include file="footer.html"}

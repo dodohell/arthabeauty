@@ -1,0 +1,253 @@
+{include file="admin/header.html"}
+<ul class="breadcrumb">
+    <li><a href="./index.php">{#home_breadcrumbs#}</a><span class="divider">&raquo;</span></li>
+    <li><a href="./users.php">{$page_heading}</a><span class="divider">&raquo;</span></li>
+    <li class="active">Статистики - {$user.name}</li>
+</ul>
+<script type="text/javascript" src="/js/jquery.query-object.js"></script>
+<div class="row-fluid">
+    <h2>{$user.name}</h2><br />
+    <div class="clear"></div>
+    <div class="fancy-div col-sm-5">
+        <span>Email: {$user.email}</span><br />
+        <span>Тел: {$user.phone}</span><br />
+		<span>Дата на регистрация: {$user.register_date|date_format:"%d/%m/%y"}</span><br />
+		<span>Последна промяна: {$user.update_date|date_format:"%d/%m/%y"}</span><br />
+		<span>Последен логин: {$user.last_login_date|date_format:"%d/%m/%y"}</span><br />
+    </div>
+	<div class="clear"></div>
+    
+	<div class="fancy-div col-sm-11">
+        <form meth action="users.php" method="GET">
+            <input type="hidden" name="statistics" value="1">
+            <input type="hidden" name="id" value="{$user.id}">
+            <input type="hidden" name="filter" value="1">
+            <div class="date-from">
+                <label for="dateFrom">От</label>
+                <input type="text" name="dateFrom" value="{$from}" id="dateFrom" title="{#enter#} {#date#}">
+            </div>
+            <div class="date-to">
+                <label for="dateTo">До</label>
+                <input type="text" name="dateTo" value="{$to}" id="dateTo" title="{#enter#} {#date#}"><br />
+            </div>
+            <div class="date-submit"><input type="submit" value="Филтрирай"></div>
+        </form>
+        <div class="clear"></div>
+
+        {literal}
+        <script>
+        $(function() {
+            $( "#dateFrom" ).datepicker({ dateFormat: 'mm/dd/yy' }).val();
+            $( "#dateTo" ).datepicker({ dateFormat: 'mm/dd/yy' }).val();
+        });
+        </script>
+        {/literal}
+    </div>
+
+    <div class="clear"></div>
+    {if 0}
+	<div class="mainList lotteries-tickets fancy-div col-sm-5">
+        <h3>Билети за лотария</h3>
+        Брой билети: {$customer.count_lotteries_tickets}
+        {section name=l loop=$customer.lotteriesTickets}
+        <p>
+            Име: {$customer.lotteriesTickets[l].name}<br />
+            Дата: {$customer.lotteriesTickets[l].postdate|date_format:"%D"}
+        </p>
+        {/section}
+    </div>
+    <div class="mainList vouchers fancy-div col-sm-5">
+        <h3>Ваучери</h3>
+        Брой изтеглени ваучери: {$customer.count_special_offers_vouchers}
+        {section name=v loop=$customer.specialOffersVouchers}
+        <p>
+            Име: {$customer.specialOffersVouchers[v].user_name}<br />
+            Тел: {$customer.specialOffersVouchers[v].phone}<br />
+            Email: {$customer.specialOffersVouchers[v].email}<br />
+            Дата: {$customer.specialOffersVouchers[v].postdate|date_format:"%D"}
+        </p>
+        {/section}
+    </div>
+    <div class="clear"></div>
+	{/if}
+    <div id="tab1" class="mainList requests-to-customers fancy-div">
+        <h3>Запитвания към клиенти</h3>
+        <div class="pagesHolder size12 paging_full_numbers">
+            {$generate_pages}
+        </div>
+        <ul class="table table-striped table-bordered" id="sortTable0" name="news_table">
+            {section name=req loop=$requests}
+            <li name="{$requests[req].id}">
+                <div class="col-sm-1 tr-task-check">
+                    <span>{$smarty.section.req.index+1}</span>
+                </div>
+                <div class="col-sm-2">
+                    <a href="customers.php?statistics=1&customer_id={$requests[req].customer_id}">
+                        {$requests[req].customer_name}
+                    </a>
+                </div>
+                <div class="col-sm-3"><a href="customers.php?statistics=1&specific_customer=1&customer_id={$requests[req].customer_id}&rtc_id={$requests[req].id}">{$requests[req].customer_email}</a></div>
+                <div class="col-sm-4">
+                    
+                    <div class="btn btn-info btn-mini col-sm-5" style="margin-left: 0px; font-size: 11px;">
+                        {if $requests[req].direct_request}Директно запитване{/if}
+                        {if $requests[req].price_request}Запитване за цена{/if}
+                        {if !$requests[req].direct_request && !$requests[req].price_request}Към Категория{/if}
+                    </div>
+                    <div class="col-sm-7 listRequests{if !$requests[req].notification_read } listRequestsUnread{/if}">
+                        <span class="status">
+                        {if !isset($requests[req].rtco_status)}
+                            {if $requests[req].status == 3}
+                            {#offer_status_company_reject#}
+                            {else}
+                            {#offers_status_request_received#}
+                            {/if}
+                        {else}
+                            {if $requests[req].rtco_status != 1 && $requests[req].rtco_status != 2 && $requests[req].rtco_status != 3 && $requests[req].rtco_status != 4}
+                                    {#offers_status_negotiation#}
+                            {/if}
+                            {if $requests[req].rtco_status == 1}{#offer_status_pending_admin#}{/if}
+                            {if $requests[req].rtco_status == 2}
+                                     {if $requests[req].rtco_hired}
+                                            {if $requests[req].rtco_hired_customer}
+                                               {#offer_hire_success#}
+                                            {else}
+                                                    {#offer_hire_pending#}
+                                            {/if}
+                                    {else}
+                                            {#offer_status_accepted#}
+                                    {/if}
+                            {/if}
+                            {if $requests[req].rtco_status == 3}{#offer_status_rejected#}{/if}
+                            {if $requests[req].rtco_status == 4}{#offer_status_rejected_budget#}{/if}
+                                {if 0}{if $requests[r].last_offer.replies.all}
+                                    <div class="message-replies">
+                                            {if $requests[r].last_offer.replies.unread > 0}<strong>{/if}
+                                            {#message_replies#}: <br />
+                                            {$requests[r].last_offer.replies.unread} / {$requests[r].replies.all}
+                                            {if $requests[r].last_offer.replies.unread > 0}</strong>{/if}
+                                    </div>
+                                {/if}
+                            {/if}
+                        {/if}
+                        </span><br />
+                        <span class="notprocessed">{ if !$requests[req].sent }{#notprocessed#}{/if}</span>
+                    </div>
+                    
+                </div>
+                <div class="col-sm-1 center">
+                    {$requests[req].postdate|date_format:"%d/%m/%Y %H:%M"}
+                </div>
+                <div class="col-sm-1">
+                    <div class="btn-group pull-right">
+                        <button data-toggle="dropdown" class="btn dropdown-toggle"><i class="icon-cog "></i><span class="caret"></span></button>
+                        <ul class="dropdown-menu">
+                            <li><a href="{$php_edit_generator}?act=edit&temp_id={$requests[req].temp_id}&without_sent=1"><i class="icon-edit"></i> {#edit#}</a></li>
+                            <li><a href="{$php_self_generator}?act=delete&temp_id={$requests[req].temp_id}"><i class="icon-trash"></i> {#delete#}</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="clear"></div>
+
+            </li>
+            {/section}
+        </ul>
+    </div>
+    <div class="clear"></div>
+	{if 0}
+    <div class="mainList requests-to-customers fancy-div">
+        <h3>Контакти към клиенти</h3>
+        <ul class="table table-striped table-bordered" id="sortTable0" name="news_table">
+            {section name=cc loop=$customer.customerContacts}
+            <li name="{$customer.customerContacts[cc].id}">
+                <div class="col-sm-1 tr-task-check">
+                    <span>{$smarty.section.cc.index+1}</span>
+                </div>
+                <div class="col-sm-2">{$customer.customerContacts[cc].name}</div>
+                <div class="col-sm-3">{$customer.customerContacts[cc].email}<br />{$customer.customerContacts[cc].phone}</div>
+                <div class="col-sm-4 statistics-scrollbox">{$customer.customerContacts[cc].message}</div>
+                <div class="col-sm-2 center">
+                    {$customer.customerContacts[cc].postdate|date_format:"%d/%m/%Y %H:%M"}
+                </div>
+                <div class="clear"></div>
+            </li>
+            {/section}
+        </ul>
+    </div>
+    <div class="clear"></div>
+    <div class="mainList requests-to-customers fancy-div">
+        <h3>Непотвърдени билети</h3>
+        <ul class="table table-striped table-bordered" id="sortTable0" name="news_table">
+            {counter start=0 print=false assign=notConfirmedCount}
+            {section name=req loop=$requests}
+            {if $requests[req].rtco_hired == 1 && $requests[req].rtco_hired_customer == 0}
+            <li name="{$requests[req].id}">
+                <div class="col-sm-1 tr-task-check">
+                    <span>{counter}{$notConfirmedCount}</span>
+                </div>
+                <div class="col-sm-2">
+                    <a href="{$php_self}?statistics=1&specific_customer=1&customer_id={$customer.id}&rtc_id={$requests[req].id}">
+                        {$requests[req].name}
+                        {if $requests[req].user_id}
+                        <span class="btn btn-mini btn-warning">registered user</span>
+                        {/if}
+                    </a>
+                </div>
+                <div class="col-sm-3">
+                    <a href="{$php_self}?statistics=1&specific_customer=1&customer_id={$customer.id}&rtc_id={$requests[req].id}">
+                        {$requests[req].email}
+                    </a>
+                </div>
+                <div class="col-sm-4">
+                    {if $requests[req].direct_request || $requests[req].price_request}
+                    <div class="btn btn-info btn-mini col-sm-5" style="margin-left: 0px; font-size: 11px;">
+                        {if $requests[req].direct_request}Директно запитване{/if}{if $requests[req].price_request}Запитване за цена{/if}
+                    </div>
+                    {/if}
+                    <a href="{$host}offers/inbox/hire-confirm/{$requests[req].offer.id}/{$requests[req].offer.hash}" class="btn btn-warning col-sm-5 confirmation">
+                        Потвърди
+                    </a>
+                </div>
+                <div class="col-sm-1 center">
+                    {$requests[req].postdate|date_format:"%d/%m/%Y %H:%M"}
+                </div>
+                <div class="col-sm-1">
+                    <div class="btn-group pull-right">
+                        <button data-toggle="dropdown" class="btn dropdown-toggle"><i class="icon-cog "></i><span class="caret"></span></button>
+                        <ul class="dropdown-menu">
+                            <li><a href="{$php_edit_generator}?act=edit&temp_id={$requests[req].temp_id}&without_sent=1"><i class="icon-edit"></i> {#edit#}</a></li>
+                            <li><a href="{$php_self_generator}?act=delete&temp_id={$requests[req].temp_id}"><i class="icon-trash"></i> {#delete#}</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="clear"></div>
+            </li>
+            {/if}
+            {/section}
+        </ul>
+    </div>
+	{/if}
+</div>
+
+<script>
+    {literal}
+        function postdata(){
+//            var dateFrom = $( "#dateFrom" ).val();
+//            var dateTo = $( "#dateTo" ).val();
+//            console.log(dateFrom);
+//            window.location.search = jQuery.query.set("dateFrom", dateFrom);
+        }
+    {/literal}
+        
+    $(document).ready(function () {ldelim}
+//        if("{ $notConfirmedCount }" > 0){ldelim}
+//        $(".notConfirmedCount").addClass("text-warning");
+//        {rdelim}
+            $('#notConfirmedCount').html( "{ $notConfirmedCount }" );
+            $('.confirmation').on('click', function () {ldelim}
+                return confirm('Сигурни ли сте, че искате да потвърдите офертата от името на клиента?');
+            {rdelim});
+    {rdelim});
+</script>
+
+{include file="admin/footer.html"}

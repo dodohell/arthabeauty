@@ -1,0 +1,552 @@
+{include file="header.html"}
+
+<div class="row">
+    <div class="col-12">
+        <ol class="breadcrumb">
+            {$breadcrumbs}
+        </ol>
+    </div>
+</div>
+<div class="row mt-3">
+    <div class="col-sm-12">
+        <article class="box">
+            <figure class="itemside">
+                <div class="aside align-self-center">
+                    <span class="icon-wrap icon-md round bg-primary text-white">
+                        <i class="fas fa-shopping-cart"></i>
+                    </span>
+                </div>
+                <figcaption class="text-wrap">
+                    <h5 class="title">{#your_shopping_cart#}</h5>
+                    <p class="text-muted">{if $cart}{$cart_descr.description}{else}{#no_items_ordered#}{/if}</p>
+                </figcaption>
+            </figure> <!-- iconbox // -->
+        </article> <!-- panel-lg.// -->
+    </div><!-- col // -->
+</div>
+{if $cart}
+<div class="card mt-3">
+    <form name="cartForm" id="cartForm" method="post" action="/{#htaccess_cart#}/">
+        <table class="table table-hover shopping-cart-wrap">
+            <thead class="text-muted">
+                <tr>
+                    <th scope="col">{#product#}</th>
+                    <th scope="col" width="120">{#quantity#}</th>
+                    <th scope="col" width="110">{#price#}</th>
+                    <th scope="col" width="110">{#price_total#}</th>
+                    {*<th scope="col" width="120" class="text-right">{#action#}</th>*}
+                </tr>
+            </thead>
+            <tbody>
+                {section name=c loop=$cart}
+                <tr>
+                    <td>
+                        <figure class="media">
+                            <div class="img-wrap"><img src="{if $cart[c].pic}/files/tntn/{$cart[c].pic}{else}/images/noImage.png{/if}" class="img-thumbnail img-sm"></div>
+                            <figcaption class="media-body">
+                                <h6 class="title text-truncate">{$cart[c].product_name} {if $cart[c].product_code}({#code#}: {$cart[c].product_code}){/if}</h6>
+                                {if $cart[c].option.id}
+                                <dl class="dlist-inline small">
+                                    {if $cart[c].option.option_group_name}
+                                        <dt>{$cart[c].option.option_group_name}: </dt>
+                                    {/if}
+                                    <dd>{$cart[c].option.name}</dd>
+                                </dl>
+                                {/if}
+                            </figcaption>
+                        </figure>
+                    </td>
+                    <td>
+                        <div class="quantityHolder">
+                            <div class="input-group plus-minus-input">
+                                <div class="input-group-button">
+                                    <button type="button" class="button hollow" data-quantity="minus" data-field="quantity">
+                                        <i class="fa fa-minus" aria-hidden="true"></i>
+                                    </button>
+                                </div>
+                                <input id="quantity{$cart[c].product_id}{$cart[c].option.id}" class="input-group-field quantity" name="quantity{$cart[c].product_id}{$cart[c].option.id}" value="{$cart[c].quantity}" type="text" readonly style="background: #fff;">
+                                <div class="input-group-button">
+                                    <button type="button" class="button hollow" data-quantity="plus" data-field="quantity">
+                                        <i class="fa fa-plus" aria-hidden="true"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div>
+                                <a href="/{#htaccess_cart#}/remove/{$cart[c].id}" class="removeButton btn btn-sm btn-danger d-block p-0 mt-1"> × {#delete#}</a>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="price-wrap">
+                            <small class="text-muted unit-price">
+                                {if $cart[c].product_price_discount > 0.0 && $cart[c].product_price_discount != $cart[c].product_price}
+                                    <span class="oldPrice">{$cart[c].product_price|number_format:2} {#currency#}</span>
+                                {/if}
+                                <span class="currentPrice">
+                                    <span class="price" id="price{$cart[c].product_id}{$cart[c].option.id}">
+                                        {if $cart[c].product_price_discount > 0.0 && $cart[c].product_price_discount != $cart[c].product_price}
+                                            {$cart[c].product_price_discount|number_format:2} {#currency#}
+                                        {else}
+                                            {$cart[c].product_price|number_format:2} {#currency#}
+                                        {/if}
+                                    </span>
+                                </span>
+                            </small>
+                        </div> <!-- price-wrap .// -->
+                    </td>
+                    <td>
+                        <div class="price-wrap">
+                            <var class="price total-price">
+                                {if $cart[c].product_price_discount > 0.0 && $cart[c].product_price_discount != $cart[c].product_price}
+                                <span class="oldPrice">
+                                    <span id="priceTotalOld{$cart[c].product_id}{$cart[c].option.id}">
+                                    {($cart[c].product_price*$cart[c].quantity)|number_format:2}
+                                    </span> {#currency#}
+                                </span>
+                                {/if}
+                                <span class="currentPrice">
+                                    <span class="priceTotal" id="priceTotal{$cart[c].product_id}{$cart[c].option.id}">
+                                        {$cart[c].product_price_total|number_format:2}
+                                    </span> {#currency#}
+                                </span>
+                            </var>
+                        </div> <!-- price-wrap .// -->
+                    </td>
+                    {*<a title="" href="" class="btn btn-outline-success" data-toggle="tooltip" data-original-title="Save to Wishlist"> <i class="fa fa-heart"></i></a> *}
+                    {*<td class="text-right"> 
+                        <a href="/{#htaccess_cart#}/remove/{$cart[c].id}" class="btn btn-outline-danger"> × {#delete#}</a>
+                    </td>*}
+                </tr>
+                {sectionelse}
+                    <td class="text-center"> 
+                        {#no_items_ordered#}
+                    </td>
+                {/section}
+            </tbody>
+        </table>
+    </form>
+</div> <!-- card.// -->
+<script>
+    $(document).ready(function () {
+        $(".removeButton").click(function(ev){
+            ev.preventDefault();
+            var link = $(this).attr("href");
+            swal({
+                title: "{#are_you_sure#}",
+                text: "{#delete_cart_product#}",
+                type: "warning",
+                showCancelButton: true,
+                cancelButtonText: "{#no_back_to_cart#}",
+                confirmButtonColor: "#312783",
+                confirmButtonText: "{#yes_delete_it#}",
+                closeOnConfirm: false,
+                html: false
+            }, function(isConfirm){
+                if(isConfirm){
+                    swal("{#deleted#}", "{#product_deleted#}", "success");
+                    window.location = link;
+                }
+            });
+        });
+        
+        $('[data-quantity="plus"]').each(function (i, e) {
+            $(this).click(function (ee1) {
+                // Stop acting like a button
+                ee1.preventDefault();
+                // Get the field name
+                var fieldName = $(this).attr('data-field');
+                // Get its current value
+                var currentVal = parseInt($('.' + fieldName).eq(i).val());
+                // If is not undefined
+                if (!isNaN(currentVal)) {
+                    // Increment
+                    $('.' + fieldName).eq(i).val(currentVal + 1);
+                } else {
+                    // Otherwise put a 0 there
+                    $('.' + fieldName).eq(i).val(1);
+                }
+                var price = parseFloat($(".currentPrice .price").eq(i).html());
+                var quantity = parseInt($(".quantity").eq(i).val());
+                $(".priceTotal").eq(i).html((price * quantity).toFixed(2));
+                $("button[name=updateCart]").trigger("click");
+            });
+        });
+        // This button will decrement the value till 0
+        $('[data-quantity="minus"]').each(function (i, e) {
+            $(this).click(function (ee2) {
+                // Stop acting like a button
+                ee2.preventDefault();
+                // Get the field name
+                fieldName = $(this).attr('data-field');
+                // Get its current value
+                var currentVal = parseInt($('.' + fieldName).eq(i).val());
+                // If it isn't undefined or its greater than 0
+                if (!isNaN(currentVal) && currentVal > 1) {
+                    // Decrement one
+                    $('.' + fieldName).eq(i).val(currentVal - 1);
+                } else {
+                    // Otherwise put a 0 there
+                    $('.' + fieldName).eq(i).val(1);
+                }
+                var price = parseFloat($(".currentPrice .price").eq(i).html());
+                var quantity = parseInt($(".quantity").eq(i).val());
+                $(".priceTotal").eq(i).html((price * quantity).toFixed(2));
+                $("button[name=updateCart]").trigger("click");
+            });
+        });
+    });
+
+</script>
+
+<div class="card p-2 my-2">
+    <div class="cart-buttons">
+        <button form="cartForm" type="submit" value="{#update_cart#}" name="updateCart" class="btn btn-outline-primary" style="display: none;">{#update_cart#}</button>
+        <button form="cartForm" type="submit" value="{#continue_shopping#}" name="continueShopping" class="btn btn-outline-secondary">{#continue_shopping#}</button>
+        <button form="cartForm" type="submit" value="{#checkout#}" name="gotoCheckout"  class="submitField btn btn-success">{#checkout#}</button>
+        <button form="cartForm" type="submit" value="{#empty_cart#}" name="emptyCart" class="btn btn-outline-danger" style="display: none;">{#empty_cart#}</button>
+    </div>
+</div>
+<script>
+    $("button[name=updateCart]").click(function(ev){
+        ev.preventDefault();
+        $.ajax({
+            type: "POST",
+            url: "/update-cart",
+            data: $("#cartForm").serialize(),
+            dataType: "json",
+            success: function(res){
+                if(res.code == 1){
+                    var totalQuantity = 0;
+                    var totalAmount = 0;
+                    $.each(res.products, function (index, value) {
+                        //console.log(value);
+                        totalQuantity += value.quantity;
+                        totalAmount += value.product_price_total;
+                        $("#quantity"+value.product_id).val(value.quantity);
+                        var option_id = value.option_id > 0 ? value.option_id.toString() : "";
+                        //console.log("option_id: ", option_id)
+                        $("#priceTotalOld"+value.product_id+option_id).html(((parseFloat(value.product_price))*(parseInt(value.quantity))).toFixed(2));
+                        $("#priceTotal"+value.product_id+option_id).html((value.product_price_total).toFixed(2));
+                    });
+                    $("#cartProductsQuantityTop").html(totalQuantity);
+                    $("#cartProductsAmountTop").html(totalAmount.toFixed(2));
+                }
+            },
+            error: function(er){
+                //console.log(er);
+            }
+        });
+    });
+</script>
+{/if}
+{if $cart}
+    {if $cart_addon}
+    <div class="row mt-3 product-add-on-title">
+        <div class="col-sm-12">
+            <article class="box">
+                <figure class="itemside">
+                    <div class="aside align-self-center">
+                        <span class="icon-wrap icon-sm round bg-primary text-white">
+                            <i class="fas fa-cart-plus"></i>
+                        </span>
+                    </div>
+                    <figcaption class="text-wrap">
+                        <h5 class="title">{#heading_cart_addon#}:</h5>
+                        {*<p class="text-muted">{$cart_descr.description}</p>*}
+                    </figcaption>
+                </figure> <!-- iconbox // -->
+            </article> <!-- panel-lg.// -->
+        </div><!-- col // -->
+    </div>
+
+    <div class="row mt-1">
+        {section name=ca loop=$cart_addon}
+        <div class="col-md-4">
+            <figure class="card card-product">
+                <div class="img-wrap"><a href="/{#htaccess_product#}/{$cart_addon[ca].id}"><img src="{if $cart_addon[ca].pic}/files/tn/{$cart_addon[ca].pic}{else}/images/noImage.png{/if}"></a></div>
+                <figcaption class="info-wrap">
+                    <h4 class="title">{$cart_addon[ca].name}</h4>
+                    <p class="desc">{$cart_addon[ca].excerpt|truncate:100:"..."}</p>
+                    <div class="rating-wrap">
+                        <div id="rating-{$cart_addon[ca].id}"></div>
+                        {if $cart_addon[ca].reviews_count > 0}<div class="label-rating">{$cart_addon[ca].reviews_count} {if $cart_addon[ca].reviews_count > 1}{#reviews#}{else}{#review#}{/if}</div>{/if}
+                        {if $cart_addon[ca].comments > 0}<div class="label-rating">{$cart_addon[ca].comments} {if $cart_addon[ca].comments > 1}{#comments#}{else}{#comment#}{/if}</div>{/if}
+                    </div> <!-- rating-wrap.// -->
+                </figcaption>
+                <div class="bottom-wrap">
+                    <div class="price-wrap h5">
+                        {if $cart_addon[ca].price_specialoffer > 0.0}
+                            <span class="price-new text-danger">{$cart_addon[ca].price_specialoffer|number_format: 2} {#currency#}</span> <del class="price-old">{$cart_addon[ca].price|number_format: 2} {#currency#}</del>
+                        {elseif $cart_addon[ca].price > 0.0}
+                            <span class="price-new">{$cart_addon[ca].price|number_format: 2} {#currency#}</span>
+                        {/if}
+                    </div> <!-- price-wrap.// -->
+                    <div class="button-wrap">
+                        <a href="/{#htaccess_add_to_cart#}/{$cart_addon[ca].id}/" class="btn btn-sm btn-primary d-block">{#add_to_cart_addon#}</a>
+                    </div>
+                </div> <!-- bottom-wrap.// -->
+                <script>
+                    $(document).ready(function () {
+                        $.fn.raty.defaults.path = '/js/raty/img';
+                        $('#rating-{$cart_addon[ca].id}').raty({
+                            readOnly:  true,
+                            starType:    'img', // Element used to represent a star.
+                            starHalf:    'star-half.png', // The name of the half star image.
+                            starOff:     'star-off.png',  // Name of the star image off.
+                            starOn:      'star-on.png',   // Name of the star image on.
+                            half:  true,
+                            start: parseFloat({$cart_addon[ca].rating})
+                       });
+                    });
+                </script>
+            </figure>
+        </div> <!-- col // -->
+        {/section}
+    </div>
+    {/if}
+{/if}
+
+
+{*<div class="innerContainer">
+    <div class="allProdContainer fullWidth">
+        <span class="title">{#your_shopping_cart#}</span>
+
+        <div class="cartDescriptionCont">{$cart_descr.description}</div>
+
+        <div class="clear"></div>
+        <div class="right top">
+            <div class="right" id="buttonGoToCheckout">
+                <input form="cartForm" type="submit" value="{#checkout#}" name="gotoCheckout"  class="submitField buttonBuy" />
+            </div>
+            <div class="right">
+                <input form="cartForm" type="submit" value="{#continue_shopping#}" name="continueShopping" class="submitField blueButton" />
+            </div>
+        </div>
+        <div class="clear"></div>
+
+        <div class="lineGrey"></div>
+        <div class="cartRow">
+            <div class="cartRowProductName">
+                {#product_name#}
+            </div>
+
+            <div class="cartRowPrice">
+                {#price_with_vat#}
+            </div>
+            <div class="cartRowQuantity">
+                {#quantity#}
+            </div>
+            <div class="cartRowTotal">
+                {#total#}
+            </div>
+            <div class="clear"></div>
+        </div>
+        <div class="clear"></div>
+        <div class="lineGrey"></div>
+        <div class="clear"></div>
+        {if $cart}
+            <form name="cartForm" id="cartForm" method="post" action="/{#htaccess_cart#}/">
+            {/if}
+            {section name=c loop=$cart}
+                <div class="cartRow">
+                    <div class="cartRowProductName">
+                        <strong>{$cart[c].product_name} (Код: {$cart[c].product_code})</strong><br />
+                        {if $cart[c].option.id}
+                            {if $cart[c].option.option_group_name}{$cart[c].option.option_group_name}: {/if}{$cart[c].option.name}
+                        {/if}
+                    </div>
+                    <div class="cartRowPrice">			
+                        {if $cart[c].product_price_discount > 0.0 && $cart[c].product_price_discount != $cart[c].product_price}<span class="priceOld">({$cart[c].product_price} {#currency#})</span>{/if}
+                        <span class="price" id="price{$cart[c].product_id}{$cart[c].option.id}">{if $cart[c].product_price_discount && $cart[c].product_price_discount != $cart[c].product_price}{$cart[c].product_price_discount}{else}{$cart[c].product_price}{/if}</span> {#currency#}
+                    </div>
+                    <div class="quantityHolder">
+                        <div class="input-group plus-minus-input">
+                            <div class="input-group-button">
+                                <button type="button" class="button hollow circle" data-quantity="minus" data-field="quantity">
+                                    <i class="fa fa-minus" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                            <input class="input-group-field quantity" name="quantity{$cart[c].product_id}{$cart[c].option.id}" value="{$cart[c].quantity}" type="text" readonly style="background: #fff;">
+                            <div class="input-group-button">
+                                <button type="button" class="button hollow circle" data-quantity="plus" data-field="quantity">
+                                    <i class="fa fa-plus" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="deleteCartProduct"> <a href="/{#htaccess_cart#}/remove/{$cart[c].id}" class="linkDelete"><i class="fas fa-trash-alt"></i></a></div>
+                    <div class="cartRowTotal">
+                        {if $cart[c].product_price_discount > 0.0 && $cart[c].product_price_discount != $cart[c].product_price}<span class="priceOld">({$cart[c].product_price*$cart[c].quantity} {#currency#})</span>{/if}
+                        <span class="priceTotal" id="priceTotal{$cart[c].product_id}{$cart[c].option.id}">{if $cart[c].product_price_discount}{$cart[c].product_price_discount*$cart[c].quantity}{else}{$cart[c].product_price_total}{/if}</span> {#currency#}
+                    </div>
+                    <div class="clear"></div>
+                </div>
+                <div class="clear"></div>
+                {if !$smarty.section.c.last}
+                    <div class="lineGrey"></div>
+                {/if}
+            {sectionelse}
+                <div class="cartRowNoItems">
+                    {#no_items_ordered#}
+                </div>
+            {/section}
+
+            {literal}
+                <script>
+                    $(document).ready(function () {
+                        $('[data-quantity="plus"]').each(function (i, e) {
+                            $(this).click(function (ee) {
+                                // Stop acting like a button
+                                ee.preventDefault();
+                                // Get the field name
+                                fieldName = $(this).attr('data-field');
+                                // Get its current value
+                                var currentVal = parseInt($('.' + fieldName).eq(i).val());
+                                // If is not undefined
+                                if (!isNaN(currentVal)) {
+                                    // Increment
+                                    $('.' + fieldName).eq(i).val(currentVal + 1);
+                                } else {
+                                    // Otherwise put a 0 there
+                                    $('.' + fieldName).eq(i).val(1);
+                                }
+                                var price = parseFloat($(".cartRowPrice .price").eq(i).html());
+                                var quantity = parseInt($(".quantity").eq(i).val());
+                                $(".priceTotal").eq(i).html((price * quantity).toFixed(2));
+                                $("input[name=updateCart]").trigger("click");
+                            });
+                        });
+                        // This button will decrement the value till 0
+                        $('[data-quantity="minus"]').each(function (i, e) {
+                            $(this).click(function (ee) {
+                                // Stop acting like a button
+                                ee.preventDefault();
+                                // Get the field name
+                                fieldName = $(this).attr('data-field');
+                                // Get its current value
+                                var currentVal = parseInt($('.' + fieldName).eq(i).val());
+                                // If it isn't undefined or its greater than 0
+                                if (!isNaN(currentVal) && currentVal > 1) {
+                                    // Decrement one
+                                    $('.' + fieldName).eq(i).val(currentVal - 1);
+                                } else {
+                                    // Otherwise put a 0 there
+                                    $('.' + fieldName).eq(i).val(1);
+                                }
+                                var price = parseFloat($(".cartRowPrice .price").eq(i).html());
+                                var quantity = parseInt($(".quantity").eq(i).val());
+                                $(".priceTotal").eq(i).html((price * quantity).toFixed(2));
+                                $("input[name=updateCart]").trigger("click");
+                            });
+                        });
+                    });
+
+                </script>
+            {/literal}
+
+            <div class="lineGrey devider-20"></div>
+            {if $cart}
+                {if $cart_addon && !$has_addon}
+                    <div class="productsInner addonProduct">
+                        <span class="title2 text-center">{#heading_cart_addon#}</span>
+                        <div class="boxAddOn">
+                            <div class="row">
+                                {section name=ca loop=$cart_addon}
+                                    <span class="boxProduct">
+                                        <div>
+                                            <a href="/{#htaccess_product#}/{$cart_addon[ca].id}" class="boxProductLeftHeading">{$cart_addon[ca].name|truncate:80}</a>
+                                        </div>
+                                        <span class="boxProductLeftImage">
+                                            <a href="/{#htaccess_product#}/{$cart_addon[ca].id}">
+                                                {if $cart_addon[ca].recipe}
+                                                    <img src="/images/noImageRecipe.png" alt="{$cart_addon[ca].name}" />
+                                                {else}
+                                                    {if $cart_addon[ca].pic}
+                                                        <img src="/files/products/tntn/{$cart_addon[ca].pic}" alt="{$cart_addon[ca].name|escape:'html'}" />
+                                                    {else}
+                                                        <img src="/images/noImage.png" alt="{$cart_addon[ca].name}" />
+                                                    {/if}
+                                                {/if}
+                                            </a>
+                                        </span>
+                                        <span class="boxProductRightContent">
+                                            <span class="boxProductLeftActions pt-1">
+
+                                                <span class="productPrice pt-2">
+                                                    {if $cart_addon[ca].price_specialoffer > 0.0}
+                                                        <span class="oldPrice">
+                                                            <span class="textL">{$cart_addon[ca].price} {#currency#}</span>
+                                                        </span>
+                                                        <span class="currentPrice">
+                                                            <span class="textL" title="{$cart_addon[ca].price_specialoffer_text}. {#promo_valid#}">{$cart_addon[ca].price_specialoffer} {#currency#}</span>
+                                                        </span>
+                                                    {else}
+                                                        <span class="currentPrice">
+                                                            <span class="textL">{$cart_addon[ca].price} {#currency#}</span>
+                                                        </span>
+                                                    {/if}
+                                                </span>
+                                            </span>
+                                        </span>
+                                        <div>
+                                            <a class="redLinkL" href="/cart.php?id={$cart_addon[ca].id}">
+                                                <i class="basketIcon fas fa-shopping-basket"></i>
+                                                <span class="text">{#add_to_cart_addon#}</span>
+                                            </a>
+                                        </div>
+                                    </span>
+                                {/section}
+                            </div>
+                        </div>
+                    </div>
+                {/if}
+                <div class="clear"></div>
+                <div class="right">
+                    <div class="left">
+                        <input type="submit" value="{#update_cart#}" class="submitField" name="updateCart" style="display: none;"/>
+                    </div>
+            </form>
+            <div class="left">
+                <input type="submit" value="{#empty_cart#}" name="emptyCart" class="submitField" style="display: none;" />
+            </div>
+
+            <div class="left">
+                <input type="submit" value="{#continue_shopping#}" name="continueShopping" class="submitField blueButton" />
+            </div>
+            <div class="left" id="buttonGoToCheckout">
+                <input type="submit" value="{#checkout#}" name="gotoCheckout"  class="submitField buttonBuy" />
+            </div>
+            <div class="clear"></div>
+        </div>
+        <div class="clear"></div>
+        <div class="clear"></div>
+    {/if}
+    <div class="clear"></div>
+    <br /><br />
+    <div class="productsList">
+        <ul class="products justify-content-center">
+            {assign var=cntr value=0}
+            {section name=m loop=$menus}
+                {if $menus[m].menu_pos == "3_cart" && $cntr < 5}
+                    {assign var=cntr value=$cntr+1}
+                    <li>
+                        <a class="product" {if $menus[m].url}href="{$menus[m].url}" target="{$menus[m].target}"{else}href="/{#htaccess_info#}/{$menus[m].id}"{/if}>
+                            <span class="nameL">{$menus[m].name}</span>
+                            <span class="nameM">{$menus[m].excerpt}</span>
+                            <span class="imgContainer">
+                                <img src="/files/{$menus[m].pic_1}" alt="{$menus[m].name}">
+                            </span>
+                        </a>
+                    </li>
+                {/if}
+            {/section}
+        </ul>
+    </div>
+</div>
+</div>*}
+<div class="mt-4"></div>
+
+<link rel="stylesheet" href="/js/sweetalert/sweetalert.css" />
+<script src="/js/sweetalert/sweetalert-dev.js"></script>
+
+{include file="footer.html"}

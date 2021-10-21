@@ -1,0 +1,30 @@
+{include file="admin/header.html"}
+    <ul class="breadcrumb">
+      <li><a href="./index.php">{#home_breadcrumbs#}</a><span class="divider">&raquo;</span></li>
+      <li><a href="./system_settings.php">{#system_settings#}</a><span class="divider">&raquo;</span></li>
+      <li class="active">{$page_heading}</li>
+    </ul>
+	<form method="POST" action="system_settings.php" >
+    <div class="row-fluid">
+		<div class="col-sm-12">
+			<div class="nonboxy-widget">
+				<div class="widget-head">
+					<h5>{#system_settings#}</h5>
+				</div>
+			</div>
+			<div class="widget-content">
+				<div class="widget-box">
+					<fieldset>
+						<div class="control-group">
+							<label class="checkbox inline"><input type="checkbox" value="checked" name="view_customers_contact_global" {$row.view_customers_contact_global}> {#view_customers_contact_global#}</label><br/>
+							<label class="checkbox inline"><input type="checkbox" value="checked" name="hide_customers_contact_global" {$row.hide_customers_contact_global}> {#hide_customers_contact_global#}</label>
+						</div>
+					</fieldset>
+				</div>
+				
+			</div>
+			<br/><br/>
+			<button type="submit" name="Submit" class="btn btn-info">{#save_changes#}</button>
+		</div>
+    </div>
+{include file="admin/footer.html"}

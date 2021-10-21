@@ -1,0 +1,191 @@
+{config_load file=$language_file}
+<form method="post" action="postProductToCart.php" name="formAddToCart">
+    <article class="p-5">
+        <h3 class="title mb-3">{$row.name}</h3>
+        <div class="mb-3">
+            {if $row.price_specialoffer > 0.0}
+                <var class="price oldPrice h3 text-secondary">
+                    <span class="num">{$row.price}</span><span class="currency"> {#currency#}</span>
+                </var>
+                <var class="price currentPrice h3 text-danger">
+                    <span class="num">{$row.price_specialoffer}</span><span class="currency"> {#currency#}</span>
+                </var>
+            {elseif $row.price > 0.0}
+                <var class="price currentPrice h3 text-danger">
+                    <span class="num">{$row.price}</span><span class="currency"> {#currency#}</span>
+                </var>
+            {/if}
+        </div> <!-- price-detail-wrap .// -->
+        <dl>
+            {*<dt>{#excerpt#}</dt>*}
+            <dd>{$row.excerpt}</dd>
+        </dl>
+        <dl class="row attributeOptions">
+            <dt class="col-sm-3">{#code#}</dt>
+            <dd class="col-sm-9">{$row.code}</dd>
+            
+            <dt class="col-sm-3">{#weight#}</dt>
+            <dd class="col-sm-9">
+                <span id="product-weight-attribute">
+                    {if $row.weight > 0.0}
+                    <span class="product-weight-content">
+                        <i class="fas fa-weight-hanging"></i> <span class="weight-num">{$row.weight}{*{$row.weight|string_format:"%.3f"}*}</span> г.
+                    </span>
+                    {/if}
+                </span>
+            </dd>
+        </dl>
+        <hr>
+        <div class="row">
+            <div class="col-sm-5">
+                <dl class="dlist-inline">
+                    <dt>{#quantity#}: </dt>
+                    <div class="quantityHolder">
+                        <div class="input-group plus-minus-input">
+                            <div class="input-group-button">
+                                <button type="button" class="button {*hollow circle*}" data-quantity="minus" data-field="quantity">
+                                    <i class="fa fa-minus" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                            <input class="input-group-field" name="quantity" value="1" type="text">
+                            <div class="input-group-button">
+                                <button type="button" class="button {*hollow circle*}" data-quantity="plus" data-field="quantity">
+                                    <i class="fa fa-plus" aria-hidden="true"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </dl>  <!-- item-property .// -->
+            </div> <!-- col.// -->
+            <div class="col-sm-7">
+                {if $option_groups}
+                    <dl class="dlist-inline">
+                        {section name=og loop=$option_groups}
+                            {if $option_groups[og].display_in_list}
+                                {$option_groups[og].info.name}
+                                <select name="option_id" class="form-control productOptionSelect">
+                                    <option value="">{#please_select#}</option>
+                                    {section name=o loop=$option_groups[og].options}
+                                        {if $option_groups[og].options[o].selected_values}
+                                            <option value="{$option_groups[og].options[o].id}">{$option_groups[og].options[o].name}</option>
+                                        {/if}
+                                    {/section}
+                                </select>
+                            {/if}
+                        {/section}
+                    </dl>  <!-- item-property .// -->
+                {/if}
+            </div> <!-- col.// -->
+        </div> <!-- row.// -->
+        <hr>
+        <div class="d-flex flex-row justify-content-end flex-wrap">
+            <input type="hidden" name="id" value="{$id}">
+            <input type="hidden" name="cart_id" value="{$cart_id}">
+            <button type="submit" name="AddToCart" id="buttonAddToCart" class="btn btn-danger">
+                <i class="fas fa-shopping-basket"></i> {#add_to_cart#}
+            </button>
+        </div>
+    </article> <!-- card-body.// -->
+    
+    <script>
+        $(document).ready(function () {
+            $('[data-quantity="plus"]').click(function (e) {
+                // Stop acting like a button
+                e.preventDefault();
+                // Get the field name
+                var fieldName = $(this).attr('data-field');
+                // Get its current value
+                var currentVal = parseInt($('input[name=' + fieldName + ']').val());
+                // If is not undefined
+                if (!isNaN(currentVal)) {
+                    // Increment
+                    $('input[name=' + fieldName + ']').val(currentVal + 1);
+                } else {
+                    // Otherwise put a 0 there
+                    $('input[name=' + fieldName + ']').val(0);
+                }
+            });
+            // This button will decrement the value till 0
+            $('[data-quantity="minus"]').click(function (e) {
+                // Stop acting like a button
+                e.preventDefault();
+                // Get the field name
+                var fieldName = $(this).attr('data-field');
+                // Get its current value
+                var currentVal = parseInt($('input[name=' + fieldName + ']').val());
+                // If it isn't undefined or its greater than 0
+                if (!isNaN(currentVal) && currentVal > 0) {
+                    // Decrement one
+                    $('input[name=' + fieldName + ']').val(currentVal - 1);
+                } else {
+                    // Otherwise put a 0 there
+                    $('input[name=' + fieldName + ']').val(0);
+                }
+            });
+            
+            $("select[name=option_id]").bind("change", function () {
+                var variant_id = $(this).val();
+                $.ajax({
+                    type: "POST",
+                    url: "getVariantDetails.php",
+                    data: "product_id={$row.id}&variant_id="+variant_id+"&cart_id={$cart_id}",
+                    dataType: "json",
+                    success: function(response){
+                        $(".price.currentPrice .num").html(response.price.toFixed(2));
+                        if ( response.price_strikethrough ){
+                            $(".price.oldPrice .num").html(response.price_strikethrough.toFixed(2));
+                        }
+                        //$("#priceBonusPoints").empty();
+                        //$("#priceBonusPointsWon").empty();
+                        //$("#priceBonusPoints").append(response.bonus_points_price);
+                        //$("#priceBonusPointsWon").append(response.bonus_points_won);
+                        var productWeightAttributeContent = $("#product-weight-attribute .product-weight-content").length;
+                        //console.log("productWeightContent",productWeightContent);
+                        if(response.weight > 0.0){
+                            var weightAttributeHTML = '';
+                            weightAttributeHTML += '<span class="product-weight-content">';
+                            weightAttributeHTML += '  <i class="fas fa-weight-hanging"></i>';
+                            weightAttributeHTML += '  <span class="weight-num">'+ parseFloat(response.weight).toFixed(0)+'</span> г.';
+                            weightAttributeHTML += '</span>';
+
+                            $("#product-weight-attribute").html(weightAttributeHTML);
+                        }else{
+                            if(productWeightAttributeContent){
+                                $("#product-weight-attribute .product-weight-content").remove();
+                            }
+                        }
+                    },
+                    error: function(er){
+                        //console.log(er);
+                    }
+                })
+            });
+            
+            $("#buttonAddToCart").bind("click", function (event) {
+                event.preventDefault();
+                var option_id = $("select[name=option_id]").val();
+                var quantity = $("input[name=quantity]").val();
+                if ($("select[name=option_id]").length == 0) {
+                    if (quantity > 0) {
+                        document.formAddToCart.submit();
+                    } else {
+                        alert("Въведете количество!");
+                    }
+                } else {
+                    if (quantity > 0) {
+                        if (option_id != "") {
+                            //alert(id);
+                            //alert(option_id);
+                            document.formAddToCart.submit();
+                        } else {
+                            alert("Изберете вариант!");
+                        }
+                    } else {
+                        alert("Въведете количество!");
+                    }
+                }
+                return false;
+            });
+        });
+    </script>
+</form>

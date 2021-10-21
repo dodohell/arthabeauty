@@ -1,0 +1,581 @@
+<!--=====================================
+=             Footer Section            =
+======================================-->
+
+<script>
+    
+    // When the user scrolls the page, execute myFunction
+    window.onscroll = function() { makeStickyHeader() };
+
+    // Get the header
+    var headerBottomLine = document.getElementById("headerBottomLine");
+    var headerContainer = document.getElementById("headerContainer");
+    var headerTopLine = document.getElementById("headerTopLine");
+    var optionsContainer = document.getElementById("optionsContainer");
+    var breadcrumbsContainer = $(".breadcrumbsContainer");
+    
+    var indexBackground = $(".indexBackground");
+    
+    // Get the offset position of the navbar
+    var sticky = headerBottomLine.offsetTop;
+
+    // Add the sticky class to the header when you reach its scroll position. Remove "sticky" when you leave the scroll position
+    function makeStickyHeader() {
+        if (window.pageYOffset > sticky) {
+            //headerBottomLine.classList.add("sticky");
+            headerContainer.classList.add("sticky");
+            headerTopLine.classList.add("hide");
+            if(optionsContainer){
+                optionsContainer.classList.add("pt-190");
+            }
+            if(breadcrumbsContainer.length){
+                breadcrumbsContainer.addClass("pt-190");
+            }
+            if(indexBackground.length){
+                indexBackground.addClass("pt-190");
+            }
+        } else {
+            headerContainer.classList.remove("sticky");
+            headerTopLine.classList.remove("hide");
+            if(optionsContainer){
+                optionsContainer.classList.remove("pt-190");
+            }
+            if(breadcrumbsContainer.length){
+                breadcrumbsContainer.removeClass("pt-190");
+            }
+            if(indexBackground.length){
+                indexBackground.removeClass("pt-190");
+            }
+        }
+    }
+
+    var updated = 0;
+    var updated2 = 0;
+
+    $(document).ready(function () {
+
+        $("#menuToggle").bind("click", function () {
+            if ($(this).children("input").is(":checked")) {
+                if (updated == 0) {
+                    updated = 1;
+                }
+                $(".bottomLine .container .headRow").css("height", "0px");
+                $("#searchIcon").removeClass("searchIconActive");
+                $(".searchHolder").removeClass("menuShow");
+                $("nav.headRow").addClass("overflowVisible");
+                $(".topLine").addClass("overflowVisible2");
+                $(".topLine .container .headRow").addClass("menuShow");
+                $(".menuHolder").addClass("menuShow");
+            } else {
+                $("nav.headRow").removeClass("overflowVisible");
+                $(".topLine").removeClass("overflowVisible2");
+                $(".topLine .container .headRow").removeClass("menuShow");
+                $(".menuHolder").removeClass("menuShow");
+            }
+        });
+
+        $("#searchIcon").bind('click', function (e) {
+            if ($(".searchHolder").hasClass("menuShow")) {
+                $(".bottomLine .container .headRow").css("height", "0px");
+                $("#searchIcon").removeClass("searchIconActive");
+                $(".searchHolder").removeClass("menuShow");
+            } else {
+                if ($("#menuToggle").children("input").is(":checked")) {
+                    $("#menuToggle").find("input").trigger("click");
+                }
+                $("#searchIcon").addClass("searchIconActive");
+                $(".bottomLine .container .headRow").css("height", "64px");
+                $(".searchHolder").addClass("menuShow");
+            }
+
+        });
+
+        $(".hasSubMenu").bind('click', function (e) {
+
+            if ($(".only-mobile").css("display") == "block") {
+                e.preventDefault();
+
+                var menuName = $(this).text();
+
+                $(".submenuHolder").removeClass("menuShow");
+
+                if ($(this).parent().children(".submenuHolder").hasClass("menuShow")) {
+
+                    $(".submenuHolder").removeClass("menuShow");
+                } else {
+
+                    if (updated2 == 0) {
+                        updated2 = 1;
+                    }
+
+                    if ($(this).parent().children(".submenuHolder").children(".submenu").children(".submenuLi").hasClass("subMenubBackBtn")) {
+                    } else {
+
+                        $(this).parent().children(".submenuHolder").children(".submenu").prepend("<li class='submenuLi subMenubBackBtn'><span>" + menuName + "</span> </li>");
+                    }
+
+                    $(this).parent().children(".submenuHolder").addClass("menuShow");
+
+                    $(".subMenubBackBtn").bind("click", function () {
+
+                        $(this).parent().parent().removeClass("menuShow");
+
+                    });
+                }
+            }
+        });
+
+        {*var swiper = new Swiper('#swiper-container1', {
+            slidesPerView: 1,
+            loop: true,
+            autoplay: {
+                delay: 2500,
+            },
+        });*}
+
+        $('.sortBy').select2({
+            minimumResultsForSearch: -1,
+        });
+
+    });
+
+</script>
+
+
+
+<!-- SCRIPT FOR MOBILE  -->
+
+
+<script>
+
+    var updated = 0;
+    var updated2 = 0;
+    var updated3 = 0;
+
+    $(document).ready(function () {
+
+        $(".catTopBtn").bind("click", function () {
+
+            if ($(".only-mobile").css("display") == "block") {
+                if ($(this).next(".listCat").css("display") == "none") {
+                    if (updated2 == 0) {
+                        updated2 = 1;
+                    }
+                    $(".leftSortBtn").children(".icon").removeClass("rotateIcon");
+                    $(".hiddenSort").slideUp();
+
+                    $(this).children(".icon").addClass("rotateIcon");
+                    $(this).next(".listCat").slideDown();
+                } else {
+                    $(this).children(".icon").removeClass("rotateIcon");
+                    $(this).next(".listCat").slideUp();
+                }
+            }
+        });
+
+        $(".leftSortBtn").bind("click", function () {
+
+            if ($(".only-mobile").css("display") == "block") {
+                if ($(".hiddenSort").css("display") == "none") {
+                    if (updated3 == 0) {
+                        updated3 = 1;
+                    }
+                    $(".catTopBtn").children(".icon").removeClass("rotateIcon");
+                    $(".listCat").slideUp();
+
+                    $(this).children(".icon").addClass("rotateIcon");
+                    $(".hiddenSort").slideDown();
+                } else {
+                    $(this).children(".icon").removeClass("rotateIcon");
+                    $(".hiddenSort").slideUp();
+                }
+            }
+        });
+
+        $(".filterBtn").bind("click", function () {
+            $(".filterWrapper").removeClass("zindex-1");
+            $(".filterWrapper").addClass("overflowVisible");
+            $("#hiddenFilter").addClass("menuShow");
+        });
+
+
+        $(".subfilterLi label").bind('click', function (event) {
+            var selectorId = $(this).parent().parent().parent().attr('id');
+            var textHolder = $("#" + selectorId).parent().children(".selectedItems");
+            var deleteBtn = $("#" + selectorId).children(".subFilter").children(".subFilterBackBtnHolder").children(".clearFilter");
+            var parentContainer = $("#" + selectorId).parent();
+            if ($(this).children("input").is(':checked')) {
+                $(this).addClass("checkedLabel");
+            } else {
+                $(this).removeClass("checkedLabel");
+            }
+            var selectedItems = get_all_checkbox_values(selectorId);
+            $(textHolder).empty();
+
+            if (selectedItems != "") {
+                $(parentContainer).addClass("height70");
+                $(textHolder).text(selectedItems);
+                $(deleteBtn).show();
+                $(".clearWholeForm").show();
+            } else {
+                if (parentContainer.hasClass("height70")) {
+                    $(parentContainer).removeClass("height70");
+                    $(deleteBtn).hide();
+                }
+            }
+            hideFormClearBtn();
+        });
+
+        $(".closeFilter .closeFilterBtn").bind("click", function () {
+
+            if ($("#hiddenFilter").hasClass("menuShow")) {
+                $("#hiddenFilter").removeClass("menuShow");
+                setTimeout(function () {
+                    $(".filterWrapper").removeClass("overflowVisible");
+                    $(".filterWrapper").addClass("zindex-1");
+                }, 1000);
+            }
+        });
+
+        $(".hasSubFilter").bind('click', function (e) {
+
+            if ($(".only-mobile").css("display") == "block") {
+                e.preventDefault();
+
+                var menuName = $(this).text();
+
+                $(".subFilterHolder").removeClass("menuShow");
+
+                if ($(this).parent().children(".subFilterHolder").hasClass("menuShow")) {
+
+                    $(".subFilterHolder").removeClass("menuShow");
+                } else {
+
+                    if (updated2 == 0) {
+                        updated2 = 1;
+                    }
+
+                    if ($(this).parent().children(".subFilterHolder").children(".subFilter").children(".subfilterLi").hasClass("subFilterBackBtnHolder")) {
+
+                    } else {
+
+                        var checkboxHolder = $(this).parent().children(".subFilterHolder").attr('id');
+
+                        $(this).parent().children(".subFilterHolder").children(".subFilter").prepend("<li class='subfilterLi subFilterBackBtnHolder'><span class='subFilterBackBtn'>" + menuName + "</span><span class='clearFilter' onclick='uncheckAllcheckboxes(" + checkboxHolder + ")'>изчисти</span></li>");
+                    }
+
+                    $(this).parent().children(".subFilterHolder").addClass("menuShow");
+
+                    $(".subFilterBackBtn").bind("click", function () {
+
+                        $(this).parent().parent().parent().removeClass("menuShow");
+
+                    });
+                }
+            }
+        });
+		
+		/*
+        $("#mobileFilterSubmit").bind('click', function (e) {
+
+            e.preventDefault();
+
+            console.log($("#mobileFilterSubmit").closest('form').serialize());
+
+        });
+		*/
+
+    });
+
+    function get_all_checkbox_values(current_id) {
+
+        var selector = '#' + current_id + ' .subFilter .subfilterLi label input:checked';
+
+        var selected = [];
+        $(selector).each(function () {
+            selected.push($(this).data('value'));
+        });
+
+        return selected.toString();
+    }
+
+    function uncheckAllcheckboxes(selector) {
+        if (selector == "#hiddenFilter") {
+            $(".selectedItems").empty();
+            $(".filterLi").removeClass("height70");
+            $(".clearFilter").hide();
+        } else {
+            $(selector).find("label").removeClass("checkedLabel");
+            $(selector).parent().children(".selectedItems").empty();
+            $(selector).children(".subFilter").children(".subFilterBackBtnHolder").children(".clearFilter").hide();
+        }
+        $(selector).find("input:checkbox").prop('checked', false);
+        hideFormClearBtn();
+    }
+
+    function hideFormClearBtn() {
+
+        var isEmpty = 1;
+
+        $('.selectedItems').each(function () {
+            if ($(this).text() != "") {
+                isEmpty = isEmpty + 1;
+            }
+        });
+        console.log("isEmpty -  " + isEmpty);
+        if (isEmpty == 1) {
+            $(".clearWholeForm").hide();
+        }
+    }
+
+</script>
+
+<!-- END OF SCRIPT FOR MOBILE  -->
+
+<footer>
+    <div class="topFooter">
+        <div class="container">
+            <div class="footerRow">
+                <nav>
+                    <h3 class="footerTitle">{#information#}</h3>
+                    <ul class="footerMenu">
+                       {section name=fm loop=$footer_menus}
+							<li><a href="{if $footer_menus[fm].url}{$footer_menus[fm].url}{else}{if $footer_menus[fm].htaccess_url}{$footer_menus[fm].htaccess_url}{else}/{#htaccess_info#}/{$footer_menus[fm].id}{/if}{/if}">{$footer_menus[fm].name}</a></li>
+						{/section}
+                    </ul>
+                </nav>
+                <div class="socialsContainer">
+                    <h3 class="footerTitle">{#follow_us#}</h3>
+                    <ul class="socialsRow">
+                        <li><a rel="nofollow" target="_blank" href="{#link_fb#}"><img class="lazyload" data-src="/images/icon-fb.png" alt=""></a></li>
+                        <li><a rel="nofollow" target="_blank" href="{#link_in#}"><img class="lazyload" data-src="/images/icon-instagram.png" alt=""></a></li>
+                        <li><a rel="nofollow" target="_blank" href="{#link_tw#}"><img class="lazyload" data-src="/images/icon-twitter.png" alt=""></a></li>
+                        <li><a rel="nofollow" target="_blank" href="{#link_pin#}"><img class="lazyload" data-src="/images/icon-pinterest.png" alt=""></a></li>
+                        <li><a rel="nofollow" target="_blank" href="{#link_yt#}"><img class="lazyload" data-src="/images/icon-youtube.png" alt=""></a></li>
+                    </ul>
+                </div>
+                <div class="payments">
+                    <ul class="paymentsRow">
+                        <li class="logo mastercard"></li>
+                        <li class="logo visa"></li>
+                        <li class="logo maestro"></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="bottomFooter">
+        <div class="container">
+            <div class="footerRow">
+                <nav>
+                    <ul class="footerMenu2">
+						{section name=fm2 loop=$footer_menus2}
+							<li><a href="{if $footer_menus2[fm2].url}{$footer_menus2[fm2].url}{else}{if $footer_menus2[fm2].htaccess_url}{$footer_menus2[fm2].htaccess_url}{else}/{#htaccess_info#}/{$footer_menus2[fm2].id}{/if}{/if}">{$footer_menus2[fm2].name}</a></li>
+						{/section}
+                    </ul>
+                </nav>
+                <div class="logoFooter">
+                    <a class="logo" href=""><img src="/images/logoCompact.png" alt=""></a>
+                    <span class="text">{$copyrights.description}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+{*<link rel="stylesheet" href="/js/sweetalert/sweetalert.css">*}
+{*<script src="/js/sweetalert/sweetalert-dev.js"></script>*}
+
+<script src='https://www.google.com/recaptcha/api.js?hl=bg'></script>
+
+{*<script src='/js/tuupola-lazyload/jquery.lazyload.js'></script>*}
+<script src='/js/lazyload.js'></script>
+{*<script src="https://cdn.rawgit.com/tuupola/jquery_lazyload/0a5e0785a90eb41a6411d67a2f2e56d55bbecbd3/lazyload.js"></script>*}
+<script>
+    window.addEventListener("load", function(event) {
+        lazyload();
+    });
+    
+    $("#logoutButton").click(function(ev){
+        ev.preventDefault();
+        {if $showSocialLogins}
+            {*{if $useFacebookLogin}fbLogout();{/if}*}
+            {if $useGoogleLogin}googleSignOut();{/if}
+        {/if}
+        window.location.href = "{#htaccess_logout#}";
+    });
+    
+    var timeRe = 600000; // 10 mins
+    //var timeRe = 5000; // 5 sec
+    function refreshSn(timeRe) {
+        setTimeout(
+            function () {
+                $.ajax({
+                    type: "POST",
+                    url: '/refresh-session',
+                    cache: false,
+                    timeout: 4000,
+                    dataType: 'text',
+                    complete: function () {
+                        //console.log('complete');
+                        refreshSn(timeRe);
+                    },
+                    success: function (res) {
+                        //console.log('success');
+                        //console.log(res);
+                    },
+                    error: function (er) {
+                        //console.log(er);
+                    }
+                });
+            },
+            timeRe
+            );
+    }
+    ;
+    refreshSn(timeRe);
+    
+    //-----------------cookieconsent--------------------------------------------
+    $(document).ready(function(){
+        var log = function (message) {
+            h.innerHTML += timeStamp() + message + "<br>";
+            h.scrollTop = h.scrollHeight;
+        }
+
+        cookieconsent.initialise({
+            type: 'info',
+            palette: {
+                "popup": { "background": "rgba(112, 172, 140, 0.9)", "text": "#ffffff" },
+                "button": { "background": "#E8F3F0", "text": "#59605F" },
+            },
+            content: {
+                "message": "Сайтът използва \"бисквитки\" (cookies), за подобряване на неговата ефективност. Продължавайки използването му, Вие се съгласявате с нашата ",
+                "dismiss": "Разбрах!",
+                "link": "Политика за употреба на бисквитки",
+                "href": "/{#htaccess_info#}/684"
+            },
+            onPopupOpen: function () {
+                console.log('<em>onPopupOpen()</em> called');
+            },
+            onPopupClose: function () {
+                console.log('<em>onPopupClose()</em> called');
+            },
+            onInitialise: function (status) {
+                console.log('<em>onInitialise()</em> called with status <em>' + status + '</em>');
+            },
+            onStatusChange: function (status) {
+                console.log('<em>onStatusChange()</em> called with status <em>' + status + '</em>');
+            },
+            onRevokeChoice: function () {
+                console.log('<em>onRevokeChoice()</em> called');
+            },
+        }, function (popup) {
+            p = popup;
+        }, function (err) {
+            console.error(err);
+        });
+    });
+</script>
+
+<!-- The Modal -->
+<div class="modal fade" id="subscribeModal">
+    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header">
+                <img class="headerImg" src="/images/logoHeaderBlack.png" alt="Козметика от ArthaBeauty">
+                {*<h4 class="modal-title">{#subscribe_title#}</h4>*}
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+	
+            <!-- Modal body -->
+            <div class="modal-body pb-5">
+                <div class="subscribeContainerModal">
+                    <h2 class="title">{#subscribe_title#}</h2>
+                    <span class="subtitle" id="subscOKModal">{#subscribe_subtitle#}</span>
+                    <form>
+                        <input class="customInput" type="text" name="email" placeholder="{#email_address#}" id="subscrMailModal" />
+                        <input class="submitBtn" type="button" name="" value="Абонирай се" id="subscribeMailModal" />
+                    </form>
+                </div>
+            </div>
+
+            {*<!-- Modal footer -->
+            <div class="modal-footer">
+                <button type="button" style="background-color: #70AC8C; border-color: #70AC8C;" class="btn btn-secondary d-block w-100" data-dismiss="modal">{#close#}</button>
+            </div>*}
+
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+	$(document).ready(function(){
+        var cookieName = 'noShowSubscribe';
+        
+        if ($.cookie(cookieName)){
+            //$("#subscribeModal").modal('show');
+        }else {
+            $("#subscribeModal").modal('show');
+            $.cookie(cookieName, true, { expires: 30 });
+        }
+		
+        
+        $("#subscribeMail, #subscribeMailModal").bind("click", function (e) {
+            var mail = "";
+            var idClicked = $(this).attr("id");
+            var fromModal = false;
+            if(idClicked == "subscribeMailModal"){
+                mail = $("#subscrMailModal").val();
+                fromModal = true;
+            }else if(idClicked == "subscribeMail"){
+                mail = $("#subscrMail").val();
+            }
+
+            $.ajax({
+                type: "POST",
+                url: "/site/index.php",
+                data: "param=newsletterHome&email="+mail,
+                dataType: "json",
+                success: function(res){
+                    if(res.code == 1){
+                        $.cookie(cookieName, true, { expires: 90 });
+                    }else{
+                        $.cookie(cookieName, true, { expires: 30 });
+                    }
+                    if(fromModal){
+                        $("#subscOKModal").html(res.message);
+                    }else{
+                        $("#subscOK").html(res.message);
+                    }
+                }
+            });
+        });
+	});
+</script>
+
+	<script>
+			window.fbAsyncInit = function() {
+	        FB.init({
+	            xfbml            : true,
+	            version          : 'v3.3'
+	        });
+	    };
+	
+	    (function(d, s, id) {
+	        var js, fjs = d.getElementsByTagName(s)[0];
+	        if (d.getElementById(id)) return;
+	        js = d.createElement(s); js.id = id;
+	        js.src = 'https://connect.facebook.net/en_US/sdk/xfbml.customerchat.js';
+	        fjs.parentNode.insertBefore(js, fjs);
+	    }(document, 'script', 'facebook-jssdk'));</script>
+  <!-- Your customer chat code -->
+  <div class="fb-customerchat"
+       page_id="120530039349577"
+       logged_in_greeting="Здравейте, с какво да помогнем?"
+       logged_out_greeting="Здравейте, с какво да помогнем?">
+  </div>
+
+
+</body>
+</html>

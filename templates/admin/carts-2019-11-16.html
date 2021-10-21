@@ -1,0 +1,413 @@
+{include file="admin/header.html"}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb p-0">
+        <li class="breadcrumb-item">
+            <a href="./index.php">
+                <span class="mdi mdi-home"></span>                
+            </a>
+        </li>
+        <li class="breadcrumb-item" aria-current="page">{$page_heading}</li>
+    </ol>
+</nav>
+
+<div class="d-flex flex-row justify-content-between flex-wrap">
+    <form action="#" method="get">
+        <div class="form-row">
+            <div class="col form-group">
+                <label>Име на клиент</label>
+                <input type="text" class="form-control form-control-sm" name="name" {if $name}value="{$name}"{/if} placeholder="{#name#}">
+            </div> <!-- form-group end.// -->
+            <div class="col form-group">
+                <label>ID</label>
+                <input type="text" class="form-control form-control-sm" name="cart_id" {if $id}value="{$id}"{/if} placeholder="ID">
+            </div> <!-- form-group end.// -->
+            <div class="col form-group">
+                <label>Товарителница №</label>
+                <input type="text" class="form-control form-control-sm" name="delivery_tracking_number" {if $delivery_tracking_number}value="{$delivery_tracking_number}"{/if} placeholder="{#delivery_tracking_number#}">
+            </div> <!-- form-group end.// -->
+            <div class="col form-group">
+                <label>{#email#}</label>
+                <input type="text" class="form-control form-control-sm" name="email" {if $email}value="{$email}"{/if} placeholder="{#email#}">
+            </div> <!-- form-group end.// -->
+			<div class="col form-group">
+                <label>{#code#}</label>
+                <input type="text" class="form-control form-control-sm" name="code" {if $code}value="{$code}"{/if} placeholder="{#code#}">
+            </div>
+			<div class="col form-group">
+                <label>{#barcode#}</label>
+                <input type="text" class="form-control form-control-sm" name="barcode" {if $barcode}value="{$barcode}"{/if} placeholder="{#barcode#}">
+            </div>
+		</div>
+		<div class="form-row">
+            <div class="col form-group">
+				<input type='hidden' placeholder="Моля, започнете да пишете. Резултати ще се появят при въвеждането на повече от 3 символа"  class='select2'  data-primary='products' name="product_id" style="min-width: 100%;"/>
+				<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+				<link href="{$host}js/select2.css" rel="stylesheet" />
+				<script src="{$host}js/select2.min.js"></script>
+				<script src="{$host}lang/select2_locale_bg.js"></script>
+				<script type="text/javascript">
+						var pageID = {$id};
+						var selected_product = {if $product_id}{$product_id}{else}0{/if};
+						var relDom = 'product';
+					{literal}
+					var jq1113 = jQuery.noConflict(true);
+					jq1113(document).ready(function () {
+						jq1113(".select2").each(function (index) {
+							var apiURL = '/admin/' + jq1113(this).attr('data-primary') + 'API.php';
+							attachSelect(jq1113(this), apiURL)
+						});
+					});
+
+					function attachSelect(elem, apiURL) {
+						elem.select2({
+							ajax: {// Зарежда JSON от API страницата и го прехвърля във формат за selec2  
+								url: apiURL + "?id=" + pageID + "&secondary=" + relDom,
+								dataType: 'json',
+								delay: 250,
+								data: function (params) {
+									//console.log(params);
+									//console.log(apiURL+"?id=" + pageID+"&secondary="+relDom);
+									return {
+										search: params
+									};
+								},
+								processResults: function (data, page) {
+									return {
+										results: jq1113.map(data, function (item) {
+											return {
+												text: item.name,
+												id: item.id
+											}
+										})
+									};
+								},
+								cache: true
+							},
+							multiple: false,
+							escapeMarkup: function (markup) {
+								return markup;
+							}, // let our custom formatter work
+							initSelection: function (element, callback) {
+								jq1113.ajax(apiURL + "?selected=" + pageID + "&secondary=" + relDom+"&selected_product="+selected_product, {// Добавя избраните полета
+									dataType: 'json'
+								}).done(function (data) {
+									data = jq1113.map(data, function (item) {// Преформатира за Select2
+										return {
+											text: item.name,
+											id: item.id
+										}
+									});
+									callback(data);
+								});
+							},
+							minimumInputLength: 3,
+							language: "bg"
+						}).select2('val', []);//PatchyFix
+					}
+
+					{/literal}
+				</script>
+			</div>
+        </div>
+        <div class="form-row row">
+            {section name=os loop=$order_statuses}
+				<div class="col checkbox col-sm-3">
+					<label> <input type="checkbox" class="orderStatusesCheckbox" name="order_statuses_selected[]" value="{$order_statuses[os].id}" {$order_statuses[os].selected}> {$order_statuses[os].name} </label>
+				</div>
+            {/section}
+        </div>
+        <div class="form-row"> 
+            <div class="col checkbox col-sm-3">
+					<label> <input type="checkbox" name="not_finalised" value="1" {if $not_finalised}checked{/if}> Нефинализирани </label>
+            </div>
+			
+			<div class="col form-group">
+                <select class="form-control" name="brand_id">
+					<option value="">{#brands#}</option>
+					{section name=b loop=$brands}
+						<option value="{$brands[b].id}" {if $brands[b].id == $brand_id}selected{/if}>{$brands[b].name}</option>
+					{/section}
+				</select>
+            </div> <!-- form-group end.// -->
+            <div class="col input-group">
+				<div class="input-group-prepend">
+					<span class="input-group-text"><i class="fas fa-calendar"></i></span>
+				</div>
+				<input type="text" name="date_from" id="date_from" class="form-control" value="{$date_from}" placeholder="От">
+            </div>
+            <div class="col input-group">
+				<div class="input-group-prepend">
+					<span class="input-group-text"><i class="fas fa-calendar"></i></span>
+				</div>
+				<input type="text" name="date_to" id="date_to" class="form-control" value="{$date_to}" placeholder="До">
+				<script>
+					  $( function() {
+						var dateFormat = "dd/mm/yy",
+						  from = $( "#date_from" )
+							.datepicker({
+							  defaultDate: "+1w",
+							  changeMonth: true,
+							  changeYear: true,
+							  dateFormat: dateFormat,
+							  numberOfMonths: 1
+							})
+							.on( "change", function() {
+							  to.datepicker( "option", "minDate", getDate( this ) );
+							}),
+						  to = $( "#date_to" ).datepicker({
+							defaultDate: "+1w",
+							changeMonth: true,
+							changeYear: true,
+							dateFormat: dateFormat,
+							numberOfMonths: 1
+						  })
+						  .on( "change", function() {
+							from.datepicker( "option", "maxDate", getDate( this ) );
+						  });
+					 
+						function getDate( element ) {
+						  var date;
+						  try {
+							date = $.datepicker.parseDate( dateFormat, element.value );
+						  } catch( error ) {
+							date = null;
+						  }
+					 
+						  return date;
+						}
+					  } );
+				</script>
+            </div>
+            <div class="col form-group">
+                <input type="submit" class="form-control btn btn-primary btn-sm" name="Filter" value="{#filter#}">
+            </div>
+        </div>
+		
+			
+    </form>
+            
+    <script>
+        function getOrders(){
+            $.ajax({
+                type: "POST",
+                url: "getOrders.php",
+                data: "delivery_since={$time_now}",
+                success: function (html) {
+                    if (html == 1) {
+                        console.log(html);
+                        alert("Има нови поръчки и/или БЪРЗИ поръчки!");
+                    } else {
+                        setTimeout("getOrders()", 10000);
+                    }
+                }
+            });
+        }
+        $(document).ready(function () {
+            setTimeout("getOrders()", 10000);
+            $('.checkAll:button').toggle(function () {
+                $('.orderStatusesCheckbox').attr('checked', 'checked');
+                $(this).val('Демаркирай всички');
+            }, function () {
+                $('.orderStatusesCheckbox').removeAttr('checked');
+                $(this).val('Маркирай всички');
+            })
+        });
+    </script>
+</div>
+<div class="row d-flex flex-row justify-content-between flex-wrap mb-3">
+    <span class="col">
+        <a href="{$php_edit}?act=add" class="btn btn-primary btn-add"><i class="mdi mdi-book-multiple-plus"></i>{#add_new#}</a>
+    </span>
+</div>
+
+
+
+<!-- List Table -->
+<div class="card card-table-border-none" id="recent-orders">
+    <div class="card-header justify-content-between">
+        <h2>{#list_elements#}</h2>
+        <div class="date-range-report ">
+            <span></span>
+        </div>
+		
+    </div>
+    <div class="card-body pt-0 pb-5">
+        <form name="formName" action="{$php_self}" method="post">
+            <table class="table card-table table-responsive table-responsive-large" style="width:100%">
+                <thead>
+                    <tr class="d-flex thSmall">
+                        <th class="col-sm-1"><input name="checkbox" type="checkbox" value="" class="checkall-task"></th>
+                        <th class="col-sm-1">ID</th>
+                        <th class="col-sm-1">{#postdate#}</th>
+                        <th class="col-sm-2">{#status#}</th>
+                        <th class="col-sm-4">Name</th>
+                        <th class="col-sm-2">Amount</th>
+                        <th class="col-sm-1 text-right pr-2">{#actions#}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {section name=itm loop=$items}
+                        <tr name="{$items[itm].id}" class="d-flex">
+                            <td class="col-sm-1 p-0">
+                                <input name="ids[]" type="checkbox" value="{$items[itm].id}">
+                            </td>
+                            <td class="col-sm-1 p-0">
+                                <strong>{$items[itm].id}</strong>
+                                {if $items[itm].add_from_cms == 1 || $items[itm].edit_from_cms == 1}
+                                    <p><span class="badge badge-warning badge-sm">CMS</span></p>
+                                {/if}
+                                {if $items[itm].draw_participate}
+                                    <p><strong>Томбола</strong></p>
+                                {/if}
+                            </td>
+                            <td class="col-sm-1 p-0 text-center">
+                                <a class="text-dark" href="{$php_edit}?act=edit&id={$items[itm].id}"><small>{$items[itm].postdate|date_format:"%d.%m.%Y<br>%H:%M"}</small></a>
+                            </td>
+                            <td class="col-sm-2 p-0 px-3" style="color: #{$items[itm].order_status_color};">
+                                <p>
+                                <select name="order_status_ids[]" class="inputField form-control form-control-sm">
+                                    {section name=os loop=$order_statuses}
+                                        <option value="{$order_statuses[os].id}"{if $order_statuses[os].id == $items[itm].status} selected{/if } style="color: #{$order_statuses[os].color};">{$order_statuses[os].name}&nbsp;</option>
+                                    {/section}
+                                </select>
+                                <input type="hidden" value="{$items[itm].id}" name="cart_ids[]">
+                                </p>
+                                <p class="pt-2">
+                                    <a href="{$php_edit}?act=edit&id={$items[itm].id}">
+                                    {if $items[itm].finalised == 1}
+                                        <span class="btn btn-sm btn-outline-success d-block p-0">Финализирана</span>
+                                    {else}
+                                        <span class="btn btn-sm btn-outline-danger d-block p-0">Нe e финализирана</span>
+                                    {/if}
+                                    </a>
+                                </p>
+                            </td>
+                            
+                            <td class="col-sm-4 py-0 px-1 pl-2">
+                                {if $items[itm].user_id}<i class="mdi mdi-account-check"></i>{/if} <small>{$items[itm].billing_first_name} {$items[itm].billing_last_name}</small>
+                            </td>
+                            <td class="col-sm-2 p-0">
+                                {if $items[itm].total_amount}{$items[itm].total_amount} лв.{/if}&nbsp;
+                            </td>
+                            <td class="col-sm-1 text-right p-0 m-0">
+                                <button class="btn btn-sm btn-primary" type="button" data-toggle="collapse" data-target="#infoCont-{$items[itm].id}" aria-expanded="false" aria-controls="collapseExample">
+                                    <i class="fas fa-info-circle"></i>
+                                </button>
+                                <div class="dropdown show d-inline-block widget-dropdown">
+                                    <a class="dropdown-toggle icon-burger-mini" href="" role="button" id="dropdown-recent-order1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" data-display="static"></a>
+                                    <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdown-recent-order1">
+                                        <li class="dropdown-item">
+                                            <a href="{$php_edit}?act=edit&id={$items[itm].id}"><i class="mdi mdi-square-edit-outline"></i>{#edit#}</a>
+                                        </li>
+                                        <li class="dropdown-item">
+                                            <a href="{$php_self}?act=delete&id={$items[itm].id}"><i class="mdi mdi-delete-outline"></i>{#delete#}</a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="collapse" id="infoCont-{$items[itm].id}">
+                            <td colspan="9">
+                                <div>
+                                    <div class="card card-body p-2 pt-3">
+                                        {if $items[itm].delivery_tracking_number}
+                                        <div>
+                                            Товарителница №: {$items[itm].delivery_tracking_number}
+                                            <hr>
+                                        </div>
+                                        
+                                        {/if}
+                                        <ul>
+                                            {section name=p loop=$items[itm].products}
+                                            <li>
+                                                <div class="product">
+                                                    <div class="col-sm-2">
+                                                        <div class="productImage" style="background-image: url(/files/tntn/{$items[itm].products[p].pic});"></div>
+                                                    </div>
+                                                    <div class="productInfo col-sm-10 pt-2">
+                                                        <a href="/productbg/{$items[itm].products[p].id}" target="_blank"><div class="prodName">{$items[itm].products[p].product_name}</div></a>
+                                                        <div class="d-flex flex-row justify-content-between flex-wrap small" style="font-size: 12px;">
+															{if $items[itm].products[p].option.option_text}
+																{$items[itm].products[p].option.option_group_name}: {$items[itm].products[p].option.option_text} &nbsp;&nbsp;&nbsp;
+															{/if}
+															{if $items[itm].products[p].product_code}
+																Код: {$items[itm].products[p].product_code}
+															{/if}
+														</div>
+                                                        <div class="d-flex flex-row justify-content-between flex-wrap mt-2">
+															<div class="d-flex flex-row justify-content-between col-sm-4 p-0">
+																<div>
+																	<span class="badge badge-info">{$items[itm].bills[$items[itm].products[p].product_id].client_price} {#currency#}</span>
+																</div>
+																<div>
+																	<span class="badge badge-primary">{$items[itm].bills[$items[itm].products[p].product_id].supply_price} {#currency#}</span>
+																</div>
+																<div>
+																	<span class="badge badge-success">{$items[itm].bills[$items[itm].products[p].product_id].profit} {#currency#}</span>
+																</div>
+															</div>
+															<div>
+																<span class="badge badge-warning">{$items[itm].products[p].product_price_supply} {#currency#}</span>
+															</div>
+															<div>
+                                                            {if $items[itm].products[p].product_price_discount > 0.0}
+                                                                <del class="prodPriceOld">{$items[itm].products[p].product_price} {#currency#}</del>
+                                                                <span class="prodPrice">{$items[itm].products[p].product_price_discount} {#currency#}</span>
+                                                            {else}
+                                                                <span class="prodPrice">{$items[itm].products[p].product_price} {#currency#}</span>
+                                                            {/if}
+                                                            </div>
+                                                            <div class="quantity">
+                                                                <strong>{$items[itm].products[p].quantity}</strong>
+                                                            </div>
+                                                            <div>
+                                                                <span class="prodPrice">{$items[itm].products[p].product_price_total} {#currency#}</span>
+                                                            </div>
+															<div>
+                                                                <span class="prodPrice">{$items[itm].products[p].price_supply} {#currency#}</span>
+                                                            </div>
+                                                        </div>
+
+                                                    </div>
+                                                </div>
+                                            </li>
+                                            {/section}
+                                        </ul>
+										
+										<hr>
+										<div class="product">
+												<div class="col-sm-2">
+													&nbsp;
+												</div>
+												<div class="d-flex flex-row justify-content-between flex-wrap mt-2 col-sm-10">
+													<div class="d-flex flex-row justify-content-between col-sm-4 p-0">
+														<div>
+															<span class="badge badge-info">{$items[itm].bills.client_price} {#currency#}</span>
+														</div>
+														<div>
+															<span class="badge badge-primary">{$items[itm].bills.supply_price} {#currency#}</span>
+														</div>
+														<div>
+															<span class="badge badge-success">{$items[itm].bills.profit} {#currency#}</span>
+														</div>
+													</div>
+												</div>
+										</div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    {/section}
+                </tbody>
+            </table>
+            <input type="submit" class="submitField btn btn-danger" name="mDelete" value="{#delete_selected#}">
+            <input type="submit" class="submitField btn btn-primary" name="changeStatuses" value="{#change_statuses#}">
+            <input type="submit" class="submitField btn btn-warning pull-right" name="sendStatusEmail" value="{#send_status_emails#}">
+        </form>
+    </div>
+    <div class="pagesHolder size12 paging_full_numbers">
+        {$pagination}
+    </div>
+</div>
+
+{include file="admin/footer.html"}

@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+<parcels>
+  <client_software>Afya-Pharmacy.bg</client_software>
+  <request_type>shipping</request_type>
+  <system>
+    <validate>0</validate>
+    <response_type>XML</response_type>
+    <only_calculate>0</only_calculate>
+  </system>
+  <client>
+    <username>afyabg08</username>
+    <password>slojnaparola</password>
+  </client>
+  <loadings>
+    <row>
+      <sender>
+        <city>&#x411;&#x443;&#x440;&#x433;&#x430;&#x441;</city>
+        <post_code>8012</post_code>
+        <office_code>8012</office_code>
+        <name>&#x410;&#x424;&#x418;&#x410; &#x424;&#x410;&#x420;&#x41C;&#x410;&#x421;&#x418; &#x415;&#x41E;&#x41E;&#x414;</name>
+        <name_person>&#x410;&#x444;&#x438;&#x430; &#x444;&#x430;&#x440;&#x43C;&#x430;&#x441;&#x438;</name_person>
+        <quarter>&#x436;.&#x43A;. &#x418;&#x437;&#x433;&#x440;&#x435;&#x432;</quarter>
+        <street>&#x436;.&#x43A;. &#x418;&#x437;&#x433;&#x440;&#x435;&#x432;</street>
+        <street_num>&#x431;&#x43B;.186</street_num>
+        <street_bl></street_bl>
+        <street_vh></street_vh>
+        <street_et></street_et>
+        <street_ap></street_ap>
+        <street_other></street_other>
+        <phone_num>0889717880</phone_num>
+      </sender>
+      <receiver>
+        <city></city>
+        <post_code>8000</post_code>
+        <office_code>8012</office_code>
+        <name>&#x410;&#x43D;&#x435;&#x43B;&#x438;&#x44F; &#x410;&#x43B;&#x438;&#x435;&#x432;&#x430;</name>
+        <name_person>&#x410;&#x43D;&#x435;&#x43B;&#x438;&#x44F; &#x410;&#x43B;&#x438;&#x435;&#x432;&#x430;</name_person>
+        <receiver_email>kkalchev@development-bg.com</receiver_email>
+        <quarter>&#x436;.&#x43A;. &#x418;&#x437;&#x433;&#x440;&#x435;&#x432;</quarter>
+        <street></street>
+        <street_num></street_num>
+        <street_bl>186</street_bl>
+        <street_vh></street_vh>
+        <street_et></street_et>
+        <street_ap></street_ap>
+        <street_other>&#x43F;&#x430;&#x440;&#x442;&#x435;&#x440;</street_other>
+        <phone_num>0895221366</phone_num>
+        <sms_no>0895221366</sms_no>
+      </receiver>
+      <shipment>
+        <shipment_type>PACK</shipment_type>
+        <description>&#x441;&#x442;&#x430;&#x43D;&#x434;&#x430;&#x440;&#x442;&#x43D;&#x430; &#x43F;&#x440;&#x430;&#x442;&#x43A;&#x430;</description>
+        <pack_count>1</pack_count>
+        <weight>0.1</weight>
+        <tariff_sub_code>OFFICE_OFFICE</tariff_sub_code>
+        <pay_after_accept>1</pay_after_accept>
+        <invoice_before_pay_CD>0</invoice_before_pay_CD>
+        <pay_after_test>0</pay_after_test>
+        <instruction_returns></instruction_returns>
+      </shipment>
+      <payment>
+        <side>RECEIVER</side>
+        <method>CASH</method>
+        <receiver_share_sum>5.05</receiver_share_sum>
+        <share_percent></share_percent>
+        <key_word>&#x42F;&#x41C;0022</key_word>
+      </payment>
+      <services>
+        <oc>0</oc>
+        <cd type="">23.60</cd>
+        <cd_agreement_num></cd_agreement_num>
+      </services>
+    </row>
+  </loadings>
+</parcels>

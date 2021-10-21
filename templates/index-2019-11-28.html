@@ -1,0 +1,331 @@
+{include file="header.html"}
+{if 0}
+<div class="optionsContainer" id="optionsContainer">
+    <div class="container">
+        <div class="optionsRow">
+            <div class="option">
+                <div class="iconHolder"><img src="/images/icon-truck.png" alt=""></div>
+                <span class="optionText">{#sign_free_delivery#}</span>
+            </div>
+            <div class="option">
+                <div class="iconHolder"><img src="/images/icon-star.png" alt=""></div>
+                <span class="optionText">{#sign_first_class_products#}</span>
+            </div>
+            <div class="option">
+                <div class="iconHolder"><img src="/images/icon-shield.png" alt=""></div>
+                <span class="optionText">{#sign_protected_ecommerce#}</span>
+            </div>
+        </div> 
+    </div>
+</div>
+{/if}
+<div class="indexBackground">
+    <div class="sliderTop">
+        <div class="container">
+            <div id="swiper-container1" class="swiper-container">
+                <div class="swiper-wrapper">
+					{section name=h loop=$homepage}
+						<div onClick="window.location='{if $homepage[h].url}{$homepage[h].url}{else}{if $homepage[h].htaccess_url}{$homepage[h].htaccess_url}{else}/{#htaccess_info#}/{$homepage[h].id}{/if}{/if}'" class="swiper-slide" style="background-image: url({if $homepage[h].pic_main}/files/{$homepage[h].pic_main}{else}/images/top-slide-d.jpg{/if}); cursor: hand; cursor: pointer;">
+							{if 1}
+							<div class="sliderContent">
+								{if 0}<h2 class="title">{$homepage[h].name}</h2>{/if}
+								{if 0}<div class="excerpt">{$homepage[h].excerpt}</div>{/if}
+								<a class="goTo" href="{if $homepage[h].url}{$homepage[h].url}{else}{if $homepage[h].htaccess_url}{$homepage[h].htaccess_url}{else}/{#htaccess_info#}/{$homepage[h].id}{/if}{/if}">{$homepage[h].link_text}</a>
+							</div>
+							{/if}
+						</div>
+					{/section}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="allCategories">
+        <div class="container">
+            <div class="catRow">
+				{section name=h2 loop=$homepage2}
+					
+					<div class="catItem">
+						<a href="{if $homepage2[h2].url}{$homepage2[h2].url}{else}{if $homepage2[h2].htaccess_url}{$homepage2[h2].htaccess_url}{else}/{#htaccess_info#}/{$homepage2[h2].id}{/if}{/if}">
+						<div class="content">
+							<div class="imgContainer" style="background-image: url({if $homepage2[h2].pic_1}/files/{$homepage2[h2].pic_1}{/if});">
+								
+							</div>
+							<h2 class="title">{$homepage2[h2].name}</h2>
+							<span class="subtitle">{$homepage2[h2].excerpt}</span>
+							<span class="goTo">{if 0}<a class="goTo" {if 0}href="{if $homepage2[h2].url}{$homepage2[h2].url}{else}{if $homepage2[h2].htaccess_url}{$homepage2[h2].htaccess_url}{else}/{#htaccess_info#}/{$homepage2[h2].id}{/if}{/if}"{/if}>{/if}{$homepage2[h2].link_text}</span>{if 0}</a>{/if}
+						</div>
+						</a>
+					</div>
+				{/section}
+            </div>
+        </div>
+    </div>
+	
+	<div class="allCategories">
+        <div class="container">
+			<h2 class="titleMain">{#heading_accents#}</h2>
+            <div class="catRow">
+				{section name=h3 loop=$homepage3}
+					<div class="catItem">
+						<a href="{if $homepage3[h3].url}{$homepage3[h3].url}{else}{if $homepage3[h3].htaccess_url}{$homepage3[h3].htaccess_url}{else}/{#htaccess_info#}/{$homepage3[h3].id}{/if}{/if}">
+							<div class="content">
+								<div class="imgContainer" style="background-image: url({if $homepage3[h3].pic_1}/files/{$homepage3[h3].pic_1}{/if});">
+									
+								</div>
+								<h2 class="title">{$homepage3[h3].name}</h2>
+								<span class="subtitle">{$homepage3[h3].excerpt}</span>
+								<span class="goTo">{if 0}<a class="goTo" href="{if $homepage3[h3].url}{$homepage3[h3].url}{else}{if $homepage3[h3].htaccess_url}{$homepage3[h3].htaccess_url}{else}/{#htaccess_info#}/{$homepage3[h3].id}{/if}{/if}">{/if}{$homepage3[h3].link_text}{if 0}</a>{/if}</span>
+							</div>
+						</a>
+					</div>
+				{/section}
+            </div>
+        </div>
+    </div>
+
+    <div class="newProducts">
+        <div class="container">
+            <h2 class="title">{#heading_new_products#}</h2>
+            <div class="productsRow">
+				{section name=np loop=$new_products}
+                <div class="singleItem">
+                        <a class="product" href="{if $new_products[np].htaccess_url}{$new_products[np].htaccess_url}{else}/{#htaccess_product#}/{$new_products[np].id}{/if}">
+                            <div class="imgContainer" style="background-image: url({if $new_products[np].mainPic}/files/tn/{$new_products[np].mainPic}{else}/images/noImage.png{/if});">
+                                <span class="likedBox"></span>
+                            </div>
+                            <h3 class="name">{$new_products[np].brand_name}</h3>
+                            {if $lng != "en"}
+                            <span class="excerpt" style="color: #212E27; font-weight: bold;">{$new_products[np].name_en}</span>
+                            {/if}
+                            <span class="excerpt">{$new_products[np].name}</span>
+                            {if $new_products[np].price_specialoffer > 0.0}
+                                <span class="d-flex flex-row justify-content-around">
+                                    <span class="price">{if $abb_before_amount}{$currency_abb}{/if}{$new_products[np].price_specialoffer|number_format: 2} {if !$abb_before_amount}{$currency_abb}{/if}</span>
+                                    <del class="price-old">{if $abb_before_amount}{$currency_abb}{/if}{$new_products[np].price|number_format: 2} {if !$abb_before_amount}{$currency_abb}{/if}</del>
+                                </span>
+                            {elseif $new_products[np].price > 0.0}
+                                <span class="price">{if $abb_before_amount}{$currency_abb}{/if}{$new_products[np].price|number_format: 2} {if !$abb_before_amount}{$currency_abb}{/if}</span>
+                            {/if}
+                        </a>
+                        <!-- rating-wrap -->
+                        <div class="rating-wrap">
+                            <div class="starsRow" id="rating-{$new_products[np].id}"></div>
+                            {*{if $new_products[np].reviews_count > 0 && $new_products[np].comments > 0}
+                                {if $new_products[np].reviews_count > 0}<div class="label-rating"><small>{$new_products[np].reviews_count} {if $new_products[np].reviews_count > 1}{#reviews#}{else}{#review#}{/if}</small></div>{/if}
+                                {if $new_products[np].comments > 0}<div class="label-rating"><small>{$new_products[np].comments} {if $new_products[np].comments > 1}{#comments#}{else}{#comment#}{/if}</small></div>{/if}
+                            {else}
+                                <div class="label-rating"><small>Все още няма ревюта.</small></div>
+                            {/if}*}
+                        </div> <!-- rating-wrap.// -->
+                        <script>
+                            $(document).ready(function () {
+                                $.fn.raty.defaults.path = '/js/raty/img';
+                                $('#rating-{$new_products[np].id}').raty({
+                                    readOnly:  true,
+                                    starType:    'png', // Element used to represent a star.
+                                    starHalf:    'star-half.png', // The name of the half star image.
+                                    starOff:     'star-off.png',  // Name of the star image off.
+                                    starOn:      'star-on.png',   // Name of the star image on.
+                                    half:  true,
+                                    start: parseFloat({$new_products[np].rating})
+                               });
+                            });
+                        </script>
+                    </div>
+				{/section}
+            </div>
+        </div>
+    </div>
+
+    <div class="topBrands">
+        <div class="container">
+            <h2 class="title">топ брандове</h2>
+            <div id="swiper-container-top-brands" class="swiper-container-top-brands">
+                <div class="swiper-wrapper brandsRow">
+                    {section name=fpb loop=$firstpage_brands}
+                    <div class="swiper-slide singleItem">
+                        <a href="/{#htaccess_brand#}/{$firstpage_brands[fpb].id}" class="brandImage" style="background-image: url(files/tn/{$firstpage_brands[fpb].pic}); box-shadow: 0px 16px 20px rgba(0, 19, 111, 0.3);"></a>
+                    </div>
+                    {/section}
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+<div class="blogSection">
+    <div class="container">
+        <h2 class="title">Ново в нашия блог</h2>
+        <div class="articleRow">
+			{section name=ln loop=$latest_news}
+            <article>
+                <a href="{if $latest_news[ln].url}{$latest_news[ln].url}{else}{if $subMenus[sm].htaccess_url}{$latest_news[ln].htaccess_url}{else}/{#htaccess_news_article#}/{$latest_news[ln].id}{/if}{/if}">					
+                    <section class="imgContainer" style="background-image: url({if $latest_news[ln].pic}/files/{$latest_news[ln].pic}{else}/images/article-2.jpg{/if});"></section>
+                    <section class="content">
+                        <h3 class="articleTitle">{$latest_news[ln].name}</h3>
+                        <div class="excerpt">{$latest_news[ln].excerpt}</div>
+						{if $latest_news[ln].author.id}
+                        <div class="authorInfo">
+                            <div class="userPic">
+                                {if $latest_news[ln].author.pic}<img src="/files/tntn/{$latest_news[ln].author.pic}" alt="{$latest_news[ln].author.name}">{/if}
+                            </div>
+                            <div class="userInfo">
+                                <span class="name">{$latest_news[ln].author.name}</span>
+                                <span class="date">{$latest_news[ln].news_date} {$latest_news[ln].news_categories[0].name}</span>
+                            </div>
+                        </div>
+						{/if}
+                    </section>
+                </a>
+            </article>
+			{/section}
+        </div>
+    </div>
+
+</div>
+
+<div class="subscribeContainer">
+    <div class="container">
+        <h2 class="title">Абонирай се</h2>
+        <span class="subtitle">Искаш да бъдеш уведомен/а за ексклузивни промоции и намаления? Въведи своя email и бъди в крак с най-добрите оферти!</span>
+        <form>
+            <input class="customInput" type="text" name="email" placeholder="Имейл адрес">
+            <input class="submitBtn" type="submit" name="" value="Абонирай се">
+        </form>
+    </div>
+</div>
+
+
+
+<script>
+
+    var updated = 0;
+    var updated2 = 0;
+
+    $(document).ready(function () {
+
+        $("#menuToggle").bind("click", function () {
+
+            if ($(this).children("input").is(":checked")) {
+                if (updated == 0) {
+                    updated = 1;
+                }
+                $(".bottomLine .container .headRow").css("height", "0px");
+                $("#searchIcon").removeClass("searchIconActive");
+                $(".searchHolder").removeClass("menuShow");
+                $("nav.headRow").addClass("overflowVisible");
+                $(".topLine").addClass("overflowVisible2");
+                $(".topLine .container .headRow").addClass("menuShow");
+                $(".menuHolder").addClass("menuShow");
+            } else {
+
+                $("nav.headRow").removeClass("overflowVisible");
+                $(".topLine").removeClass("overflowVisible2");
+                $(".topLine .container .headRow").removeClass("menuShow");
+                $(".menuHolder").removeClass("menuShow");
+            }
+        });
+
+        $("#searchIcon").bind('click', function (e) {
+            if ($(".searchHolder").hasClass("menuShow")) {
+                $(".bottomLine .container .headRow").css("height", "0px");
+                $("#searchIcon").removeClass("searchIconActive");
+                $(".searchHolder").removeClass("menuShow");
+            } else {
+                if ($("#menuToggle").children("input").is(":checked")) {
+                    $("#menuToggle").find("input").trigger("click");
+                }
+                $("#searchIcon").addClass("searchIconActive");
+                $(".bottomLine .container .headRow").css("height", "64px");
+                $(".searchHolder").addClass("menuShow");
+            }
+
+        });
+
+        $(".hasSubMenu").bind('click', function (e) {
+
+            if ($(".only-mobile").css("display") == "block") {
+                e.preventDefault();
+
+                var menuName = $(this).text();
+
+                $(".submenuHolder").removeClass("menuShow");
+
+                if ($(this).parent().children(".submenuHolder").hasClass("menuShow")) {
+
+                    $(".submenuHolder").removeClass("menuShow");
+                } else {
+
+                    if (updated2 == 0) {
+                        updated2 = 1;
+                    }
+
+                    if ($(this).parent().children(".submenuHolder").children(".submenu").children(".submenuLi").hasClass("subMenubBackBtn")) {
+                    } else {
+
+                        $(this).parent().children(".submenuHolder").children(".submenu").prepend("<li class='submenuLi subMenubBackBtn'><span>" + menuName + "</span> </li>");
+                    }
+
+                    $(this).parent().children(".submenuHolder").addClass("menuShow");
+
+                    $(".subMenubBackBtn").bind("click", function () {
+
+                        $(this).parent().parent().removeClass("menuShow");
+
+                    });
+                }
+            }
+        });
+
+        var swiper = new Swiper('#swiper-container1', {
+            slidesPerView: 1,
+            loop: true,
+            autoplay: {
+                delay: 2500,
+            },
+        });
+        
+        var swiperTopBrands = new Swiper('#swiper-container-top-brands', {
+            slidesPerView: 7,
+            spaceBetween: 10,
+            centeredSlides: true,
+            loop: true,
+            autoplay: {
+                delay: 2500,
+            },
+            // init: false,
+            pagination: {
+                el: '.swiper-pagination',
+                clickable: true,
+            },
+            breakpoints: {
+                300: {
+                    slidesPerView: 3,
+                    spaceBetween: 10,
+                },
+                640: {
+                    slidesPerView: 4,
+                    spaceBetween: 10,
+                },
+                768: {
+                    slidesPerView: 5,
+                    spaceBetween: 15,
+                },
+                1024: {
+                    slidesPerView: 6,
+                    spaceBetween: 20,
+                },
+                1200: {
+                    slidesPerView: 7,
+                    spaceBetween: 20,
+                }
+            }
+        });
+
+    });
+
+</script>
+{include file="footer.html"}

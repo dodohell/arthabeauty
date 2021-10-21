@@ -1,0 +1,5 @@
+{
+    "require": {
+        "jmatosp/tumbleweed-cache": "^1.2"
+    }
+}

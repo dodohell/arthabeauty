@@ -1,0 +1,5 @@
+RewriteEngine off
+#AuthType Basic
+#AuthName "admin"
+#AuthUserFile "/home/vpsjqism/.htpasswds/public_html/admin/passwd"
+#require valid-user

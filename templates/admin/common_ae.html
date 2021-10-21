@@ -1,0 +1,64 @@
+{include file="admin/header.html"}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb p-0">
+            <li class="breadcrumb-item">
+                <a href="./">
+                    <span class="mdi mdi-home"></span>                
+                </a>
+            </li>
+            <li class="breadcrumb-item">
+                <a href="./{$php_self}">{#common#}</a>
+            </li>
+            <li class="breadcrumb-item" aria-current="page">{$row.tag}</li>
+        </ol>
+    </nav>
+    <div class="row-fluid">
+		<form method="post" enctype="multipart/form-data">
+            <div class="row">
+                <div class="col-sm-12 well">
+                    <div class="nonboxy-widget">
+                        <div class="widget-head">
+                            <h5>Описание</h5>
+                        </div>
+                        <div class="widget-content">
+
+                            <div class="widget-box">
+                            {if $row.spaw}
+                                {$editor}
+                            {else}
+                                {literal}
+                                <script language="javascript" type="text/javascript">
+                                    $(document).ready(function(){
+                                        $(".tabLanguage").bind("click", function(){
+                                            var index = $(".tabLanguage").index(this);
+                                            $(".tabLanguage").removeClass("activeTab");
+                                            $(this).addClass("activeTab");
+
+                                            $(".tabLanguageEditor").removeClass("activeTabEditor");
+                                            $(".tabLanguageEditor").eq(index).addClass("activeTabEditor");
+
+                                        });
+                                    });
+                                </script>
+                                {/literal}
+                                {section name=lan loop=$languages}
+                                    <div class="tabLanguage{if $smarty.section.lan.first} activeTab{/if}">{$languages[lan].long}</div>
+                                {/section}
+                                <div class="clear"></div>
+                                {section name=lan loop=$languages}
+                                    <div class="tabLanguageEditor{if $smarty.section.lan.first} activeTabEditor{/if}"><textarea id="description_{$languages[lan].short_use}" name="description_{$languages[lan].short_use}" rows="10" class="col-sm-12">{$languages[lan].value}</textarea></div>
+                                {/section}	
+                            {/if}
+                            </div>
+                        </div>
+                        <div class="form-actions">
+                            <input type="hidden" name="act" value="edit">
+                            <input type="hidden" name="tag" value="{$tag}">
+                            <button type="submit" name="Submit" class="btn btn-info">Save changes</button>
+                        </div>
+                    </div>
+                </div>
+			</div>
+		</form>
+    </div>
+	{include file="admin/footer.html"}

@@ -1,0 +1,172 @@
+{include file="header.html"}
+
+<div class="row">
+    <div class="col-12">
+        <ol class="breadcrumb">
+            {$breadcrumbs}
+        </ol>
+    </div>
+</div>
+<div class="row my-4">
+    <form method="post" action="#" id="formAddress" class="col-12">
+        <div class="card">
+            <div class="card-header">
+                <strong>{if $act == "add"}{#add_address_title#}{else}{#edit_address_title#}{/if}</strong>
+            </div>
+            <div class="card-body">
+                <dl class="dlist-align">
+                    <dt>Име: </dt>
+                    <dd><input type="text" class="required form-control" placeholder="Име" name="firstname" value="{$row.firstname}"></dd>
+                </dl>
+                <dl class="dlist-align">
+                    <dt>Фамилия: </dt>
+                    <dd><input type="text" class="required form-control" placeholder="Фамилно име" name="lastname" value="{$row.lastname}"></dd>
+                </dl>
+                <dl class="dlist-align">
+                    <dt>Email: </dt>
+                    <dd><input type="email" class="required form-control" placeholder="Email" name="email" value="{$row.email}"></dd>
+                </dl>
+                <dl class="dlist-align">
+                    <dt>Телефон: </dt>
+                    <dd><input type="text" class="form-control" placeholder="Телефон" name="phone" value="{$row.phone}"></dd>
+                </dl>
+                
+                <script>
+                    $(document).ready(function () {
+                        $("select[name=district_id]").bind("change", function () {
+                            var district_id = $(this).val();
+                            //console.log(district_id);
+                            $.ajax({
+                                type: "POST",
+                                url: "/get-cities-by-district-id",
+                                data: "district_id=" + district_id,
+                                dataType: "json",
+                                success: function (result) {
+                                    var city_id = parseInt({$row.city_id});
+                                    city_id = city_id ? city_id : 0;
+
+                                    var html = "<option value=''>{#please_choose#} {#city#}</option>";
+                                    var selected = "";
+                                    for (i = 0; i < result.length; i++) {
+                                        if (city_id == result[i].id) {
+                                            selected = "selected";
+                                        }
+                                        html += "<option value='" + result[i].id + "' " + selected + ">" + result[i].name + "</option>";
+                                    }
+                                    $("select[name=city_id]").html(html);
+                                },
+                                error: function (er) {
+                                    console.log(er);
+                                }
+                            });
+                        });
+                        //$("select[name=city_id]").bind("change", function(){
+                        //    console.log($(this). val());
+                        //});
+                    });
+                </script>
+
+                <dl class="dlist-align">
+                    <dt>Област: </dt>
+                    <dd>
+                        <select name="district_id" class="required form-control">
+                            <option value="">{#please_select#}</option>
+                            {section name=d loop=$districts}
+                                <option value="{$districts[d].id}" {if $districts[d].id == $row.district_id}selected{/if}>{$districts[d].name}</option>
+                            {/section}
+                        </select>
+                    </dd>
+                </dl>
+                <dl class="dlist-align">
+                    <dt>Град: </dt>
+                    <dd>
+                        <select name="city_id" class="required form-control">
+                            <option value="">{#please_select#}</option>
+                            {section name=c loop=$cities}
+                                <option value="{$cities[c].id}" {if $cities[c].id == $row.city_id}selected{/if}>{$cities[c].name}</option>
+                            {/section}
+                        </select>
+                    </dd>
+                </dl>
+                <dl class="dlist-align">
+                    <dt>Адрес 1: </dt>
+                    <dd><input type="text" class="required form-control" placeholder="Адрес 1" name="address_line_1" value='{$row.address_line_1}'></dd>
+                </dl>
+                <dl class="dlist-align">
+                    <dt>Адрес 2: </dt>
+                    <dd><input type="text" class="form-control" placeholder="Адрес 2" name="address_line_2" value="{$row.address_line_2}"></dd>
+                </dl>
+                <dl class="dlist-align">
+                    <dt>Пощенски код: </dt>
+                    <dd><input type="text" class="required form-control" placeholder="Пощенски код" name="postcode" value="{$row.postcode}"></dd>
+                </dl>
+                <hr>
+                <dl class="dlist-align">
+                    <dt>Фирма: </dt>
+                    <dd><input type="text" class="form-control" placeholder="Име на фирма" name="company_name" value='{$row.company_name}'></dd>
+                </dl>
+                <dl class="dlist-align">
+                    <dt>БУЛСТАТ: </dt>
+                    <dd><input type="text" class="form-control" placeholder="Булстат" name="vat_number" value="{$row.vat_number}" /></dd>
+                </dl>
+                <dl class="dlist-align">
+                    <dt>Град: </dt>
+                    <dd><input type="text" class="form-control" placeholder="Град по регистрация" name="company_city" value="{$row.company_city}"></dd>
+                </dl>
+                <dl class="dlist-align">
+                    <dt>МОЛ: </dt>
+                    <dd><input type="text" class="form-control" placeholder="МОЛ" name="company_mol" value="{$row.company_mol}"></dd>
+                </dl>
+                <dl class="dlist-align">
+                    <dt><input type="checkbox" name="default_billing" {if $row.default_billing}checked{/if} value="1"></dt>
+                    <dd>Адрес за плащане по подразбиране</dd>
+                </dl>
+                <dl class="dlist-align">
+                    <dt><input type="checkbox" name="default_shipping" {if $row.default_shipping}checked{/if} value="1"></dt>
+                    <dd>Адрес за доставка по подразбиране</dd>
+                </dl>
+            </div>
+            <div class="card-footer">
+                <input type="hidden" value="{$id}" name="id">
+                <input type="submit" class="submitField btn btn-primary" name="buttonSave" id="buttonSave" value="{#button_save#}" />
+            </div>
+        </div>
+        <script>
+            $(document).ready(function () {
+                $("#buttonSave").bind("click", function () {
+                    var errors = 0;
+                    $("#formChangePassword input").each(function (i, e) {
+                        if ($(this).hasClass("required")) {
+                            if ($(this).val().trim() == "") {
+                                $(this).addClass("redBorderIn");
+                                errors++;
+                            }
+
+                            if ($(this).attr("name") == "password" && $("input[name=password]").val() != $("input[name=confirm_password]").val()) {
+                                $(this).addClass("redBorderIn");
+                                $("input[name=confirm_password]").addClass("redBorderIn");
+                                errors++;
+                            }
+                        }
+                    });
+
+                    $("#formChangePassword select").each(function (i, e) {
+                        if ($(this).hasClass("required")) {
+                            if ($(this).val().trim() == "") {
+                                $(this).addClass("redBorderIn");
+                                errors++;
+                            }
+                        }
+                    });
+
+                    if (errors > 0) {
+                        return false;
+                    } else {
+                        return true;
+                    }
+                });
+            });
+        </script>
+    </form>
+</div>
+{include file="footer.html"}

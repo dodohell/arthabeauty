@@ -1,0 +1,791 @@
+{include file="admin/header.html"}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb p-0">
+            <li class="breadcrumb-item">
+                <a href="./">
+                    <span class="mdi mdi-home"></span>                
+                </a>
+            </li>
+            <li class="breadcrumb-item">
+                <a href="./{$php_self}">{#menus#}</a>
+            </li>
+            <li class="breadcrumb-item">
+                <a href="./{$php_self}?menu_pos={$menu_pos}">{$menu_name}</a>
+            </li>
+            <li class="breadcrumb-item" aria-current="page">{$row.name_bg}{*{$page_heading}*}</li>
+        </ol>
+    </nav>
+    <div class="row-fluid">
+		<form method="post" enctype="multipart/form-data">
+            <div class="row">
+                <div class="col-sm-7 well">
+                    <div class="nonboxy-widget">
+                        <div class="widget-head">
+                            <h5>{#short_description#}</h5>
+                        </div>
+                        <div class="widget-content">
+                            <div class="widget-box">
+                                {$editorExcerpt}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="nonboxy-widget">
+                        <div class="widget-head">
+                            <h5>{#description#}</h5>
+                        </div>
+                        <div class="widget-content">
+                            <div class="widget-box">
+                                {$editor}
+                            </div>
+                        </div>
+                    </div>
+                    {if $act == "edit"}
+                    <div class="nonboxy-widget">
+                        <div class="widget-head">
+                            <h5>{#record_images#}</h5>
+                        </div>
+                        <div class="widget-content">
+                            <div class="widget-box">
+                                {literal}
+                                    <script>
+                                        $(document).ready(function(){
+                                            getImages();
+                                        });
+                                        function getImages(){
+                                            $.ajax({
+                                                url: "menus_images.php",
+                                                data: "info_id={/literal}{$row.id}{literal}&act=show",
+                                                dataType: "json",
+                                                success: function(response){
+                                                    var str = "";
+                                                    str += '<ul class="imagesList">';
+                                                    for( var i = 0; i < response.length; i++ ){
+                                                        str += '<li name="'+response[i].id+'">';
+                                                        str += '<span class="imageHolder"><img src="/files/tntn/'+response[i].file+'" border="0" ></span>';
+                                                        str += '<span class="clear"></span>'
+                                                        str += '<div class="deleteImage text-danger" name="'+response[i].id+'"><i class="mdi mdi-delete-forever-outline"></i></div>'
+                                                        str += '<a href="#editImage" class="editImage btn-modal" data-toggle="modal" name="'+response[i].id+'"><i class="mdi mdi-square-edit-outline"></i></a>';
+                                                        str += '</li>';
+                                                    }
+                                                    str += '</ul>';
+
+                                                    $("#imagesHolder").empty().append(str);
+                                                    $(".deleteImage").bind("click", function(){
+                                                        var id = $(this).attr("name");
+                                                        deleteImage(id);
+                                                    });
+
+                                                    $(".editImage").bind("click", function(){
+                                                        var id = $(this).attr("name");
+                                                        editImage(id);
+                                                    });
+
+                                                    $("#imagesHolder ul").sortable({stop: function(){
+                                                            var commonData = $(this).attr("name");
+                                                            var items = $("li");
+                                                            var params = "";
+
+                                                            $.each(items, function(i, element){
+                                                                params += "items[]=" + i + "@@_@@" + $("#imagesHolder ul li:eq("+i+")").attr("name");
+                                                                if(items[i+1]) params += "&";
+
+                                                            });
+
+                                                            $.ajax({
+                                                                type: "POST",
+                                                                url: "move.php",
+                                                                data: "commonData=static_images_table|&" + params,
+                                                                success: function(html){
+                                                                }
+                                                            });
+                                                        }
+                                                    });
+                                                }
+                                            });
+                                        }
+                                        function deleteImage(id){
+                                            $.ajax({
+                                                url: "menus_images.php",
+                                                data: "id="+id+"&act=delete",
+                                                success: function(html){
+                                                    getImages();
+                                                }
+                                            });
+                                        }
+                                        function editImage(id){
+                                            $.ajax({
+                                                url: "menus_images.php",
+                                                data: "id="+id+"&act=getImageForm",
+                                                success: function(html){
+                                                    $("#holderEditImage").empty();
+                                                    $("#holderEditImage").append(html);
+                                                }
+                                            });
+                                        }
+                                    /*jslint unparam: true */
+                                    /*global window, $ */
+                                    $(function () {
+                                        'use strict';
+                                        // Change this to the location of your server-side upload handler:
+                                        var url = window.location.hostname === 'blueimp.github.io' ?
+                                                    '//jquery-file-upload.appspot.com/' : 'fileuploader.php';
+                                        $('#fileupload').fileupload({
+                                            url: url,
+                                            dataType: 'json',
+                                            done: function (e, data) {
+                                                $.each(data.result.files, function (index, file) {
+                                                    $('<p/>').text(file.name).appendTo('#files');
+                                                    $.ajax({
+                                                        url: "menus_images.php",
+                                                        data: "file="+file.name+"&info_id={/literal}{$row.id}{literal}&act=add",
+                                                        success: function(html){
+                                                            getImages();
+                                                        }
+                                                    });
+                                                });
+                                            },
+                                            progressall: function (e, data) {
+                                                var progress = parseInt(data.loaded / data.total * 100, 10);
+                                                $('#progress .progress-bar').css(
+                                                    'width',
+                                                    progress + '%'
+                                                );
+                                            }
+                                        }).prop('disabled', !$.support.fileInput)
+                                            .parent().addClass($.support.fileInput ? undefined : 'disabled');
+                                    });
+                                    </script>
+                                {/literal}
+                                 <span class="btn btn-success fileinput-button">
+                                    <i class="glyphicon glyphicon-plus"></i>
+                                    <span>{#select_files#}</span>
+                                    <!-- The file input field used as target for the file upload widget -->
+                                    <input id="fileupload" type="file" name="files[]" multiple>
+                                </span>
+                                <div class="clear"></div>
+                                <br />
+                                <!-- The global progress bar -->
+                                <div id="progress" class="progress mb-3">
+                                    <span class="progress-bar progress-bar-success green" style="height: 18px; width: 0px;"></span>
+                                </div>
+                                <!-- The container for the uploaded files -->
+                                <div id="imagesHolder" class="files"></div>
+                            </div>
+                        </div>
+                    </div>
+                    {/if}
+                    <div class="clear"></div>
+                    <div class="nonboxy-widget pt-4">
+                        <div class="widget-head">
+                            <h5>{#record_files#}</h5>
+                        </div>
+                        <div class="widget-content">
+                            <div class="widget-box">
+                                {literal}
+                                    <script>
+                                        $(document).ready(function(){
+                                            getFiles();
+                                        });
+                                        function getFiles(){
+                                            $.ajax({
+                                                url: "menus_files.php",
+                                                data: "info_id={/literal}{$row.id}{literal}&act=show",
+                                                dataType: "json",
+                                                success: function(response){
+                                                    var str = "";
+                                                    str += '<ul class="filesList">';
+                                                    for( var i = 0; i < response.length; i++ ){
+                                                        str += '<li name="'+response[i].id+'" class="d-flex flex-row justify-content-between flex-wrap">';
+                                                        if ( response[i].name ){
+                                                            str += '<span class="fileHolder">'+response[i].name+'</span>';
+                                                        }else{
+                                                            str += '<span class="fileHolder">'+response[i].file+'</span>';
+                                                        }
+                                                        str += '<span class="actionsHolder">'
+                                                        str += '<a href="#editFile" class="editFile btn-modal pr-2" data-toggle="modal" name="'+response[i].id+'"><i class="mdi mdi-square-edit-outline"></i></a>';
+                                                        str += '<div class="deleteFile text-danger" name="'+response[i].id+'"><i class="mdi mdi-delete-forever-outline"></i></div>'
+                                                        //str += '<span class="editFile color-icons page_white_edit_co" name="'+response[i].id+'"></span>';
+                                                        str += '</span>';
+                                                        str += '</li>';
+                                                    }
+                                                    str += '</ul>';
+
+                                                    $("#filesHolder").empty().append(str);
+                                                    $(".deleteFile").bind("click", function(){
+                                                        var id = $(this).attr("name");
+                                                        deleteFile(id);
+                                                    });
+
+                                                    $(".editFile").bind("click", function(){
+                                                        var id = $(this).attr("name");
+                                                        editFile(id);
+                                                    });
+
+                                                    $("#filesHolder ul").sortable({stop: function(){
+                                                            var commonData = $(this).attr("name");
+                                                            var items = $("li");
+                                                            var params = "";
+
+                                                            $.each(items, function(i, element){
+                                                                params += "items[]=" + i + "@@_@@" + $("#filesHolder ul li:eq("+i+")").attr("name");
+                                                                if(items[i+1]) params += "&";
+
+                                                            });
+
+                                                            $.ajax({
+                                                                type: "POST",
+                                                                url: "move.php",
+                                                                data: "commonData=static_files_table|&" + params,
+                                                                success: function(html){
+                                                                }
+                                                            });
+                                                        }
+                                                    });
+                                                }
+                                            });
+
+                                            $(".deleteFile").bind("click", function(){
+                                                var id = $(this).attr("name");
+                                                deleteFile(id);
+                                            });
+                                            $(".editFile").bind("click", function(){
+                                                var id = $(this).attr("name");
+                                                deleteFile(id);
+                                            });
+                                        }
+                                        function deleteFile(id){
+                                            $.ajax({
+                                                url: "menus_files.php",
+                                                data: "id="+id+"&act=delete",
+                                                success: function(html){
+                                                    getFiles();
+                                                }
+                                            });
+                                        }
+                                        function editFile(id){
+                                            $.ajax({
+                                                url: "menus_files.php",
+                                                data: "id="+id+"&act=getFileForm",
+                                                success: function(html){
+                                                    $("#holderEditFile").empty();
+                                                    $("#holderEditFile").append(html);
+                                                }
+                                            });
+                                        }
+                                    /*jslint unparam: true */
+                                    /*global window, $ */
+                                    $(function () {
+                                        'use strict';
+                                        // Change this to the location of your server-side upload handler:
+                                        var url = window.location.hostname === 'blueimp.github.io' ?
+                                                    '//jquery-file-upload.appspot.com/' : 'fileuploader.php';
+                                        $('#fileuploadFiles').fileupload({
+                                            url: url,
+                                            dataType: 'json',
+                                            done: function (e, data) {
+                                                $.each(data.result.files, function (index, file) {
+                                                    $('<p/>').text(file.name).appendTo('#files');
+                                                    $.ajax({
+                                                        url: "menus_files.php",
+                                                        data: "file="+file.name+"&info_id={/literal}{$row.id}{literal}&act=add",
+                                                        success: function(html){
+                                                            getFiles();
+                                                        }
+                                                    });
+                                                });
+                                            },
+                                            progressall: function (e, data) {
+                                                var progress = parseInt(data.loaded / data.total * 100, 10);
+                                                $('#progressFiles .progress-bar').css(
+                                                    'width',
+                                                    progress + '%'
+                                                );
+                                            }
+                                        }).prop('disabled', !$.support.fileInput)
+                                            .parent().addClass($.support.fileInput ? undefined : 'disabled');
+                                    });
+                                    </script>
+                                {/literal}
+                                 <span class="btn btn-success fileinput-button">
+                                    <i class="glyphicon glyphicon-plus"></i>
+                                    <span>{#select_files#}</span>
+                                    <!-- The file input field used as target for the file upload widget -->
+                                    <input id="fileuploadFiles" type="file" name="files[]" multiple>
+                                </span>
+                                <div class="clear"></div>
+                                <br />
+                                <!-- The global progress bar -->
+                                <div id="progressFiles" class="progress">
+                                    <span class="progress-bar progress-bar-success green" style="height: 18px; width: 0px;"></span>
+                                </div>
+                                <!-- The container for the uploaded files -->
+                                <div id="filesHolder" class="files"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-5 well">
+                    <div class="nonboxy-widget">
+                        <div class="widget-head">
+                            <h5>{#settings#}</h5>
+                        </div>
+                        <div class="widget-content">
+                            <div class="widget-box">
+                                <fieldset>
+                                    <div class="control-group">
+                                        <label class="checkbox inline"><input type="checkbox" value="1" name="active" {if $row.active}checked{/if}> {#active#}</label>
+                                        <label class="checkbox inline"><input type="checkbox" value="1" name="contactsform" {if $row.contactform == 1}checked{/if}> {$row.contactsform}{#contactsform#}</label>
+                                        <label class="checkbox inline"><input type="checkbox" value="1" name="dont_open" {if $row.dont_open}checked{/if}> {#dont_open#}</label>
+                                        <label class="checkbox inline"><input type="checkbox" value="1" name="no_heading" {if $row.no_heading}checked{/if}> {#no_heading#}</label>
+                                        <label class="checkbox inline"><input type="checkbox" value="1" name="is_faq" {if $row.is_faq}checked{/if}> {#is_faq#}</label>
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </div>
+                        <div class="widget-head">
+                            <h5>{#settings_for_logged_users#}</h5>
+                        </div>
+                        <div class="widget-content">
+                            <div class="widget-box">
+                                <fieldset>
+                                    <div class="control-group">
+                                        <label class="checkbox inline"><input type="checkbox" value="1" name="hidden_for_not_logged_in" {if $row.hidden_for_not_logged_in}checked{/if}> {#hidden_for_not_logged_in#}</label>
+                                        <label class="checkbox inline"><input type="checkbox" value="1" name="hidden_for_logged_in" {if $row.hidden_for_logged_in}checked{/if}> {#hidden_for_logged_in#}</label>
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </div>
+                        <div class="widget-head">
+                            <h5>{#general_information#}</h5>
+                        </div>
+                        <div class="widget-content">
+                            <div class="widget-box">
+                                <fieldset>
+                                    <div class="control-group">
+                                        <label class="control-label" for="name_bg">{#name#} BG</label>
+                                        <div class="controls">
+                                            <input type="text" name="name_bg" value="{$row.name_bg}" class="form-control form-control-sm text-tip" id="name_bg" title="{#enter#} {#name#} BG">
+                                        </div>
+                                    </div>
+                                    <div class="control-group">
+                                        <label class="control-label" for="name_en">{#name#} EN</label>
+                                        <div class="controls">
+                                            <input type="text" name="name_en" value="{$row.name_en}" class="form-control form-control-sm text-tip" id="name_en" title="{#enter#} {#name#} EN">
+                                        </div>
+                                    </div>
+                                    <div class="control-group">
+                                        <label class="control-label" for="name_de">{#name#} DE</label>
+                                        <div class="controls">
+                                            <input type="text" name="name_de" value="{$row.name_de}" class="form-control form-control-sm text-tip" id="name_de" title="{#enter#} {#name#} DE">
+                                        </div>
+                                    </div>
+                                    <div class="control-group">
+                                        <label class="control-label" for="name_ro">{#name#} RO</label>
+                                        <div class="controls">
+                                            <input type="text" name="name_ro" value="{$row.name_ro}" class="form-control form-control-sm text-tip" id="name_ro" title="{#enter#} {#name#} RO">
+                                        </div>
+                                    </div>
+                                    <div class="control-group">
+                                        <label class="control-label" for="name_ru">{#name#} RU</label>
+                                        <div class="controls">
+                                            <input type="text" name="name_ru" value="{$row.name_ru}" class="form-control form-control-sm text-tip" id="name_ru" title="{#enter#} {#name#} RU">
+                                        </div>
+                                    </div>
+
+                                    {*<div class="control-group">
+                                        <label class="control-label" for="icon">{#icon#}</label>
+                                        <div class="controls">
+                                            <input type="text" name="icon" value="{$row.icon}" class="form-control form-control-sm text-tip" id="icon" title="{#enter#} {#icon#} HTML tag">
+                                        </div>
+                                    </div>*}
+                                    <div class="control-group">
+                                        <label class="control-label" for="h1_bg">{#h1#} BG</label>
+                                        <div class="controls">
+                                            <input type="text" name="h1_bg" value="{$row.h1_bg}" class="form-control form-control-sm text-tip" id="h1_bg" title="{#enter#} {#h1#} BG">
+                                        </div>
+                                    </div>
+                                    <div class="control-group">
+                                        <label class="control-label" for="h1_en">{#h1#} EN</label>
+                                        <div class="controls">
+                                            <input type="text" name="h1_en" value="{$row.h1_en}" class="form-control form-control-sm text-tip" id="h1_en" title="{#enter#} {#h1#} EN">
+                                        </div>
+                                    </div>
+                                    <div class="control-group">
+                                        <label class="control-label" for="h1_de">{#h1#} DE</label>
+                                        <div class="controls">
+                                            <input type="text" name="h1_de" value="{$row.h1_de}" class="form-control form-control-sm text-tip" id="h1_de" title="{#enter#} {#h1#} DE">
+                                        </div>
+                                    </div>
+                                    <div class="control-group">
+                                        <label class="control-label" for="h1_ro">{#h1#} RO</label>
+                                        <div class="controls">
+                                            <input type="text" name="h1_ro" value="{$row.h1_ro}" class="form-control form-control-sm text-tip" id="h1_ro" title="{#enter#} {#h1#} RO">
+                                        </div>
+                                    </div>
+                                    <div class="control-group">
+                                        <label class="control-label" for="h1_ru">{#h1#} RU</label>
+                                        <div class="controls">
+                                            <input type="text" name="h1_ru" value="{$row.h1_ru}" class="form-control form-control-sm text-tip" id="h1_ru" title="{#enter#} {#h1#} RU">
+                                        </div>
+                                    </div>
+									<div class="control-group">
+                                        <label class="control-label" for="link_text_bg">{#link_text#} BG</label>
+                                        <div class="controls">
+                                            <input type="text" name="link_text_bg" value="{$row.link_text_bg}" class="form-control form-control-sm text-tip" id="link_text_bg" title="{#enter#} {#link_text#} BG">
+                                        </div>
+                                    </div>
+                                    <div class="control-group">
+                                        <label class="control-label" for="link_text_en">{#link_text#} EN</label>
+                                        <div class="controls">
+                                            <input type="text" name="link_text_en" value="{$row.link_text_en}" class="form-control form-control-sm text-tip" id="link_text_en" title="{#enter#} {#link_text#} EN">
+                                        </div>
+                                    </div>
+                                    <div class="control-group">
+                                        <label class="control-label" for="link_text_de">{#link_text#} DE</label>
+                                        <div class="controls">
+                                            <input type="text" name="link_text_de" value="{$row.link_text_de}" class="form-control form-control-sm text-tip" id="link_text_de" title="{#enter#} {#link_text#} DE">
+                                        </div>
+                                    </div>
+                                    <div class="control-group">
+                                        <label class="control-label" for="link_text_ro">{#link_text#} RO</label>
+                                        <div class="controls">
+                                            <input type="text" name="link_text_ro" value="{$row.link_text_ro}" class="form-control form-control-sm text-tip" id="link_text_ro" title="{#enter#} {#link_text#} RO">
+                                        </div>
+                                    </div>
+                                    <div class="control-group">
+                                        <label class="control-label" for="link_text_ru">{#link_text#} RU</label>
+                                        <div class="controls">
+                                            <input type="text" name="link_text_ru" value="{$row.link_text_ru}" class="form-control form-control-sm text-tip" id="link_text_ru" title="{#enter#} {#link_text#} RU">
+                                        </div>
+                                    </div>
+                                    <div class="control-group">
+                                        <label class="control-label" for="url_bg">{#url#} BG</label>
+                                        <div class="controls">
+                                            <input type="text" name="url_bg" value="{$row.url_bg}" class="form-control form-control-sm text-tip" id="url_bg" title="{#enter#} {#url#} BG">
+                                        </div>
+                                    </div>
+                                    <div class="control-group">
+                                        <label class="control-label" for="url_en">{#url#} EN</label>
+                                        <div class="controls">
+                                            <input type="text" name="url_en" value="{$row.url_en}" class="form-control form-control-sm text-tip" id="url_en" title="{#enter#} {#url#} EN">
+                                        </div>
+                                    </div>
+                                    <div class="control-group">
+                                        <label class="control-label" for="url_de">{#url#} DE</label>
+                                        <div class="controls">
+                                            <input type="text" name="url_de" value="{$row.url_de}" class="form-control form-control-sm text-tip" id="url_de" title="{#enter#} {#url#} DE">
+                                        </div>
+                                    </div>
+                                    <div class="control-group">
+                                        <label class="control-label" for="url_ro">{#url#} RO</label>
+                                        <div class="controls">
+                                            <input type="text" name="url_ro" value="{$row.url_ro}" class="form-control form-control-sm text-tip" id="url_ro" title="{#enter#} {#url#} RO">
+                                        </div>
+                                    </div>
+                                    <div class="control-group">
+                                        <label class="control-label" for="url_ru">{#url#} RU</label>
+                                        <div class="controls">
+                                            <input type="text" name="url_ru" value="{$row.url_ru}" class="form-control form-control-sm text-tip" id="url_ru" title="{#enter#} {#url#} RU">
+                                        </div>
+                                    </div>
+                                    <div class="control-group">
+                                        <label class="control-label" for="url_target">{#url_target#}</label>
+                                        <div class="controls">
+                                            <select name="url_target" class="form-control form-control-sm" id="url_target">
+                                                <option value="_self" {if $row.url_target == "_self"}selected{/if}>{#target_self#}</option>
+                                                <option value="_blank" {if $row.url_target == "_blank"}selected{/if}>{#target_blank#}</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </div>
+                        <div class="widget-head">
+                            <h5>{#htaccess_settings#}</h5>
+                        </div>
+                        <div class="widget-content">
+                            <div class="widget-box">
+                                <fieldset>
+                                    <div class="control-group">
+                                        <label class="control-label" for="htaccess_url_bg">{#htaccess_url#} BG</label>
+                                        <div class="controls">
+                                            <input type="text" name="htaccess_url_bg" value="{$row.htaccess_url_bg}" class="htaccessField form-control form-control-sm text-tip" id="htaccess_url_bg" title="{#enter#} {#htaccess_url#} BG" autocomplete="new-password">
+                                            <div class="errorHTACCESS">{#invalid_or_duplicate_htaccess#}</div>
+                                        </div>
+                                    </div>
+                                    <div class="control-group">
+                                        <label class="control-label" for="htaccess_url_en">{#htaccess_url#} EN</label>
+                                        <div class="controls">
+                                            <input type="text" name="htaccess_url_en" value="{$row.htaccess_url_en}" class="htaccessField form-control form-control-sm text-tip" id="htaccess_url_en" title="{#enter#} {#htaccess_url#} EN" autocomplete="new-password">
+                                            <div class="errorHTACCESS">{#invalid_or_duplicate_htaccess#}</div>
+                                        </div>
+                                    </div>
+                                    <div class="control-group">
+                                        <label class="control-label" for="htaccess_url_de">{#htaccess_url#} DE</label>
+                                        <div class="controls">
+                                            <input type="text" name="htaccess_url_de" value="{$row.htaccess_url_de}" class="htaccessField form-control form-control-sm text-tip" id="htaccess_url_de" title="{#enter#} {#htaccess_url#} DE" autocomplete="new-password">
+                                            <div class="errorHTACCESS">{#invalid_or_duplicate_htaccess#}</div>
+                                        </div>
+                                    </div>
+                                    <div class="control-group">
+                                        <label class="control-label" for="htaccess_url_ro">{#htaccess_url#} RO</label>
+                                        <div class="controls">
+                                            <input type="text" name="htaccess_url_ro" value="{$row.htaccess_url_ro}" class="htaccessField form-control form-control-sm text-tip" id="htaccess_url_ro" title="{#enter#} {#htaccess_url#} RO" autocomplete="new-password">
+                                            <div class="errorHTACCESS">{#invalid_or_duplicate_htaccess#}</div>
+                                        </div>
+                                    </div>
+                                    <div class="control-group">
+                                        <label class="control-label" for="htaccess_url_ru">{#htaccess_url#} RU</label>
+                                        <div class="controls">
+                                            <input type="text" name="htaccess_url_ru" value="{$row.htaccess_url_ru}" class="htaccessField form-control form-control-sm text-tip" id="htaccess_url_ru" title="{#enter#} {#htaccess_url#} RU" autocomplete="new-password">
+                                            <div class="errorHTACCESS">{#invalid_or_duplicate_htaccess#}</div>
+                                        </div>
+                                    </div>
+                                    {if 0}<div id="errorTracker"></div>{/if}
+                                    {literal}
+                                        <script>
+                                            $(document).ready(function(){
+                                                $(".htaccessField").bind("keyup", function(){
+                                                    var use_index = $(".htaccessField").index(this);
+                                                    var lang = $(".htaccessField:eq("+use_index+")").attr("name").replace("htaccess_url_", "");
+                                                    var fieldValue = $(".htaccessField:eq("+use_index+")").val().trim();
+
+                                                    if(fieldValue == ""){
+                                                        $(".errorHTACCESS:eq("+use_index+")").hide();
+                                                    }else{
+                                                        $.ajax({
+                                                            type: "POST",
+                                                            url: "checkHtaccess.php",
+                                                            data: "type=menu&lang_check="+lang+"&record_id={/literal}{$row.id}{literal}&htaccess_url="+$(this).val(),
+                                                            success: function(html){
+                                                                // $("#errorTracker").empty();
+                                                                // $("#errorTracker").append(html);
+                                                                if ( html != 0 ){
+                                                                    if ( html == 2 ){
+                                                                        $(".errorHTACCESS:eq("+use_index+")").hide();
+                                                                    }else{
+                                                                        $(".errorHTACCESS:eq("+use_index+")").show();
+                                                                    }
+                                                                }else{
+                                                                    $(".errorHTACCESS:eq("+use_index+")").hide();
+                                                                }
+                                                            }
+                                                        });
+                                                    }
+                                                });
+                                            });
+                                        </script>
+                                    {/literal}
+                                </fieldset>
+                            </div>
+                        </div>
+                        <div class="widget-head">
+                            <h5>{#html_settings#} <small>(Не променяйте стойностите в тези полета)</small></h5> 
+                        </div>
+                        <div class="widget-content">
+                            <div class="widget-box">
+                                <fieldset>
+                                    <div class="control-group">
+                                        <label class="control-label" for="html_id">{#html_id#}</label>
+                                        <div class="controls">
+                                            <input type="text" name="html_id" value="{$row.html_id}" class="form-control form-control-sm text-tip" id="html_id" title="{#enter#} {#html_id#}">
+                                        </div>
+                                    </div>
+                                    <div class="control-group">
+                                        <label class="control-label" for="html_class">{#html_class#}</label>
+                                        <div class="controls">
+                                            <input type="text" name="html_class" value="{$row.html_class}" class="form-control form-control-sm text-tip" id="html_class" title="{#enter#} {#html_class#}">
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+                        </div>
+                        <div class="widget-head">
+                            <h5>{#general_images#}</h5>
+                        </div>
+                        <div class="widget-content">
+                            <div class="widget-box">
+                                <fieldset>
+                                    <div>
+                                        <span>{#picture_main#}</span>
+                                        <div class="custom-file">
+                                            <input type="file" name="pic_main" class="custom-file-input" id="pic_main">
+                                            <label class="custom-file-label" for="pic_main">{if $row.pic_main}{$row.pic_main}{else}{#picture_main#}{/if}</label>
+                                        </div>
+                                        <p class="help-block">
+                                            <strong>{#notice#}:</strong> {#notice_leading_image#}
+                                        </p>
+                                        {if $row.pic_main}
+                                            <img src="/files/tn/{$row.pic_main}" class="picView">
+                                            <a href="menus_ae.php?act=delete&field=pic_main&id={$id}&menu_pos={$menu_pos}"><i class="mdi mdi-trash-can-outline"></i>{#delete#}</a>
+                                        {/if}
+                                    </div>
+                                    <div class="my-3">
+                                        <span>{#picture#} 1</span>
+                                        <div class="custom-file">
+                                            <input type="file" name="pic_1" class="custom-file-input" id="pic_1">
+                                            <label class="custom-file-label" for="pic_1">{if $row.pic_1}{$row.pic_1}{else}{#picture#} 1{/if}</label>
+                                        </div>
+                                        {if $row.pic_1}
+                                            <img src="/files/tn/{$row.pic_1}" class="picView">
+                                            <a href="menus_ae.php?act=delete&field=pic_1&id={$id}&menu_pos={$menu_pos}"><i class="mdi mdi-trash-can-outline"></i>{#delete#}</a>
+                                        {/if}
+                                    </div>
+                                    <div class="control-group">
+                                        <label class="control-label" for="pic_1_name_bg">{#picture#} 1 {#name#} BG</label>
+                                        <div class="controls">
+                                            <input type="text" name="pic_1_name_bg" value="{$row.pic_1_name_bg}" class="htaccessField form-control form-control-sm text-tip" id="pic_1_name_bg" title="{#picture#} 1 {#name#} BG">
+                                        </div>
+                                    </div>
+                                    <div class="control-group">
+                                        <label class="control-label" for="pic_1_name_en">{#picture#} 1 {#name#} EN</label>
+                                        <div class="controls">
+                                            <input type="text" name="pic_1_name_en" value="{$row.pic_1_name_en}" class="htaccessField form-control form-control-sm text-tip" id="pic_1_name_en" title="{#picture#} 1 {#name#} EN">
+                                        </div>
+                                    </div>
+                                    <div class="control-group">
+                                        <label class="control-label" for="pic_1_name_de">{#picture#} 1 {#name#} DE</label>
+                                        <div class="controls">
+                                            <input type="text" name="pic_1_name_de" value="{$row.pic_1_name_de}" class="htaccessField form-control form-control-sm text-tip" id="pic_1_name_de" title="{#picture#} 1 {#name#} DE">
+                                        </div>
+                                    </div>
+                                    <div class="control-group">
+                                        <label class="control-label" for="pic_1_name_ro">{#picture#} 1 {#name#} RO</label>
+                                        <div class="controls">
+                                            <input type="text" name="pic_1_name_ro" value="{$row.pic_1_name_ro}" class="htaccessField form-control form-control-sm text-tip" id="pic_1_name_ro" title="{#picture#} 1 {#name#} RO">
+                                        </div>
+                                    </div>
+                                    <div class="control-group">
+                                        <label class="control-label" for="pic_1_name_ru">{#picture#} 1 {#name#} RU</label>
+                                        <div class="controls">
+                                            <input type="text" name="pic_1_name_ru" value="{$row.pic_1_name_ru}" class="htaccessField form-control form-control-sm text-tip" id="pic_1_name_ru" title="{#picture#} 1 {#name#} RU">
+                                        </div>
+                                    </div>
+                                    <div class="my-3">
+                                        <span>{#picture#} 2</span>
+                                        <div class="custom-file">
+                                            <input type="file" name="pic_2" class="custom-file-input" id="pic_2">
+                                            <label class="custom-file-label" for="pic_2">{if $row.pic_2}{$row.pic_2}{else}{#picture#} 2{/if}</label>
+                                        </div>
+                                        {if $row.pic_2}
+                                            <img src="/files/tn/{$row.pic_2}" class="picView">
+                                            <a href="menus_ae.php?act=delete&field=pic_2&id={$id}&menu_pos={$menu_pos}"><i class="mdi mdi-trash-can-outline"></i>{#delete#}</a>
+                                        {/if}
+                                    </div>
+                                    <script>
+                                        $('#pic_main, #pic_1, #pic_2').on('change',function(){
+                                            //get the file name
+                                            var fileName = $(this).val();
+                                            //replace the "Choose a file" label
+                                            $(this).next('.custom-file-label').html(fileName);
+                                        })
+                                    </script>
+                                    <div class="control-group">
+                                        <label class="control-label" for="pic_2_name_bg">{#picture#} 2 {#name#} BG</label>
+                                        <div class="controls">
+                                            <input type="text" name="pic_2_name_bg" value="{$row.pic_2_name_bg}" class="htaccessField form-control form-control-sm text-tip" id="pic_2_name_bg" title="{#picture#} 2 {#name#} BG">
+                                        </div>
+                                    </div>
+                                    <div class="control-group">
+                                        <label class="control-label" for="pic_2_name_en">{#picture#} 2 {#name#} EN</label>
+                                        <div class="controls">
+                                            <input type="text" name="pic_2_name_en" value="{$row.pic_2_name_en}" class="htaccessField form-control form-control-sm text-tip" id="pic_2_name_en" title="{#picture#} 2 {#name#} EN">
+                                        </div>
+                                    </div>
+                                    <div class="control-group">
+                                        <label class="control-label" for="pic_2_name_de">{#picture#} 2 {#name#} DE</label>
+                                        <div class="controls">
+                                            <input type="text" name="pic_2_name_de" value="{$row.pic_2_name_de}" class="htaccessField form-control form-control-sm text-tip" id="pic_2_name_de" title="{#picture#} 2 {#name#} DE">
+                                        </div>
+                                    </div>
+                                    <div class="control-group">
+                                        <label class="control-label" for="pic_2_name_ro">{#picture#} 2 {#name#} RO</label>
+                                        <div class="controls">
+                                            <input type="text" name="pic_2_name_ro" value="{$row.pic_2_name_ro}" class="htaccessField form-control form-control-sm text-tip" id="pic_2_name_ro" title="{#picture#} 2 {#name#} RU">
+                                        </div>
+                                    </div>
+                                    <div class="control-group">
+                                        <label class="control-label" for="pic_2_name_ru">{#picture#} 2 {#name#} RU</label>
+                                        <div class="controls">
+                                            <input type="text" name="pic_2_name_ru" value="{$row.pic_2_name_ru}" class="htaccessField form-control form-control-sm text-tip" id="pic_2_name_ru" title="{#picture#} 2 {#name#} RU">
+                                        </div>
+                                    </div>
+                                </fieldset>
+                            </div>
+                            <div class="widget-box">
+                                <div class="alert alert-error fade in" id="generalHTACCESSerror">
+                                    {if 0}<button data-dismiss="alert" class="close" type="button">×</button>{/if}
+                                    <strong>{#general_error_heading#}</strong><br /> {#general_error_text#}
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                {literal}
+                                    <script>
+                                        $(document).ready(function(){
+                                            $("button[name=Submit]").bind("click", function(){
+                                                var prompted_error = 0;
+                                                $(".errorHTACCESS").each(function(e, i){
+                                                    if ( $(this).css("display") == "block" ){
+                                                        prompted_error = 1;
+                                                    }
+                                                });
+                                                
+                                                if ( prompted_error == 1 ){
+                                                    $("#generalHTACCESSerror").show();
+                                                    return false;
+                                                }else{
+                                                    $("#generalHTACCESSerror").hide();
+                                                }
+                                            });
+                                        });
+                                    </script>
+                                {/literal}
+                                <button type="submit" name="Submit" class="btn btn-info">{#save_changes#}</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+		
+			{include file="admin/metaInformation.html"}
+
+		</form>
+		<div class="modal hide fade" id="editImage">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">{#edit_image#}</h4>
+                        <button type="button" class="close" data-dismiss="modal" id="buttonCloseEventClient">×</button>
+                    </div>
+                    <div class="modal-body">
+                        <p id="holderEditImage">
+
+                        </p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">{#close#}</button>
+                    </div>
+                </div>
+            </div>
+		</div>
+		<div class="modal hide fade" id="editFile">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">{#edit_file#}</h4>
+                        <button type="button" class="close" data-dismiss="modal" id="buttonCloseEventClient">×</button>
+                    </div>
+                    <div class="modal-body">
+                        <p id="holderEditFile">
+
+                        </p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">{#close#}</button>
+                    </div>
+                </div>
+            </div>
+		</div>
+    </div>
+	
+	{include file="admin/footer.html"}

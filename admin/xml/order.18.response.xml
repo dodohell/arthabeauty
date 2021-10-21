@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<response>
+  <result>
+    <e>
+      <loading_id></loading_id>
+      <loading_num></loading_num>
+      <courier_request_id></courier_request_id>
+      <delivery_date></delivery_date>
+      <loading_price>
+        <total>0</total>
+        <sender_total>0</sender_total>
+        <receiver_total>0</receiver_total>
+        <other_total>0</other_total>
+        <currency/>
+        <currency_code/>
+      </loading_price>
+      <loading_discount/>
+      <error>Не валиден начин на доставка за получател.</error>
+      <error_code>econt\classes\ExInvalidParam</error_code>
+      <pdf_url/>
+      <return_reason/>
+      <prev_parcel_num/>
+      <next_parcels/>
+    </e>
+  </result>
+  <pdf/>
+</response>

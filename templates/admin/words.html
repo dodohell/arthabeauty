@@ -1,0 +1,48 @@
+{include file="admin/header.html"}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb p-0">
+            <li class="breadcrumb-item">
+                <a href="./index.php">
+                    <span class="mdi mdi-home"></span>                
+                </a>
+            </li>
+            <li class="breadcrumb-item" aria-current="page">{#words#}</li>
+        </ol>
+    </nav>
+    <div class="row-fluid">
+		<form method="post" action="{$_self}" enctype="multipart/form-data">
+			<div class="nonboxy-widget">
+				<div class="widget-content">
+					<div class="widget-box languagesBox">
+                        <div class="row">
+                            <div class="control-group col">{#languages#}</div>
+                            {foreach key=lng item=value from=$files}
+                                <div class="control-group col">
+                                    <strong>{$lng|upper}</strong>
+                                </div>
+                            {/foreach}
+						</div>
+						{foreach key=param item=arr from=$langs}
+						<div class="row">
+                            <div class="control-group col">{$param}</div>
+							{foreach key=lng item=value from=$files}     
+								<div class="control-group col">
+                                    <input class="form-control form-control-sm" type="text" value="{$arr.$lng|escape}" name="{$lng}[{$param}]">
+                                </div>
+							{/foreach}
+						</div>
+						{/foreach}
+						{if $id}<input type="hidden" name="id" value="{$id}" />{/if}
+						{if $id_menu}<input type="hidden" name="id_menu" value="{$id_menu}" />{/if}			
+						{if $act}<input type="hidden" name="act" value="{$act}" />{/if}			
+						<div style="clear: both;"></div>
+						<div class="form-actions">
+							<button type="submit" name="Submit" class="btn btn-info">{#save_changes#}</button>
+						</div>
+					</div>
+				</div>
+			</div>
+			
+		</form>
+    </div>
+	{include file="admin/footer.html"}

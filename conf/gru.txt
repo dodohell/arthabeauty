@@ -1,0 +1,18 @@
+htaccess_info = infoen
+htaccess_news = newsen
+htaccess_news_article = show-newsen
+htaccess_news_categories = newslisten
+htaccess_page = page
+htaccess_search = search
+htaccess_brides_articles = /brides-articles-page
+
+htaccess_categories = categoriesru
+htaccess_cart = /cartru
+htaccess_add_to_cart = add-to-cartru
+htaccess_checkout = checkoutru
+htaccess_checkout_final = checkout-finalru
+htaccess_myorders = myordersru
+htaccess_categorytypes = catalogueru
+htaccess_downloadproductfile = download-product-fileru
+htaccess_order_rating = order-ratingru
+htaccess_messages = messagesru

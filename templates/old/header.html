@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <title>{if $infoTitle}{$infoTitle}{else}{$extraTitle}{$title.description}{/if}{if $pageNum} - {$pageNum}{/if}</title>
+        <meta name="description" content="{if $infoDescr}{$infoDescr}{else}{$description.description}{/if}{if $extraTitle} {$extraTitle}{/if}" />
+        <meta name="keywords" content="{if $infoKeys}{$infoKeys}{else}{$keywords.description}{/if}{if $extraTitle}, {$extraTitle}{/if}" />		
+        {$metatags.description}
+        <link rel="image_src" href="{$host}{if $images[0].pic}files/products/{$images[0].pic}{else}{if $row.pic_1}files/{$row.pic_1}{else}{if $row.pic}files/{$row.pic}{else}images/logo-facebook.png{/if}{/if}{/if}" />
+        <link rel="target_url" href="{$host}{#htaccess_product#}/{$row.id}"/>
+        <link rel="shortcut icon" href="/images/favicon.ico" />
+
+        <meta property="og:locale" content="bg_BG" />
+        <meta property="og:site_name" content="{$title.description}" />
+        <meta property="og:type" content="article" />
+        <meta property="og:title" content="{if $infoTitle}{$infoTitle}{else}{$extraTitle}{$title.description}{/if}{if $pageNum} - {$pageNum}{/if}" />
+        <meta property="og:description" content="{if $infoDescr}{$infoDescr}{else}{$description.description}{/if}{if $extraTitle} {$extraTitle}{/if}" />
+        <meta property="og:image" content="{$host}{if $images[0].pic}files/{$images[0].pic}{else}{if $row.pic_1}files/{$row.pic_1}{else}{if $row.pic}files/{$row.pic}{else}images/logo-facebook.png{/if}{/if}{/if}" />
+        {*<meta property="fb:app_id" content="{$fb_api_key}" />*}
+        <link rel="stylesheet" type="text/css" href="/js/bootstrap_4_3_1/css/bootstrap.min.css">
+        <link rel="stylesheet" href="/js/fontawesome-free-5_7_2-web/css/all.min.css">
+        <link rel="stylesheet" type="text/css" href="/js/fancybox-master/dist/jquery.fancybox.css">
+        <link href="/js/cookieconsent/cookieconsent.min.css" rel="stylesheet">
+        <link rel="stylesheet" type="text/css" href="/css/flag-icon-css/css/flag-icon.css">
+        <link rel="stylesheet" type="text/css" href="/css/ui.css">
+        <link rel="stylesheet" type="text/css" href="/css/responsive.css">
+        <link rel="stylesheet" type="text/css" href="/css/style.css">
+        
+        <script src="/js/jquery-3_3_1-min.js"></script>
+        <script src="/js/bootstrap_4_3_1/js/bootstrap.bundle.min.js"></script>
+        <script src="/js/fancybox-master/dist/jquery.fancybox.min.js"></script>
+        <script src="/js/raty/js/jquery.raty.js"></script>
+        
+        <script src="/js/cookieconsent/scriptCookies.js"></script>
+        <script src="/js/cookieconsent/cookieconsent.min.js"></script>
+        
+        <meta name="google-signin-scope" content="profile email">
+        <meta name="google-signin-client_id" content="{$google_client_id}">
+        <script src="https://apis.google.com/js/platform.js" async defer></script>
+        
+    </head>
+    <body>
+        <script>
+            var log = function (message) {
+                h.innerHTML += timeStamp() + message + "<br>";
+                h.scrollTop = h.scrollHeight;
+            }
+
+            cookieconsent.initialise({
+                type: 'info',
+                palette: {
+                    "popup": { "background": "rgba(27,51,130,0.9)", "text": "#ffffff" },
+                    "button": { "background": "#00a650", "text": "#ffffff" },
+                },
+                content: {
+                    "message": "Сайтът използва \"бисквитки\" (cookies), за подобряване на неговата ефективност. Продължавайки използването му, Вие се съгласявате с нашата ",
+                    "dismiss": "Разбрах!",
+                    "link": "Политика за употреба на бисквитк        и",
+                    "href": "/{#htaccess_info#}/684"
+                },
+                onPopupOpen: function () {
+                    console.log('<em>onPopupOpen()</em> called');
+                },
+                onPopupClose: function () {
+                    console.log('<em>onPopupClose()</em> called');
+                },
+                onInitialise: function (status) {
+                    console.log('<em>onInitialise()</em> called with status <em>' + status + '</em>');
+                },
+                onStatusChange: function (status) {
+                    console.log('<em>onStatusChange()</em> called with status <em>' + status + '</em>');
+                },
+                onRevokeChoice: function () {
+                    console.log('<em>onRevokeChoice()</em> called');
+                },
+            }, function (popup) {
+                p = popup;
+            }, function (err) {
+                console.error(err);
+            });
+            
+            {if $showSocialLogins}
+                {*{if $useFacebookLogin}
+                
+                {/if}*}
+                {if $useGoogleLogin}
+                function googleSignOut() {
+                    var auth2 = gapi.auth2.getAuthInstance();
+                    //console.log(auth2);
+                    auth2.signOut().then(function () {
+                        console.log('Google: User signed out.');
+                    });
+                }
+                function onLoad() {
+                    gapi.load('auth2', function () {
+                        gapi.auth2.init();
+                        //console.log("auth2.init()");
+                    });
+                }
+                $(document).ready(function(){
+                    onLoad();
+                });
+                {/if}
+            {/if}
+        </script>
+
+        <!-- Navigation -->
+        <div class="fixed-top">
+            <header class="topbar">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-sm-6 pl-0">
+                            <ul class="topContacts">
+                                <li class="nav-item">
+                                    <a href="tel:+359888888888" class="nav-link py-0 pl-0 pr-3"><i class="fas fa-phone-square"></i> 0888 888 888</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="mailto:sales@vistamarltd.com" class="nav-link py-0 pl-0 pr-3"><i class="fas fa-envelope-square"></i> sales@vistamarltd.com</a>
+                                </li>
+                                <li class="nav-item"><a class="waves-effect waves-dark" href="#"><i class="fab fa-facebook-square"></i></a></li>
+                                <li class="nav-item"><a class="pl-2 waves-effect waves-dark" href="#"><i class="fab fa-twitter-square"></i></a></li>
+                                <li class="nav-item"><a class="pl-2 waves-effect waves-dark" href="#"><i class="fab fa-linkedin"></i></a></li>
+                            </ul>
+                        </div>
+                        <div class="col-sm-6 pr-0">
+                            <div class="topLangs">
+                                {if $link_bg && $lng != "bg"}<a class="langLink" href="{$link_bg}"><span class="flag-icon flag-icon-bg"></span> Български</a> {/if}
+                                {if $link_en && $lng != "en"}<a class="langLink" href="{$link_en}"><span class="flag-icon flag-icon-gb"></span> {if !$link_bg || $lng == "bg"}{/if}  English</a> {/if}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+            <nav class="navbar navbar-expand-lg navbar-light mx-background-top-linear">
+                <div class="container p-0">
+                    <a class="navbar-brand col-lg-3 mr-2" href="/"><img src="/images/vistamar_logo.svg" alt=""></a>
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarResponsive">
+                        <ul class="navbar-nav">
+                        {if !$user.id}
+                            {section name=hm loop=$header_menus}
+                                {if $header_menus[hm].menu_pos == "0_up"}
+                                    {if $header_menus[hm].hidden_for_not_logged_in != 1}
+                                    <li class="nav-item">
+                                        <a class="nav-link{if $header_menus[hm].html_class} {$header_menus[hm].html_class}{/if}" {if $header_menus[hm].html_id}id="{$header_menus[hm].html_id}"{/if} href="{if $header_menus[hm].dont_open}#{else}{if $header_menus[hm].url}{$header_menus[hm].url}{else}{if $header_menus[hm].htaccess_url}{$header_menus[hm].htaccess_url}{else}/{#htaccess_info#}/{$header_menus[hm].id}{/if}{/if}{/if}" target="{$header_menus[hm].target}">
+                                            {if $header_menus[hm].icon}{$header_menus[hm].icon|unescape:"html"} {/if}{$header_menus[hm].name}
+                                            {*<span class="sr-only">(current)</span>*}
+                                        </a>
+                                    </li>
+                                    {/if}
+                                {/if}
+                            {/section}
+                        {else}
+                            {section name=hm loop=$header_menus}
+                                {if $header_menus[hm].menu_pos == "0_up"}
+                                    {if $header_menus[hm].hidden_for_logged_in != 1}
+                                    <li class="nav-item">
+                                        <a class="nav-link{if $header_menus[hm].html_class} {$header_menus[hm].html_class}{/if}" {if $header_menus[hm].html_id}id="{$header_menus[hm].html_id}"{/if} href="{if $header_menus[hm].dont_open}#{else}{if $header_menus[hm].url}{$header_menus[hm].url}{else}{if $header_menus[hm].htaccess_url}{$header_menus[hm].htaccess_url}{else}/{#htaccess_info#}/{$header_menus[hm].id}{/if}{/if}{/if}" target="{$header_menus[hm].target}">
+                                            {if $header_menus[hm].icon}{$header_menus[hm].icon|unescape:"html"} {/if}{$header_menus[hm].name}
+                                            {*<span class="sr-only">(current)</span>*}
+                                        </a>
+                                    </li>
+                                    {/if}
+                                {/if}
+                            {/section}
+                        {/if}
+                        </ul>
+                        <ul class="navbar-nav">
+                        {if !$user.id}
+                            {section name=um loop=$user_menu}
+                                {if $user_menu[um].menu_pos == "1_user"}
+                                    {if $user_menu[um].hidden_for_not_logged_in != 1}
+                                    <li class="nav-item">
+                                        <a class="nav-link{if $user_menu[um].html_class} {$user_menu[um].html_class}{/if}" {if $user_menu[um].html_id}id="{$user_menu[um].html_id}"{/if} href="{if $user_menu[um].dont_open}#{else}{if $user_menu[um].url}{$user_menu[um].url}{else}{if $user_menu[um].htaccess_url}{$user_menu[um].htaccess_url}{else}/{#htaccess_info#}/{$user_menu[um].id}{/if}{/if}{/if}" target="{$user_menu[um].target}">
+                                            {if $user_menu[um].icon}{$user_menu[um].icon|unescape:"html"} {/if}{$user_menu[um].name}
+                                            {*<span class="sr-only">(current)</span>*}
+                                        </a>
+                                    </li>
+                                    {/if}
+                                {/if}
+                            {/section}
+                        {else}
+                            {section name=um loop=$user_menu}
+                                {if $user_menu[um].menu_pos == "1_user"}
+                                    {if $user_menu[um].hidden_for_logged_in != 1}
+                                    <li class="nav-item">
+                                        <a class="nav-link{if $user_menu[um].html_class} {$user_menu[um].html_class}{/if}" {if $user_menu[um].html_id}id="{$user_menu[um].html_id}"{/if} href="{if $user_menu[um].dont_open}#{else}{if $user_menu[um].url}{$user_menu[um].url}{else}{if $user_menu[um].htaccess_url}{$user_menu[um].htaccess_url}{else}/{#htaccess_info#}/{$user_menu[um].id}{/if}{/if}{/if}" target="{$user_menu[um].target}">
+                                            {if $user_menu[um].icon}{$user_menu[um].icon|unescape:"html"} {/if}{$user_menu[um].name}
+                                            {*<span class="sr-only">(current)</span>*}
+                                        </a>
+                                    </li>
+                                    {/if}
+                                {/if}
+                            {/section}
+                        {/if}
+                        </ul>
+                        <ul class="navbar-nav">
+                            <li class="nav-item">
+                                <a class="shoppingClick" href="/{#htaccess_cart#}/">
+                                    <div class="icontext">
+                                        <div class="icon-wrap icon-xs bg-primary round text-light">
+                                            <i class="fas fa-shopping-basket"></i>
+                                            {if 1 || $cart_items_count}<span id="cartProductsQuantityTop" class="notify">{$cart_items_count}</span>{/if}
+                                        </div>
+                                        {if 1 || $cart_amount}
+                                        <div class="text-wrap cartAmountCont">
+                                            <span class="cartAmountNum" id="cartProductsAmountTop">{$cart_amount|number_format: 2}</span>
+                                            <span class="cartAmountCurrency">{#currency#}</span>
+                                        </div>
+                                        {/if}
+                                    </div> <!-- icontext.// -->
+                                </a>
+                            </li>
+                        </ul>
+                        <script>
+                            $("#logoutButton").click(function(ev){
+                                ev.preventDefault();
+                                {if $showSocialLogins}
+                                    {*{if $useFacebookLogin}fbLogout();{/if}*}
+                                    {if $useGoogleLogin}googleSignOut();{/if}
+                                {/if}
+                                window.location.href = "{#htaccess_logout#}";
+                            });
+                        </script>
+                    </div>
+                </div>
+            </nav>
+        </div>
+        <!-- Page Content -->
+        <div class="container">

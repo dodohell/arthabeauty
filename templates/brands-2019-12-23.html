@@ -1,0 +1,23 @@
+{include file="header.html"}
+<div class="breadcrumbsContainer">
+    <div class="container">
+        <div class="breadcrubsRow">
+            {$breadcrumbs}
+        </div>
+    </div>
+</div>
+<div class="indexBackground">
+    <div class="brandsPage">
+        <div class="container">
+            <h2 class="title">{#brands#} ({$resultsCount})</h2>
+            <div class="brandsRow">
+                {section name=i loop=$items}
+                <div class="singleItem">
+                    <a href="{if $items[i].htaccess_url}{$items[i].htaccess_url}{else}/{#htaccess_brand#}/{$items[i].id}{/if}" class="brandImage" style="background-image: url(/files/tn/{$items[i].pic}); box-shadow: 0px 16px 20px rgba(0, 19, 111, 0.3);"></a>
+                </div>
+                {/section}
+            </div>
+        </div>
+    </div>
+</div>
+{include file="footer.html"}

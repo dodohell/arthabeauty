@@ -1,0 +1,131 @@
+{include file="admin/header.html"}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb p-0">
+        <li class="breadcrumb-item">
+            <a href="./">
+                <span class="mdi mdi-home"></span>                
+            </a>
+        </li>
+        <li class="breadcrumb-item">
+            <a href="./{$php_self}">{#quiz_categories#}</a>
+        </li>
+        <li class="breadcrumb-item" aria-current="page">{$row.name}</li>
+    </ol>
+</nav>
+<div class="row-fluid">
+    <form method="post" enctype="multipart/form-data">
+        <div class="row">
+            <div class="col-sm-7 well">
+                <div class="nonboxy-widget">
+                    <div class="widget-head">
+                        <h5>{#description#}</h5>
+                    </div>
+                    <div class="widget-content">
+                        <div class="widget-box">
+                            {$editor}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-5 well">
+                <div class="nonboxy-widget">
+                    <div class="widget-head">
+                        <h5>{#settings#}</h5>
+                    </div>
+                    <div class="widget-content">
+                        <div class="widget-box">
+                            <fieldset>
+                                <div class="control-group">
+                                    <label class="checkbox inline"><input type="checkbox" value="1" name="active" {if $row.active}checked{/if}> {#active#}</label>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label" for="sex">{#sex#}</label>
+                                    <select name="sex" class="form-control form-control-sm">
+                                        <option value="">{#please_select#}</option>
+                                        <option value="1" {if 1 == $row.sex}selected{/if}>{#males#}</option>
+                                        <option value="2" {if 2 == $row.sex}selected{/if}>{#females#}</option>
+                                    </select>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                    <div class="widget-head">
+                        <h5>{#general_information#}</h5>
+                    </div>
+                    <div class="widget-content">
+                        <div class="widget-box">
+                            <fieldset>
+                                <div class="control-group">
+                                    <label class="control-label" for="name_bg">{#name#} BG</label>
+                                    <div class="controls">
+                                        <input type="text" name="name_bg" value="{$row.name_bg}" class="form-control form-control-sm text-tip" id="name_bg" title="{#enter#} {#name#} BG">
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label" for="name_en">{#name#} EN</label>
+                                    <div class="controls">
+                                        <input type="text" name="name_en" value="{$row.name_en}" class="form-control form-control-sm text-tip" id="name_en" title="{#enter#} {#name#} EN">
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label" for="name_de">{#name#} DE</label>
+                                    <div class="controls">
+                                        <input type="text" name="name_de" value="{$row.name_de}" class="form-control form-control-sm text-tip" id="name_de" title="{#enter#} {#name#} DE">
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label" for="name_ru">{#name#} RU</label>
+                                    <div class="controls">
+                                        <input type="text" name="name_ru" value="{$row.name_ru}" class="form-control form-control-sm text-tip" id="name_ru" title="{#enter#} {#name#} RU">
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label" for="name_ro">{#name#} RO</label>
+                                    <div class="controls">
+                                        <input type="text" name="name_ro" value="{$row.name_ro}" class="form-control form-control-sm text-tip" id="name_ro" title="{#enter#} {#name#} RO">
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                    
+                    {*<div class="widget-head">
+                        <h5>{#general_images#}</h5>
+                    </div>
+                    <div class="widget-content">
+                        <div class="widget-box">
+                            <fieldset>
+                                <div class="my-3">
+                                    <span>{#picture#}</span>
+                                    <div class="custom-file">
+                                        <input type="file" name="pic" class="custom-file-input" id="pic">
+                                        <label class="custom-file-label" for="pic">{if $row.pic}{$row.pic}{else}{#picture#}{/if}</label>
+                                    </div>
+                                    {if $row.pic}
+                                        <img src="/files/tn/{$row.pic}" class="picView">
+                                        <a href="quiz_categories_ae.php?act=delete&field=pic&id={$id}"><i class="mdi mdi-trash-can-outline"></i>{#delete#}</a>
+                                    {/if}
+                                </div>
+                                <script>
+                                    $('#pic').on('change',function(){
+                                        //get the file name
+                                        var fileName = $(this).val();
+                                        //replace the "Choose a file" label
+                                        $(this).next('.custom-file-label').html(fileName);
+                                    })
+                                </script>
+                            </fieldset>
+                        </div>
+                    </div>*}
+                    <hr>
+                    <div class="form-actions">
+                        <button type="submit" name="Submit" class="btn btn-primary">{#save_changes#}</button>
+                        <input type="submit" name="SaveAndStay" class="btn btn-info" value="{#save_and_stay#}" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+{include file="admin/footer.html"}

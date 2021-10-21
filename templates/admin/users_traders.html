@@ -1,0 +1,98 @@
+{include file="admin/header.html"}
+    <ul class="breadcrumb">
+      <li><a href="./index.php">{#home_breadcrumbs#}</a><span class="divider">&raquo;</span></li>
+      <li class="active">{$page_heading}</li>
+    </ul>
+	
+    <div class="row-fluid">
+      <div class="col-sm-12">
+        <div class="nonboxy-widget" style="margin-left: 0px;height: auto;">
+			<div class="widget-head" style="height: auto;">
+				<span class="col-sm-2">
+					<h5 class="pull-left"><i class="black-icons list_images"></i> {#list_elements#}</h5>
+				</span>
+				<span class="col-sm-2">
+					{if 0}<a href="{$php_edit}?act=add" class="btn btn-mini btn-add"><i class="icon-file"></i>{#add_new#}</a>{/if}
+				</span>
+				<span class="col-sm-2">
+					<div class="searchHolder top-search">
+					  <form action="#" method="get">
+						<div class="input-prepend"> <span class="add-on"><i class="icon-search"></i></span>
+						  <input type="text" id="searchIcon" name="search_string" value="{$search_string}">
+						  <button class="btn">{#search#}</button>
+						  <div class="clear"></div>
+						  <label class="checkbox inline" for="planner"><input type="checkbox" id="planner" {if $planner == 1}checked{/if} name="planner" value="1"> Планер</label><br />
+						  <label class="checkbox inline" for="budget"><input type="checkbox" id="budget" {if $budget == 1}checked{/if} name="budget" value="1"> Бюджет</label><br />
+						  <label class="checkbox inline" for="guests"><input type="checkbox" id="guests" {if $guests == 1}checked{/if} name="guests" value="1"> Гости</label><br />
+						  <label class="checkbox inline" for="tables"><input type="checkbox" id="tables" {if $tables == 1}checked{/if} name="tables" value="1"> Организация на масите</label><br />
+						  <label class="checkbox inline" for="website"><input type="checkbox" id="website" {if $website == 1}checked{/if} name="website" value="1"> Уебсайт</label><br />
+						  <div class="clearfix"></div>
+						  <label class="checkbox inline nopadding" for="sortby_date"><input type="radio" id="sortby_date_desc" {if $sortby == 1}checked{/if} name="sortby" value="1"> Сортирай по низходяща дата на регистрация</label><br />
+						  <label class="checkbox inline" for="sortby_date_asc"><input type="radio" id="sortby_date_asc" {if $sortby == 2}checked{/if} name="sortby" value="2"> Сортирай по възходяща дата  на регистрация</label><br />
+						  <label class="checkbox inline" for="sortby_login_date"><input type="radio" id="sortby_login_date" {if $sortby == 3}checked{/if} name="sortby" value="3"> Сортирай по низходяща дата на последно влизане</label><br />
+						  <label class="checkbox inline" for="sortby_login_date_asc"><input type="radio" id="sortby_login_date_asc" {if $sortby == 4}checked{/if} name="sortby" value="4"> Сортирай по възходяща дата  на последно влизане</label><br />
+						</div>
+					  </form>
+					</div>
+				</span>
+				<div class="btn-group pull-right">
+					<button data-toggle="dropdown" class="btn dropdown-toggle"><i class="icon-cog "></i><span class="caret"></span></button>
+					<ul class="dropdown-menu">
+						<li><a href="{$php_edit}?act=add"><i class="icon-file"></i>{#add_new#}</a></li>
+						<li><a href="#"><i class="icon-trash"></i>{#delete#}</a></li>
+					</ul>
+				</div>
+				<div class="clear"></div>
+			</div>
+			
+			
+			<div class="col-sm-12" style="margin: 0px;">
+				<div class="col-sm-1 pull-left"> {*<input name="checkbox" type="checkbox" value="" class="checkall-task">*}</div>
+				<div class="col-sm-1"> &nbsp; </div>
+				<div class="col-sm-4"> {#name#} </div>
+				<div class="col-sm-1"> {#register_date#} </div>
+				<div class="col-sm-1"> {#last_login_date#} </div>
+				<div class="col-sm-1"> {#website#} </div>
+				<div class="center col-sm-2"> {#status#} </div>
+				<div class="center col-sm-1"> {#actions#} </div>
+			</div>
+			<div class="clear"></div>
+			<div class="mainList">
+				<ul class="table table-striped table-bordered" id="sortTable0" >
+					{section name=itm loop=$items}
+					<li name="{$items[itm].id}">
+						<div class="col-sm-1 tr-task-check"><input name="checkbox" type="checkbox" value=""></div>
+						<div class="col-sm-1 tr-task-check">{if $items[itm].facebook}FB{/if}</div>
+						<div class="col-sm-4"><a href="{$php_edit}?act=edit&id={$items[itm].id}">{$items[itm].name} ({$items[itm].email})</a></div>
+						<div class="col-sm-1 center">{if $items[itm].register_date > 0}{$items[itm].register_date|date_format:"%d/%m/%Y"}{/if}</div>
+						<div class="col-sm-1 center">{if $items[itm].last_login_date > 0}{$items[itm].last_login_date|date_format:"%d/%m/%Y"}{/if}</div>
+						<div class="col-sm-1 center">{if $items[itm].website}<span class="label label-success">Да</span>{else}Не{/if}</div>
+						<div class="col-sm-2 center">
+							{if $items[itm].active}
+								<span class="label label-success">{#active#}</span>
+							{else}
+								<span class="label label-important">{#inactive#}</span>
+							{/if}
+						</div>
+						<div class="col-sm-1">
+							<div class="btn-group pull-right">
+								<button data-toggle="dropdown" class="btn dropdown-toggle"><i class="icon-cog "></i><span class="caret"></span></button>
+								<ul class="dropdown-menu">
+									<li><a href="{$php_edit}?act=edit&id={$items[itm].id}"><i class="icon-edit"></i> {#edit#}</a></li>
+									<li><a href="{$php_self}?act=delete&id={$items[itm].id}"><i class="icon-trash"></i> {#delete#}</a></li>
+								</ul>
+							</div>
+						</div>
+						<div class="clear"></div>
+					</li>
+					{/section}
+				</ul>
+			</div>
+			
+		<div class="pagesHolder size12 paging_full_numbers">
+			{$pagination}
+		</div>
+<div class="clear"></div>
+      </div>
+    </div>
+	{include file="admin/footer.html"}

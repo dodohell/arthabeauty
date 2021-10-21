@@ -1,0 +1,1 @@
+<?php	include("globals.php");    $products = new Products();    $products->getOutOfStockProductsCount(3);	?>

@@ -1,0 +1,440 @@
+{include file="header.html"}
+<div class="row">
+    <div class="col-lg-3">
+        {include file="side_bar.html"}
+    </div>
+    <div class="col-lg-9">
+        <div class="card mt-4">
+            <div class="row no-gutters">
+                <aside class="col-sm-5">
+                    <article class="gallery-wrap"> 
+                        <div class="img-big-wrap">
+                            {if $row.new_product}
+                                <img src="/images/iconNew.png" id="newProduct" class="contentProductImg"/>
+                            {/if}
+                            {if $row.price_specialoffer > 0.0}
+                                <div class="promo-medal bg-danger">
+                                    <i class="fas fa-percent"></i>
+                                    <span class="promo-medal-text">
+                                        {#promo_medal_text#}
+                                    </span>
+                                </div>
+                            {/if}
+                            <div id="free-delivery-medal" class="free-delivery-medal bg-primary">
+                            {if $freeDelivery}
+                                <div class="free-delivery-medal-content">
+                                    <i class="fas fa-truck"></i>
+                                    <span class="free-delivery-medal-text">
+                                        {#free_delivery_medal_text#}
+                                    </span>
+                                </div>
+                            {/if}
+                            </div>
+                            <div> <a href="{if $images[0].pic}/files/{$images[0].pic}{else}/images/noImage.png{/if}" data-fancybox="productGallery"><img src="{if $images[0].pic}/files/tn/{$images[0].pic}{else}/images/noImage.png{/if}"{if !$images[0].pic}style="object-fit: contain;"{/if}></a></div>
+                        </div> <!-- slider-product.// -->
+                        <div class="img-small-wrap">
+                        {section name=i loop=$images}
+                            {if !$smarty.section.i.first}
+                                <a href="/files/{$images[i].pic}" data-fancybox="productGallery">
+                                    <div class="item-gallery">
+                                        <img src="{if $images[i].pic}/files/tntn/{$images[i].pic}{else}/images/noImage.png{/if}" class="thumbImg">
+                                    </div>
+                                </a>
+                            {/if}
+                        {/section}
+                        {section name=sp loop=$similarProducts}
+                            <a href="/{#htaccess_product#}/{$similarProducts[sp].product_id}">
+                                <div class="item-gallery">
+                                    <img src="{if $similarProducts[sp].pic}/files/tntn/{$similarProducts[sp].pic}{else}/images/noImage.png{/if}" class="thumbImg">
+                                </div>
+                            </a>
+                        {/section}
+                        </div> <!-- slider-nav.// -->
+                    </article> <!-- gallery-wrap .end// -->
+                </aside>
+                <aside class="col-sm-7">
+                    <article class="p-5">
+                        <h3 class="title mb-3">{$row.name}</h3>
+                        <div class="mb-3">
+                            {if $row.price_specialoffer > 0.0}
+                                <var class="price oldPrice h3 text-secondary"> 
+                                    <span class="num">{$row.price|number_format: 2}</span><span class="currency"> {#currency#}</span>
+                                </var>
+                                <var class="price currentPrice h3 text-danger"> 
+                                    <span class="num">{$row.price_specialoffer|number_format: 2}</span><span class="currency"> {#currency#}</span>
+                                </var>
+                            {elseif $row.price > 0.0}
+                                <var class="price currentPrice h3 text-danger"> 
+                                    <span class="num">{$row.price|number_format: 2}</span><span class="currency"> {#currency#}</span>
+                                </var>
+                            {/if}
+                        </div> <!-- price-detail-wrap .// -->
+                        <dl>
+                            {*<dt>{#excerpt#}</dt>*}
+                            <dd>{$row.excerpt}</dd>
+                        </dl>
+                        <dl class="row attributeOptions">
+                            <dt class="col-sm-3">{#code#}</dt>
+                            <dd class="col-sm-9">{$row.code}</dd>
+                            {section name=ao loop=$attributeOptions}
+                            <dt class="col-sm-3">{$attributeOptions[ao].attribute_name}</dt>
+                            <dd class="col-sm-9">
+                                {section name=o loop=$attributeOptions[ao].options}
+                                    {$attributeOptions[ao].options[o].option_text}{if !$smarty.section.o.last}, {/if}
+                                {/section}
+                            </dd>
+                            {/section}
+                            
+                            <dt class="col-sm-3">{#weight#}</dt>
+                            <dd class="col-sm-9">
+                                <span id="product-weight-attribute">
+                                    {if $row.weight > 0.0}
+                                    <span class="product-weight-content">
+                                        <i class="fas fa-weight-hanging"></i> <span class="weight-num">{$row.weight|string_format:"%.3f"}</span> кг.
+                                    </span>
+                                    {/if}
+                                </span>
+                            </dd>
+                            <dt class="col-sm-3">{#rating#}</dt>
+                            <dd class="col-sm-9">
+                                <div class="rating-wrap">
+                                    <div id="rating-{$row.id}"></div>
+                                    {if $row.reviews_count > 0}<div class="label-rating">{$row.reviews_count} {if $row.reviews_count > 1}{#reviews#}{else}{#review#}{/if}</div>{/if}
+                                    {if $row.comments > 0}<div class="label-rating">{$row.comments} {if $row.comments > 1}{#comments#}{else}{#comment#}{/if}</div>{/if}
+                                    <div class="ratingAlert alert alert-warning alert-dismissible fade show" id="ratingWarning" style="display: none;">
+                                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                        Оценката на продукт е възможна след получаване на email за доставена поръчка.
+                                    </div>
+                                    <script>
+                                        $(document).ready(function () {
+                                            $.fn.raty.defaults.path = '/js/raty/img';
+                                            $('#rating-{$row.id}').raty({
+                                                readOnly:  true,
+                                                starType:    'img', // Element used to represent a star.
+                                                starHalf:    'star-half.png', // The name of the half star image.
+                                                starOff:     'star-off.png',  // Name of the star image off.
+                                                starOn:      'star-on.png',   // Name of the star image on.
+                                                half:  true,
+                                                start: parseFloat({$row.rating})
+                                            });
+                                            $(".rating-wrap img").click(function(){
+                                                $("#ratingWarning").slideToggle();
+                                            });
+                                        });
+                                    </script>
+                                </div> <!-- rating-wrap.// -->
+                            </dd>
+                            {*<dt class="col-sm-3">Delivery</dt>
+                            <dd class="col-sm-9">Russia, USA, and Europe </dd>*}
+                        </dl>
+                        
+                        <hr>
+                        <form method="POST" action="/add-to-cart" name="formAddToCart">
+                            <div class="row">
+                                <div class="col-sm-5">
+                                    <dl class="dlist-inline">
+                                        <dt>{#quantity#}: </dt>
+                                        <div class="quantityHolder">
+                                            <div class="input-group plus-minus-input">
+                                                <div class="input-group-button">
+                                                    <button type="button" class="button {*hollow circle*}" data-quantity="minus" data-field="quantity">
+                                                        <i class="fa fa-minus" aria-hidden="true"></i>
+                                                    </button>
+                                                </div>
+                                                <input class="input-group-field" name="quantity" value="1" type="text">
+                                                <div class="input-group-button">
+                                                    <button type="button" class="button {*hollow circle*}" data-quantity="plus" data-field="quantity">
+                                                        <i class="fa fa-plus" aria-hidden="true"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </dl>  <!-- item-property .// -->
+                                    <div id="product-free-delivery" class="d-flex">{if $freeDelivery}<span class="product-free-delivery-content badge badge-info px-3 py-2"><i class="fas fa-truck"></i> {#free_delivery#}</span>{/if}</div>
+                                </div> <!-- col.// -->
+                                <div class="col-sm-7">
+                                    {if $option_groups}
+                                    <dl class="dlist-inline">
+                                        <dt>{#variants#}: </dt>
+                                        {section name=og loop=$option_groups}
+                                            {if $option_groups[og].display_in_list}
+                                            {$option_groups[og].info.name}
+                                            <select name="option_id" class="form-control productOptionSelect">
+                                                <option value="">{#please_select#}</option>
+                                                {section name=o loop=$option_groups[og].options}
+                                                    {if $option_groups[og].options[o].selected_values}
+                                                    <option value="{$option_groups[og].options[o].id}">{$option_groups[og].options[o].name}</option>
+                                                    {/if}
+                                                {/section}
+                                            </select>
+                                            {/if}
+                                        {/section}
+                                    </dl>  <!-- item-property .// -->
+                                    {/if}
+                                    <div id="product-weight" class="d-flex justify-content-end">{if $row.weight > 0.0}<span class="product-weight-content badge badge-info px-3 py-2"><i class="fas fa-weight-hanging"></i> {#weight#}: <span class="weight-num">{$row.weight|string_format:"%.3f"}</span> кг.</span>{/if}</div>
+                                </div> <!-- col.// -->
+                            </div> <!-- row.// -->
+                            <hr>
+                            <div class="d-flex flex-row justify-content-between flex-wrap">
+                                <input type="hidden" name="product_id" value="{$row.id}">
+                                <button type="submit" name="AddToCart" id="buttonAddToCart" class="btn btn-danger">
+                                    <i class="fas fa-shopping-basket"></i> {#add_to_cart#}
+                                </button>
+                                <a href="/site/index.php?param=get-fast-order-form&product_id={$row.id}" class="btn btn-light buttonFastOrder fancybox" id="buttonFastOrder">
+                                    <i class="fas fa-phone-volume"></i> {#fast_order#} 
+                                    <span class="for-one-product">
+                                        {#for_one_product#}
+                                    </span>
+                                </a>
+                            </div>
+                        </form>
+                    </article> <!-- card-body.// -->
+                </aside> <!-- col.// -->
+            </div> <!-- row.// -->
+            <div class="row px-5">
+                {*<div class="col-sm-12">*}
+                    <dl>
+                        <dt>{#description#}</dt>
+                        <dd>{$row.description}</dd>
+                    </dl>
+                    {if $files}
+                    <dl>
+                        <dt>{#files#}</dt>
+                        {section name=f loop=$files}
+                        <dd>
+                            <a href="/{#htaccess_downloadproductfile#}/{$files[f].doc}/{$row.id}" target="_blank">
+                                {*<i class="fas fa-chevron-right"></i>*}<i class="fas fa-file-download"></i> {if $files[f].name}{$files[f].name}{else}{$files[f].doc}{/if}
+                            </a>
+                        </dd>
+                        {/section}
+                    </dl>
+                    {/if}
+                {*</div>*}
+            </div>
+        </div> <!-- card.// -->
+    </div>
+</div>
+<script>
+$(document).ready(function () {
+    // Fancybox: Disable adding hash to the URL
+    $.fancybox.defaults.hash = false;
+    
+    // This button will increment the value
+    $('[data-quantity="plus"]').click(function (e) {
+        // Stop acting like a button
+        e.preventDefault();
+        // Get the field name
+        var fieldName = $(this).attr('data-field');
+        // Get its current value
+        var currentVal = parseInt($('input[name=' + fieldName + ']').val());
+        // If is not undefined
+        if (!isNaN(currentVal)) {
+            // Increment
+            $('input[name=' + fieldName + ']').val(currentVal + 1);
+        } else {
+            // Otherwise put a 0 there
+            $('input[name=' + fieldName + ']').val(0);
+        }
+    });
+    // This button will decrement the value till 0
+    $('[data-quantity="minus"]').click(function (e) {
+        // Stop acting like a button
+        e.preventDefault();
+        // Get the field name
+        var fieldName = $(this).attr('data-field');
+        // Get its current value
+        var currentVal = parseInt($('input[name=' + fieldName + ']').val());
+        // If it isn't undefined or its greater than 0
+        if (!isNaN(currentVal) && currentVal > 0) {
+            // Decrement one
+            $('input[name=' + fieldName + ']').val(currentVal - 1);
+        } else {
+            // Otherwise put a 0 there
+            $('input[name=' + fieldName + ']').val(0);
+        }
+    });
+
+    $("select[name=option_id]").bind("change", function () {
+        var variant_id = $(this).val();
+        $("#buttonFastOrder").attr("href", "/site/index.php?param=get-fast-order-form&product_id={$row.id}&variant_id="+variant_id);
+        $.ajax({
+            type: "POST",
+            url: "/site/index.php",
+            data: "param=get-variant-details&product_id={$row.id}&variant_id="+variant_id,
+            dataType: "json",
+            success: function(response){
+                $(".price.currentPrice .num").html(response.price.toFixed(2));
+                if ( response.price_strikethrough ){
+                    $(".price.oldPrice .num").html(response.price_strikethrough.toFixed(2));
+                }
+                //$("#priceBonusPoints").empty();
+                //$("#priceBonusPointsWon").empty();
+                //$("#priceBonusPoints").append(response.bonus_points_price);
+                //$("#priceBonusPointsWon").append(response.bonus_points_won);
+                var productWeightContent = $("#product-weight .product-weight-content").length;
+                var productWeightAttributeContent = $("#product-weight-attribute .product-weight-content").length;
+                //console.log("productWeightContent",productWeightContent);
+                if(response.weight > 0.0){
+                    var weightHTML = '';
+                    weightHTML += '<span class="product-weight-content badge badge-info px-3 py-2">';
+                    weightHTML += '  <i class="fas fa-weight-hanging"></i>';
+                    weightHTML += '  {#weight#}: <span class="weight-num">'+ parseFloat(response.weight).toFixed(3)+'</span> кг.';
+                    weightHTML += '</span>';
+                    
+                    var weightAttributeHTML = '';
+                    weightAttributeHTML += '<span class="product-weight-content">';
+                    weightAttributeHTML += '  <i class="fas fa-weight-hanging"></i>';
+                    weightAttributeHTML += '  <span class="weight-num">'+ parseFloat(response.weight).toFixed(3)+'</span> кг.';
+                    weightAttributeHTML += '</span>';
+                    
+                    $("#product-weight").html(weightHTML);
+                    $("#product-weight-attribute").html(weightAttributeHTML);
+                }else{
+                    if(productWeightContent){
+                        $("#product-weight .product-weight-content").remove();
+                    }
+                    if(productWeightAttributeContent){
+                        $("#product-weight-attribute .product-weight-content").remove();
+                    }
+                }
+                var freeDeliveryMedalContent = $("#free-delivery-medal .free-delivery-medal-content").length;
+                //console.log("freeDeliveryMedalContent",freeDeliveryMedalContent);
+                //console.log("isFreeDelivery",response.isFreeDelivery);
+                if(response.isFreeDelivery){
+                    if(!freeDeliveryMedalContent){
+                        var freeDeliveryMedalHTML = '';
+                        freeDeliveryMedalHTML += '<div class="free-delivery-medal-content">';
+                        freeDeliveryMedalHTML += '   <i class="fas fa-truck"></i>';
+                        freeDeliveryMedalHTML += '   <span class="free-delivery-medal-text">';
+                        freeDeliveryMedalHTML += '       {#free_delivery_medal_text#}';
+                        freeDeliveryMedalHTML += '   </span>';
+                        freeDeliveryMedalHTML += '</div>';
+                        var freeDeliveryTextHTML = "";
+                        freeDeliveryTextHTML = '<span class="product-free-delivery-content badge badge-info px-3 py-2"><i class="fas fa-truck"></i> {#free_delivery#}</span>';
+                        
+                        $("#free-delivery-medal").html(freeDeliveryMedalHTML);
+                        $("#product-free-delivery").html(freeDeliveryTextHTML);
+                    }
+                }else{
+                    if(freeDeliveryMedalContent){
+                        $("#free-delivery-medal .free-delivery-medal-content").remove();
+                        $("#product-free-delivery .product-free-delivery-content").remove();
+                    }
+                }
+            },
+            error: function(er){
+                //console.log(er);
+            }
+        })
+    });
+    $("#buttonAddToCart").bind("click", function(event){
+        event.preventDefault();
+        var option_id = $("select[name=option_id]").val();
+        var quantity = $("input[name=quantity]").val();
+        if ( $("select[name=option_id]").length == 0 ){
+            if ( quantity > 0 ){
+                document.formAddToCart.submit();
+            }else{
+                swal({
+                  title: "{#havent_selected#}?",
+                  text: "{#havent_selected_text#}",
+                  type: "warning",
+                  showCancelButton: false,
+                  confirmButtonColor: "#1F975A",
+                  confirmButtonText: "{#ok_good#}",
+                  closeOnConfirm: false
+                });
+            }
+        }else{
+            if ( quantity > 0 ){
+                if ( option_id != "" ){
+                    document.formAddToCart.submit();
+                }else{
+                    swal({
+                        title: "{#havent_selected_variant#}?",
+                        text: "{#havent_selected_variant_text#}",
+                        type: "warning",
+                        showCancelButton: false,
+                        confirmButtonColor: "#1F975A",
+                        confirmButtonText: "{#ok_good#}",
+                        closeOnConfirm: false
+                    });
+                }
+            }else{
+                swal({
+                  title: "{#havent_selected#}?",
+                  text: "{#havent_selected_text#}",
+                  type: "warning",
+                  showCancelButton: false,
+                  confirmButtonColor: "#1F975A",
+                  confirmButtonText: "{#ok_good#}",
+                  closeOnConfirm: false
+                });
+            }
+        }
+    });
+    $("#buttonFastOrder").bind("click", function (event) {
+        event.preventDefault();
+        var option_id = $("select[name=option_id]").val();
+        var quantity = $("input[name=quantity]").val();
+        if ($("select[name=option_id]").length == 0) {
+            if (quantity > 0) {
+                /*$('.fancybox').fancybox({
+                    padding: 0,
+                    border: 0,
+                    type: 'ajax'
+                });*/
+                $.fancybox.open({
+                    autoSize: true,
+                    src: "/site/index.php?param=get-fast-order-form&product_id={$row.id}&variant_id="+option_id+"&quantity="+quantity,
+                    type: 'ajax'
+                });
+            } else {
+                swal({
+                    title: "{#havent_selected#}?",
+                    text: "{#havent_selected_text#}",
+                    type: "warning",
+                    showCancelButton: false,
+                    confirmButtonColor: "#1F975A",
+                    confirmButtonText: "{#ok_good#}",
+                    closeOnConfirm: false
+                });
+            }
+        } else {
+            if (quantity > 0) {
+                if (option_id != "") {
+                    $.fancybox.open({
+                        autoSize: true,
+                        src: "/site/index.php?param=get-fast-order-form&product_id={$row.id}&variant_id="+option_id+"&quantity="+quantity,
+                        type: 'ajax'
+                    });
+                } else {
+                    swal({
+                        title: "{#havent_selected_variant#}?",
+                        text: "{#havent_selected_variant_text#}",
+                        type: "warning",
+                        showCancelButton: false,
+                        confirmButtonColor: "#1F975A",
+                        confirmButtonText: "{#ok_good#}",
+                        closeOnConfirm: false
+                    });
+                }
+            } else {
+                swal({
+                    title: "{#havent_selected#}?",
+                    text: "{#havent_selected_text#}",
+                    type: "warning",
+                    showCancelButton: false,
+                    confirmButtonColor: "#1F975A",
+                    confirmButtonText: "{#ok_good#}",
+                    closeOnConfirm: false
+                });
+            }
+        }
+    });              
+    
+});
+</script>
+<link rel="stylesheet" href="/js/sweetalert/sweetalert.css" />
+<script src="/js/sweetalert/sweetalert-dev.js"></script>
+{include file="footer.html"}

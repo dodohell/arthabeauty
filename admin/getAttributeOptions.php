@@ -1,0 +1,1 @@
+<?php	include("globals.php");		$attribute_id = $params->getInt("attribute_id");		$options = $db->getAll("SELECT * FROM ".$attributes_to_attribute_options_table." WHERE edate = 0 AND attribute_id = '".$attribute_id."' ORDER BY pos"); safeCheck($options);	echo json_encode($options);	?>

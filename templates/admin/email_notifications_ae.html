@@ -1,0 +1,53 @@
+{include file="admin/header.html"}
+    <div class="row-fluid">
+		<form method="post" enctype="multipart/form-data">
+			
+		
+			<div class="col-sm-5 well">
+				<div class="nonboxy-widget">
+					<div class="widget-head">
+						<h5>{#general_information#}</h5>
+					</div>
+					<div class="widget-content">
+						<div class="widget-box">
+							<fieldset>
+								<div class="control-group">
+									<label class="control-label" for="email">{#email#}</label>
+									<div class="controls">
+										<input readonly type="text" name="email" value="{$row.email}" class="input-xlarge text-tip" id="email" title="{#email#}">
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label" for="category_id">Category id</label>
+									<div class="controls">
+										<input readonly type="text" name="category_id" value="{$row.category_id}" class="input-xlarge text-tip" id="category_id" title="category_id">
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label" for="user_id">User id</label>
+									<div class="controls">
+										<input readonly type="text" name="user_id" value="{$row.user_id}" class="input-xlarge text-tip" id="user_id" title="user_id">
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label" for="sent">Sent</label>
+									<div class="controls">
+										<input readonly type="text" name="sent" value="{$row.sent}" class="input-xlarge text-tip" id="sent" title="Sent">
+									</div>
+								</div>
+								<div class="control-group">
+									<label class="control-label" for="postdate">Postdate</label>
+									<div class="controls">
+										<input readonly type="text" name="postdate" value="{$row.postdate}" class="input-xlarge text-tip" id="postdate" title="Postdate">
+									</div>
+								</div>
+							</fieldset>
+						</div>
+					</div>
+					<div class="clear"></div>
+				</div>
+			</div>
+			<div class="clear"></div>
+		</form>
+    </div>
+	{include file="admin/footer.html"}

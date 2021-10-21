@@ -1,0 +1,13 @@
+{*{if $index}<h5 class="my-4">Онлайн магазин Вистамар</h5>{/if}*}
+<div class="list-group my-3 side-menu">
+    {section name=c loop=$categories}
+        <a href="{if $categories[c].htaccess_url}{$categories[c].htaccess_url}{else}/{#htaccess_categories#}/{$categories[c].id}{/if}" class="list-group-item text-dark"><i class="fas fa-ship"></i> {$categories[c].name}</a>
+        {if $categories[c].subcategories}
+            <div class="list-group-submenu" id="{$categories[c].id}">
+                {section name=subcat loop=$categories[c].subcategories}
+                    <a href="{if $categories[c].subcategories[subcat].htaccess_url}{$categories[c].subcategories[subcat].htaccess_url}{else}/{#htaccess_categories#}/{$categories[c].subcategories[subcat].id}{/if}" class="list-group-item sub-item text-dark" data-parent="#category_{$categories[c].id}" style="padding-left: 40px;"><i class="fas fa-caret-right"></i> {$categories[c].subcategories[subcat].name}</a>
+                {/section}
+            </div>
+        {/if}
+    {/section}
+</div>

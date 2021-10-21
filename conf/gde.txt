@@ -1,0 +1,18 @@
+htaccess_info = infoen
+htaccess_news = newsen
+htaccess_news_article = show-newsen
+htaccess_news_categories = newslisten
+htaccess_page = page
+htaccess_search = search
+htaccess_specialoffer = specialofferen
+
+htaccess_categories = categoriesde
+htaccess_cart = /cartde
+htaccess_add_to_cart = add-to-cartde
+htaccess_checkout = checkoutde
+htaccess_checkout_final = checkout-finalde
+htaccess_myorders = myordersde
+htaccess_categorytypes = cataloguede
+htaccess_downloadproductfile = download-product-filede
+htaccess_order_rating = order-ratingde
+htaccess_messages = messagesde

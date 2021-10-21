@@ -1,0 +1,1267 @@
+{include file="header.html"}
+<script>
+gtag('event', 'view_item', {
+  "content_type": "product",
+  "items": [
+    {
+      "id": "{$row.id}",
+      "name": "{$row.name_en}, {$row.name_bg}",
+      "list_name": "Product page",
+      "brand": "{$brand.name}",
+      "category": "{$categoryMain.name}",
+      "list_position": 1,
+      "quantity": 1,
+      "price": {if $row.price_specialoffer > 0.0}{$row.price_specialoffer|number_format: 2}{elseif $row.price > 0.0}{$row.price|number_format: 2}{/if}
+    }
+  ]
+});
+gtag('event','view_item', {
+  'value': {if $row.price_specialoffer > 0.0}{$row.price_specialoffer|number_format: 2}{elseif $row.price > 0.0}{$row.price|number_format: 2}{/if},
+  'items':[{
+  'id':'{$row.id}',
+  'google_business_vertical': 'custom',
+  }]
+});
+</script>
+<script type="application/ld+json">
+{
+"@context": "https://schema.org",
+"@type": "BreadcrumbList",
+  "itemListElement": [{
+    "@type": "ListItem",
+    "position": 1,
+    "name": "{#home_breadcrumbs#}",
+    "item": "{$host_clear}"
+  },{
+    "@type": "ListItem",
+    "position": 2,
+    "name": "{$categoryMain.name}",
+    "item": "{$host_clear}{$categoryMain.htaccess_url}"
+  }{if $subCategory},{
+    "@type": "ListItem",
+    "position": 3,
+    "name": "{$subCategory.name}",
+    "item": "{$host_clear}{$subCategory.htaccess_url}"
+  }{/if}]
+}
+</script>
+
+					<script type="application/ld+json">
+					{
+						"@context": "http://schema.org/",
+						"@type": "Product",
+					  "aggregateRating": {
+					    "@type": "AggregateRating",
+					    "bestRating": "5",
+					    "ratingCount": "{if $row.reviews_count}{$row.reviews_count}{else}1{/if}",
+					    "ratingValue": "{if $row.rating}{$row.rating}{else}5{/if}"
+					  },
+						"name": "{$row.name_en}, {$row.name}",
+						"image": [{section name=i loop=$images}"{$host}files/{$images[i].pic}"{if $smarty.section.i.last}{else},{/if}{/section}],
+					   "brand": {
+							"@type": "Thing",
+							"name": "{$brand.name}"
+						},
+						"offers": {
+							"@type": "Offer",
+							"price": "{if $row.price_specialoffer > 0.0}{$row.price_specialoffer|number_format: 2}{elseif $row.price > 0.0}{$row.price|number_format: 2}{/if}",
+							"priceCurrency": "BGN",
+							"url": "https://{$smarty.server.HTTP_HOST}{$smarty.server.REQUEST_URI}",
+							"availability": "https://schema.org/InStock",
+							"seller": {
+								"@type": "Organization",
+								"name": "ArthaBeauty"
+							}
+							
+														
+						},
+						"description": "{$row.excerpt|strip_tags|escape:javascript|replace:'\n':''|replace:'\r':''|replace:'&nbsp;':" "|trim}",
+						"sku": "{$row.barcode}",
+						"mpn": "{$row.barcode}"{if $productComments},
+						"review": [
+						
+           {section name=pc loop=$productComments}
+					    {
+					      "@type": "Review",
+					      "author": "{$productComments[pc].initials}",
+					      "datePublished": "{$productComments[pc].postdate|date_format: "%Y-%m-%d"}",
+					      "description": "{$productComments[pc].comment|strip_tags|escape:javascript|replace:'\n':''|replace:'\r':''}",
+					      "name": "{$productComments[pc].nickname}",
+					      "reviewRating": {
+					        "@type": "Rating",
+					        "bestRating": "5",
+					        "ratingValue": "{$productComments[pc].rating}",
+					        "worstRating": "1"
+					      }
+					    }{if $smarty.section.pc.last}{else},{/if}
+            {/section}
+
+    				]
+    				{/if}
+					}
+					</script>
+
+
+
+<div class="breadcrumbsContainer">
+    <div class="container">
+        <div class="breadcrubsRow">
+            {$breadcrumbs}
+        </div>
+    </div>
+</div>
+
+
+<div class="catBackgroundGradient">
+	<div class="container" id="successProductCart">
+		<div class="alert alert-success successProductToCart">
+		</div>
+	</div>
+	
+    <div class="singleProduct">
+        <div class="container">
+			<div class="mobileHeaderRow">
+                <div class="left">
+                    <h2 class="heading">{*{$row.name}*}{$row.name_en}, {$row.name_bg}</h2>
+                    {if $row.collection_name}
+                        <span class="subtitle">{$row.collection_name}</span>
+                    {/if}
+                </div>
+                <div class="right">
+                    <div class="starsRow rating-wrap">
+                        <div id="mobile-rating-{$row.id}"></div>
+                        {*{if $row.reviews_count > 0}<div class="label-rating">{$row.reviews_count} {if $row.reviews_count > 1}{#reviews#}{else}{#review#}{/if}</div>{/if}
+                        {if $row.comments > 0}<div class="label-rating">{$row.comments} {if $row.comments > 1}{#comments#}{else}{#comment#}{/if}</div>{/if}*}
+                        <script>
+                            $(document).ready(function () {
+                                $.fn.raty.defaults.path = '/js/raty/img';
+                                $('#mobile-rating-{$row.id}').raty({
+                                    readOnly: true,
+                                    starType: 'png', /* Element used to represent a star.*/
+                                    starHalf: 'star-half.png', /* The name of the half star image.*/
+                                    starOff: 'star-off.png', /* Name of the star image off.*/
+                                    starOn: 'star-on.png', /* Name of the star image on.*/
+                                    half: true,
+                                    start: parseFloat({$row.rating})
+                                });
+                                $(".starsRow img").click(function(){
+                                    $("#ratingWarningMobile").slideToggle();
+                                });
+                            });
+                        </script>
+                    </div> <!-- rating-wrap.// -->
+                    <span class="counter">{if $row.reviews_count > 1}({$row.reviews_count}){/if}</span>
+                </div>
+            </div>
+            <div class="ratingAlert alert alert-warning alert-dismissible fade show" id="ratingWarningMobile" style="display: none;">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                {#rate_product_registred_user_error#}
+            </div>
+            <span class="productBrandLogo">
+                {if $brand.pic}<img class="lazyload" data-src="/files/tntn/{$brand.pic}" alt="{$brand.name}">{/if}
+            </span>
+            <div class="carouselSlider">
+                <span class="likedBox {if $row.in_favourites} likedBoxRed{/if}" name="{$row.id}"></span>
+                <script>
+                    $(".likedBox").bind("click", function(){
+                        {if !$user.id}
+                            swal({
+                                title: "{#error_login#}",
+                                text: "{#error_login_text_2#}",
+                                type: "warning",
+                                confirmButtonText: "{#proceed_login#}",
+                                showCancelButton: true,
+                                cancelButtonText: "{#cancel_liked_box#}",
+                                closeOnConfirm: true,
+                                closeonCancel: true
+                            },
+                            function(){
+                                $("#loginFormButton").trigger("click");
+                            });
+                        {else}
+                            if ( $(this).hasClass("likedBoxRed") ){
+                                $.ajax({
+                                    type: "POST",
+                                    url: "/",
+                                    data: "param=post-product-to-favourites&act=remove&product_id="+$(this).attr("name"),
+                                    dataType: "json",
+                                    success: function(res){
+                                        $("#favouritesQuantityTopButton").html(res.total_count);
+                                    },
+                                    error: function(er){
+                                    }
+                                });
+                                $(this).removeClass("likedBoxRed");
+                            }else{
+                                $.ajax({
+                                    type: "POST",
+                                    url: "/",
+                                    data: "param=post-product-to-favourites&act=add&product_id="+$(this).attr("name"),
+                                    dataType: "json",
+                                    success: function(res){
+                                        $("#favouritesQuantityTopButton").html(res.total_count);
+                                    },
+                                    error: function(er){
+                                    }
+                                });
+                                $(this).addClass("likedBoxRed");
+                            }
+                        {/if}
+                        return false;
+                    });
+                </script>
+                
+                <div class="swiper-container gallery-top">
+                    <div class="swiper-wrapper">
+						{if !$display_options_as_buttons}
+							{section name=i loop=$images}
+								<div class="swiper-slide">
+									<div class="swiper-slide-container">
+										<a data-fancybox="gallery" href="/files/{$images[i].pic}">
+											<div class="productImage" style="background-image: url({if $images[i].pic}/files/{$images[i].pic}{else}/images/noImage.png{/if});"></div>
+										</a>
+									</div>
+								</div>
+							{/section}
+						{/if}
+						{if $display_options_as_buttons || $display_variant_images}
+							{if $option_groups}
+								{section name=og loop=$option_groups}
+									{if $option_groups[og].display_in_list}
+										{if $option_groups[og].info.buttons || $display_variant_images}
+											{section name=o loop=$option_groups[og].options}
+												{if $option_groups[og].options[o].pic}
+												<div class="swiper-slide">
+													<div class="swiper-slide-container">
+														<a data-fancybox="gallery" href="{if $option_groups[og].options[o].pic}/files/{$option_groups[og].options[o].pic}{/if}">
+															<div class="productImage" style="background-image: url({if $option_groups[og].options[o].pic}/files/tn/{$option_groups[og].options[o].pic}{/if});"></div>
+														</a>
+													</div>
+												</div>
+												{/if}
+											{/section}
+										{/if}
+									{/if}
+								{/section}
+							{/if}
+                        {/if}
+                    </div>
+
+                    <div class="swiper-button-next"></div>
+                    <div class="swiper-button-prev"></div>
+                </div>
+                    
+				{if !$display_options_as_buttons}
+                <div class="swiper-container gallery-thumbs">
+                    <div class="swiper-wrapper">
+                        {section name=i loop=$images}
+                            <div class="swiper-slide">
+                                <div class="swiper-slide-container">
+                                    <div class="productImage" style="background-image: url({if $images[i].pic}/files/tn/{$images[i].pic}{else}/images/noImage.png{/if});">
+
+                                    </div>
+                                </div>
+                            </div>
+                        {/section}
+						{if $option_groups}
+                            {section name=og loop=$option_groups}
+                                {if $option_groups[og].display_in_list}
+									{if $option_groups[og].info.buttons}
+										{section name=o loop=$option_groups[og].options}
+                                            {if $option_groups[og].options[o].pic}
+                                            <div class="swiper-slide">
+												<div class="swiper-slide-container">
+													<div class="productImage" style="background-image: url({if $option_groups[og].options[o].pic}/files/tn/{$option_groups[og].options[o].pic}{/if});">
+
+													</div>
+												</div>
+											</div>
+                                            {/if}
+										{/section}
+									{/if}
+								{/if}
+                            {/section}
+                        {/if}
+                    </div>
+                </div>
+				{/if}
+            </div>
+            
+            <div class="productInfo">
+                <div class="headerRow">
+                    <div class="left">
+                        <h1 class="heading">{$row.name_en}{if $row.name_en && $row.name_bg}, {/if}{$row.name}</h1>
+                        {if $row.collection_name}
+                            <span class="subtitle">{$row.collection_name}</span>
+                        {/if}
+                    </div>
+                    <div class="right">
+                        <div class="rating-wrap">
+                            <div class="starsRow" id="rating-{$row.id}"></div>
+                            {*{if $row.reviews_count > 0}<div class="label-rating">{$row.reviews_count} {if $row.reviews_count > 1}{#reviews#}{else}{#review#}{/if}</div>{/if}
+                            {if $row.comments > 0}<div class="label-rating">{$row.comments} {if $row.comments > 1}{#comments#}{else}{#comment#}{/if}</div>{/if}*}
+                            <script>
+                                $(document).ready(function () {
+                                    $.fn.raty.defaults.path = '/js/raty/img';
+                                    $('#rating-{$row.id}').raty({
+                                        readOnly: true,
+                                        starType: 'png', /* Element used to represent a star.*/
+                                        starHalf: 'star-half.png', /* The name of the half star image.*/
+                                        starOff: 'star-off.png', /* Name of the star image off.*/
+                                        starOn: 'star-on.png', /* Name of the star image on.*/
+                                        half: true,
+                                        start: parseFloat({$row.rating})
+                                    });
+                                    $(".starsRow img").click(function(){
+                                        $("#ratingWarning").slideToggle();
+                                    });
+                                });
+                            </script>
+                        </div> <!-- rating-wrap.// -->
+                        <span class="counter">{if $row.reviews_count > 1}({$row.reviews_count}){/if}</span>
+                    </div>
+                </div>
+                <div class="ratingAlert alert alert-warning alert-dismissible fade show" id="ratingWarning" style="display: none;">
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    {#rate_product_registred_user_error#}
+                </div>
+                <div class="priceRow">
+                    <div class="priceCol">
+                        <div class="priceBox">
+                            {if $row.price_specialoffer > 0.0}
+                            <span class="oldPrice">{if $abb_before_amount}{$currency_abb}{/if}{$row.price|number_format: 2} {if !$abb_before_amount}{$currency_abb}{/if}</span>
+                            <span class="currentPrice color-red">{if $abb_before_amount}{$currency_abb}{/if}{$row.price_specialoffer|number_format: 2} {if !$abb_before_amount}{$currency_abb}{/if}</span>
+                            {elseif $row.price > 0.0}
+                            <span class="currentPrice">{if $abb_before_amount}{$currency_abb}{/if}{$row.price|number_format: 2} {if !$abb_before_amount}{$currency_abb}{/if}</span>
+                            {/if}
+                        </div>
+                        {if !$quantity > 0 && $row.expected_delivery_date}
+                            <div class="deliveryInfo">{#expected_delivery#}: {$row.expected_delivery_date|date_format:"%d.%m.%Y"}</div>
+                        {/if}
+                    </div>
+                    <div class="codeBox">
+                        <span>{#code#}: <span id="barcodeProd">{$row.barcode}</span></span>
+                        {if $quantity > 0}
+                        <span class="inStock">
+                            <span class="imgContainer"><img class="lazyload" data-src="/images/check-green.svg" alt=""></span>
+                            {#in_stock#}
+                        </span>
+                        {else}
+                        <span class="outOfStock">
+                            <span class="imgContainer"><img class="lazyload" data-src="/images/check-red.svg" alt=""></span>
+                            {#out_of_stock#}
+                        </span>
+                        {/if}
+                    </div>
+                </div>
+                <div class="excerpt">
+                	<strong>{#main_usage#}: {$row.useful}</strong><br /><br />
+                	{$row.excerpt}
+                	
+                </div>
+                <div class="option-groups-buttons">
+					{section name=og loop=$option_groups}
+						{if $option_groups[og].display_in_list}
+						{if $option_groups[og].info.buttons}
+							{section name=o loop=$option_groups[og].options}
+								{if $option_groups[og].options[o].selected_values}
+									{if $option_groups[og].options[o].pic}
+										<div class="color{if $smarty.section.o.first} active{/if}" data-color-index="{$option_groups[og].options[o].color_index}" data-value="{$option_groups[og].options[o].id}" style="background: {$option_groups[og].options[o].color};" title="{$option_groups[og].options[o].name}"></div>
+									{/if}
+								{/if}
+							{/section}
+						{/if}
+						{/if}
+					{/section}
+					{if $display_options_as_buttons}
+						<div class="options-label-selected mt-2">{$option_groups[1].info.name}: <span id="optionSelectedButtons">не е избрано</span></div>
+					{/if}
+					<script>
+						$(document).ready(function(){
+							$(".option-groups-buttons .color").click(function(){
+								$("#product-option-"+$(this).data("value")).attr("checked", true);
+								$(".option-groups-buttons .color").removeClass('active');
+								$("#optionSelectedButtons").empty().text($(this).attr('title'));
+								$(this).addClass('active');
+							});
+						});
+					</script>
+				</div>
+                <div class="iconsList">
+                    {if $freeDelivery}
+                    <span class="singleIcon">
+                        <span class="imgContainer"><img class="lazyload" data-src="/images/truck-gray.svg" alt=""></span>
+                        Безплатна Доставка
+                    </span>
+                    {/if}
+                    <span class="singleIcon">
+                        <span class="imgContainer"><img class="lazyload" data-src="/images/star-gray-e.svg" alt=""></span>
+                        {#sign_first_class_products#}
+                    </span>
+                    <span class="singleIcon">
+                        <span class="imgContainer"><img class="lazyload" data-src="/images/shield-gray-e.svg" alt=""></span>
+                        {#sign_protected_ecommerce#}
+                    </span>
+                </div>
+                {if $quantity > 0}
+                <form method="POST" action="/add-to-cart" name="formAddToCart" id="formAddToCart">
+					<div class="selectsRow">
+                        {if $option_groups}
+                        <div class="select-options">
+                            {section name=og loop=$option_groups}
+                                {if $option_groups[og].display_in_list}
+								{if $option_groups[og].info.buttons}<div style="display: none;">{/if}
+									{$option_groups[og].info.name}:{if $display_options_as_buttons && !$option_groups[og].info.buttons}{else}<div style="display: block; margin-bottom: 10px;"></div>{/if}
+                                    {section name=o loop=$option_groups[og].options}
+                                        {if $option_groups[og].options[o].selected_values}
+											{if $display_options_as_buttons && !$option_groups[og].info.buttons}
+												<strong>{$option_groups[og].options[o].name}</strong>
+											{else}
+                                                <span class="button_option" data-pic-index="{$option_groups[og].options[o].pic_index}" data-value="{$option_groups[og].options[o].id}">
+                                                    <input type="radio" name="option_id" {if $number_of_options == 1}checked{/if} id="product-option-{$option_groups[og].options[o].id}" value="{$option_groups[og].options[o].id}">
+                                                    <label for="product-option-{$option_groups[og].options[o].id}">
+                                                        {$option_groups[og].options[o].name}
+                                                    </label>
+                                                </span>
+											{/if}
+                                        {/if}
+                                    {/section}
+                                {/if}
+								{if $option_groups[og].info.buttons}</div>{/if}
+                            {/section}
+                        </div>
+                        {/if}
+					</div>
+                    <div class="selectsRow quantityRow">
+						{if $option_groups && 0}
+                        <div class="select1">
+                            {section name=og loop=$option_groups}
+                                {if $option_groups[og].display_in_list}
+								{if $option_groups[og].info.buttons}<div style="display: none;">{/if}
+                                {$option_groups[og].info.name}:
+                                <select name="option_id" class="prodSize">
+                                    <option value="">{#please_select#}</option>
+                                    {section name=o loop=$option_groups[og].options}
+                                        {if $option_groups[og].options[o].selected_values}
+                                        <option value="{$option_groups[og].options[o].id}">{$option_groups[og].options[o].name}</option>
+                                        {/if}
+                                    {/section}
+                                </select>
+                                {/if}
+								{if $option_groups[og].info.buttons}</div>{/if}
+                            {/section}
+                        </div>
+                        {/if}
+                        <div class="select2">
+                            {#quantity#}:
+                            <select name="quantity" class="prodQuantity">
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+                                <option value="3">3</option>
+                                <option value="4">4</option>
+                                <option value="5">5</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="submitBtnHolder">
+                        <input type="hidden" name="lang" value="{$lng}">
+                        <input type="hidden" name="product_id" value="{$row.id}">
+                        <button type="submit" name="AddToCart" id="buttonAddToCart"><img class="lazyload" data-src="/images/add-to-cart-icon.svg" alt="">{#add_to_cart#}</button>
+                    </div>
+                </form>
+                <div class="fastOrderForm" style="text-align: center;">
+                    <form id="fastOrderForm">
+                        <h4>{#quick_order_title#}</h4>
+                        {#quick_order_text#}
+                        <br /><br />
+                        <link rel="stylesheet" href="/js/intl-tel-input/build/css/intlTelInput.css">
+                        <script src="/js/intl-tel-input/build/js/intlTelInput.min.js"></script>
+                        <div class="inputField">
+                            <input type="tel" name="phone" id="fast_order_tel" placeholder="{#tel_for_fast_order#}" autocomplete="off" style="width: 100%;">
+                        </div>
+                        <div class="fastOrderHolder">
+                            <button class="fastOrderBtn" id="submitFastOrder">{#fast_order#}</button>
+                        </div>
+                        <div id="error2" class="errorMessage2">
+                            {#invalid_phone#}
+                        </div>
+                        <script>
+                            $(document).ready(function(){
+                                var input = document.querySelector("#fast_order_tel");
+                                window.intlTelInput(input, {
+                                    initialCountry: "auto",
+                                    geoIpLookup: function(callback) {
+                                        $.get('https://ipinfo.io', function() { }, "jsonp").always(function(resp) {
+                                            var countryCode = (resp && resp.country) ? resp.country : "";
+                                            callback(countryCode);
+                                        });
+                                    },
+                                    utilsScript: "/js/intl-tel-input/build/js/utils.js?1562189064761" // just for formatting/placeholders etc
+                                });
+                            });
+                        </script>
+                    </form>
+                    <div id="messageDescription2" class="alert alert-success"></div>
+                </div>
+                
+                <script>
+				
+				function addToCart(){
+					$.ajax({
+						type: "POST",
+						url: "/",
+						data: "param=add-to-cart&"+$("#formAddToCart").serialize(),
+						success: function(html){
+							$.ajax({
+								type: "POST",
+								url: "/",
+								data: "param=cart-ajax",
+								dataType: "json",
+								success: function(response){
+									var html = '';
+									$("#cartProductsQuantityTop").empty().append(response.cart_items);
+									$("#cartProductsQuantityTopMobile").empty().append(response.cart_items);
+									if ( response.products.length ){
+										for ( var i = 0; i < response.products.length; i++ ){
+											html += '<li>';
+											html += '	<div class="productImage">';
+											html += '		<div class="image" style="background-image: url(/files/tn/'+response.products[i].pic+');"></div>';
+											html += '	</div>';
+											html += '	<div class="productInfo">';
+											html += '		<span class="name">'+response.products[i].product_name+'</span>';
+											/*html += '		<span class="excerpt">'+response.products[i].excerpt+'</span>';*/
+											html += '	</div>';
+											html += '	<div class="productPrice">';
+											html += '		'+response.products[i].quantity+' x '+response.products[i].product_price_total+' {#currency#}';
+											html += '	</div>';
+											html += '</li>';
+
+										}
+										$("#cartDropDownTotal").empty();
+										$("#cartDropDownTotal").append(response.total_amount);
+										$("#productsDropDown").empty();
+										$("#productsDropDown").append(html);
+										
+									}
+									$(".successProductToCart").empty().append('<i class="fas fa-check"></i> {#add_to_cart_1#} <strong>{$row.name}</strong> {#add_to_cart_2#} <a href="/{#htaccess_cart#}/" class="btn btn-success">{#proceed_to_cart#}</a>');
+									$("#successProductCart").show();
+									$("html, body").animate({ scrollTop: 0 }, "slow");
+								}
+							});
+						}
+					});
+					gtag('event', 'add_to_cart', {
+					  "items": [
+					    {
+					      "id": "{$row.id}",
+					      "name": "{$row.name_en}, {$row.name}",
+					      "list_name": "Product page",
+					      "brand": "{$brand.name}",
+					      "category": "{$categoryMain.name}",
+					      "list_position": 1,
+					      "quantity": 1,
+					      "price": '{if $row.price_specialoffer > 0.0}{$row.price_specialoffer|number_format: 2}{elseif $row.price > 0.0}{$row.price|number_format: 2}{/if}'
+					    }
+					  ]
+					});
+					
+					gtag('event','add_to_cart', {
+					  'value': '{if $row.price_specialoffer > 0.0}{$row.price_specialoffer|number_format: 2}{elseif $row.price > 0.0}{$row.price|number_format: 2}{/if}',
+					  'items':[{
+					  'id':'{$row.id}',
+					  'location_id': '',
+					  'google_business_vertical': 'custom',
+					  }]
+					});
+					
+				}
+				
+                $(document).ready(function(){
+                    $("#submitFastOrder").bind("click", function(e){
+                        e.preventDefault();
+                        /*var phone = $("input[name=phone]").val();*/
+                        var inputPhone = document.querySelector('#fast_order_tel');
+                        var iti = window.intlTelInputGlobals.getInstance(inputPhone);
+                        if(iti.isValidNumber()){
+                            var phone = iti.getNumber();
+                        }else{
+                            var phone = "";
+                        }
+                        var error2 = false;
+                        if (phone == ""){
+                            error2 = false;
+                            $("#error2").show();
+                        }else{
+                            error2 = true;
+                            $("#error2").hide();
+                        }
+                       
+                        if (error2){
+                            $(this).html('<i class="fas fa-cog fa-spin"></i> {#submitFastOrderPleaseWait#}');
+                            $(this).attr("disabled", true);
+                            var quantity = $("select[name=quantity]").val();
+                            var checkedRadioOption = $('input[name=option_id]:checked');
+                            var option_id = checkedRadioOption.val();
+                            var option_name = checkedRadioOption.next("label").html().trim();
+                            $.ajax({
+                                type: "POST",
+                                url: "/post-fast-order",
+                                {*data: "name="+name+"&email="+email+"&phone="+phone+"&agree_terms="+agree_terms+"&agree_terms_gdpr="+agree_terms_gdpr+"&quantity="+quantity+"&product_id={$product_id}"+"&variant_id={$variant_id}",*}
+                                data: "phone="+phone+"&quantity="+quantity+"&product_id={$row.id}"+"&variant_id="+option_id+"&variant_name="+option_name,
+                                success: function(html){
+                                    $("#messageDescription2").html(html);
+                                    $("#fastOrderForm").slideUp();
+                                    $("#messageDescription2").slideDown();
+                                },
+                                error: function(er){
+                                }
+                            });
+                        }
+
+                    });
+                });
+                    
+                $("#buttonAddToCart").bind("click", function(event){
+                    event.preventDefault();
+					
+					var has_option = $("input[name=option_id]").length;
+					var option_id = $("input[name=option_id]:checked").val();
+					var option_checked = $("input[name=option_id]").is(":checked");
+					
+                    var quantity = $("select[name=quantity]").val();
+                    if(has_option){
+                        if ( option_checked == true ){
+                            if ( quantity > 0 ){
+                                addToCart();
+                                /*document.formAddToCart.submit();*/
+                            }else{
+                                swal({
+                                    title: "{#havent_selected#}?",
+                                    text: "{#havent_selected_text#}",
+                                    type: "warning",
+                                    showCancelButton: false,
+                                    confirmButtonColor: "#70AC8C",
+                                    confirmButtonText: "{#ok_good#}",
+                                    closeOnConfirm: false
+                                });
+                            }
+                        }else{
+                            swal({
+                                title: "{#havent_selected_variant#}?",
+                                text: "{#havent_selected_variant_text#}",
+                                type: "warning",
+                                showCancelButton: false,
+                                confirmButtonColor: "#70AC8C",
+                                confirmButtonText: "{#ok_good#}",
+                                closeOnConfirm: false
+                            });
+                        }
+                    }else{
+                        if ( quantity > 0 ){
+                            addToCart();
+                        }else{
+                            swal({
+                                title: "{#havent_selected#}?",
+                                text: "{#havent_selected_text#}",
+                                type: "warning",
+                                showCancelButton: false,
+                                confirmButtonColor: "#70AC8C",
+                                confirmButtonText: "{#ok_good#}",
+                                closeOnConfirm: false
+                            });
+                        }
+                    }
+                });
+                </script>
+                {/if}
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="moreInfoContainer">
+    <div class="container">
+        <div class="topRow">
+            <div class="left">
+                <div class="headering border-bottom">{#heading_information#}</div>
+                <div class="info">{$row.description}</div>
+            </div>
+			{if $row.usage}
+            <div class="left">
+                <div class="headering border-bottom">{#heading_usage#}</div>
+                <div class="info">{$row.usage}</div>
+            </div>
+            {/if}
+            {if $row.ingredients}
+            <div class="left">
+                <div class="headering border-bottom">{#heading_ingredients#}</div>
+                <div class="info">{$row.ingredients}</div>
+            </div>
+            {/if}
+			{if $row.video}
+            <div class="right">
+                <div class="videoBox">
+                    {*<span class="playVideoBtn"><img id="playBtn" src="/images/icon-play.svg" alt=""></span>*}
+                    {*<iframe src="https://www.youtube.com/embed/j0om19AI4Qs?rel=0&controls=0" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>*}
+                    {$row.video}
+                </div>
+            </div>
+			{/if}
+        </div>
+		{if 0}
+			{if $row.usage || $row.ingredients}
+			<div class="bottomRow">
+				{if $row.usage}
+				<div class="left">
+					<div class="headering border-bottom">{#usage#}</div>
+					<div class="info">{$row.usage}</div>
+				</div>
+				{/if}
+				{if $row.ingredients}
+				<div class="right">
+					<div class="headering border-bottom">{#ingredients#}</div>
+					<div class="info">{$row.ingredients}</div>
+				</div>
+				{/if}
+			</div>
+			{/if}
+        {/if}
+    </div>
+</div>
+
+<div class="reviewContainer">
+    <div class="container">
+        <h2 class="heading">{#heading_reviews#}</h2>
+        <a href="/{#htaccess_brand#}/{$row.brand_id}"><div class="brandLogo"><img class="lazyload" data-src="/files/tntn/{$row.brand_pic}"></div></a>
+        <div class="reviewRow">
+            <div class="col1">
+                <h3 class="brand">{$row.name|truncate:45:"..."}</h3>
+                {if $row.collection_name}
+                    <span class="subTitle">{$row.collection_name|truncate:60:"..."}</span>
+                {/if}
+                <div class="starsRow" id="product-rating"></div>
+                <span class="rating">{$row.rating} {#from_5_stars#} / {$row.reviews_count} {#reviews#}</span>
+                <script>
+                    $(document).ready(function () {
+                        $('#product-rating').raty({
+                            readOnly: true,
+                            starType: 'png', /* Element used to represent a star.*/
+                            starHalf: 'star-half.png', /* The name of the half star image.*/
+                            starOff: 'star-off.png', /* Name of the star image off.*/
+                            starOn: 'star-on.png', /* Name of the star image on.*/
+                            half: true,
+                            start: parseFloat({$row.rating})
+                        });
+                    });
+                </script>
+            </div>
+            <div class="col2">
+                <div class="row1">
+                    <div class="stars">
+                        <span class="starBox"><img class="lazyload" data-src="/images/star-green.svg" alt=""></span>
+                        <span class="starBox"><img class="lazyload" data-src="/images/star-green.svg" alt=""></span>
+                        <span class="starBox"><img class="lazyload" data-src="/images/star-green.svg" alt=""></span>
+                        <span class="starBox"><img class="lazyload" data-src="/images/star-green.svg" alt=""></span>
+                        <span class="starBox"><img class="lazyload" data-src="/images/star-green.svg" alt=""></span>
+                    </div>
+                    <div class="progressBarContainer">
+                        <div class="progress">
+                            <div class="progress-bar" style="width: {$row.reviews_count_5}%;"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row2">
+                    <div class="stars">
+                        <span class="starBox"><img class="lazyload" data-src="/images/star-gray.svg" alt=""></span>
+                        <span class="starBox"><img class="lazyload" data-src="/images/star-green.svg" alt=""></span>
+                        <span class="starBox"><img class="lazyload" data-src="/images/star-green.svg" alt=""></span>
+                        <span class="starBox"><img class="lazyload" data-src="/images/star-green.svg" alt=""></span>
+                        <span class="starBox"><img class="lazyload" data-src="/images/star-green.svg" alt=""></span>
+                    </div>
+                    <div class="progressBarContainer">
+                        <div class="progress">
+                            <div class="progress-bar" style="width: {$row.reviews_count_4}%;"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row3">
+                    <div class="stars">
+                        <span class="starBox"><img class="lazyload" data-src="/images/star-gray.svg" alt=""></span>
+                        <span class="starBox"><img class="lazyload" data-src="/images/star-gray.svg" alt=""></span>
+                        <span class="starBox"><img class="lazyload" data-src="/images/star-green.svg" alt=""></span>
+                        <span class="starBox"><img class="lazyload" data-src="/images/star-green.svg" alt=""></span>
+                        <span class="starBox"><img class="lazyload" data-src="/images/star-green.svg" alt=""></span>
+                    </div>
+                    <div class="progressBarContainer">
+                        <div class="progress">
+                            <div class="progress-bar" style="width: {$row.reviews_count_3}%;"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row4">
+                    <div class="stars">
+                        <span class="starBox"><img class="lazyload" data-src="/images/star-gray.svg" alt=""></span>
+                        <span class="starBox"><img class="lazyload" data-src="/images/star-gray.svg" alt=""></span>
+                        <span class="starBox"><img class="lazyload" data-src="/images/star-gray.svg" alt=""></span>
+                        <span class="starBox"><img class="lazyload" data-src="/images/star-green.svg" alt=""></span>
+                        <span class="starBox"><img class="lazyload" data-src="/images/star-green.svg" alt=""></span>
+                    </div>
+                    <div class="progressBarContainer">
+                        <div class="progress">
+                            <div class="progress-bar" style="width: {$row.reviews_count_2}%;"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row5">
+                    <div class="stars">
+                        <span class="starBox"><img class="lazyload" data-src="/images/star-gray.svg" alt=""></span>
+                        <span class="starBox"><img class="lazyload" data-src="/images/star-gray.svg" alt=""></span>
+                        <span class="starBox"><img class="lazyload" data-src="/images/star-gray.svg" alt=""></span>
+                        <span class="starBox"><img class="lazyload" data-src="/images/star-gray.svg" alt=""></span>
+                        <span class="starBox"><img class="lazyload" data-src="/images/star-green.svg" alt=""></span>
+                    </div>
+                    <div class="progressBarContainer">
+                        <div class="progress">
+                            <div class="progress-bar" style="width: {$row.reviews_count_1}%;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col3">
+                <span class="iconContainer"><img class="lazyload" data-src="/images/finger-up.svg" alt=""></span>
+                <span class="text">{#recomend_all#}</span>
+            </div>
+        </div>
+		<div class="addCommentContainer">
+			<button data-animation-duration="700" data-fancybox data-src="#addCommentForm" href="javascript:;" class="addCommentBtn">Напиши ревю</button>
+		</div>
+    </div>
+</div>
+
+
+<div class="commentsContainer">
+    <div class="container">
+        <div class="allComents">
+            {section name=pc loop=$productComments}
+            <div class="commentRow">
+                <div class="left">
+                    <span class="initials">{$productComments[pc].initials}</span>
+                    <span class="fullName">{$productComments[pc].nickname}</span>
+                </div>
+                <div class="right">
+                    <span class="title">{$productComments[pc].title}</span>
+                    <span class="date">{$productComments[pc].postdate|date_format: "%d.%m.%Y"}</span>
+                    <div class="starsRow" id="rating-comment-{$productComments[pc].id}"></div>
+                    <div class="commentText">
+                        {$productComments[pc].comment}
+                    </div>
+                </div>
+                <script>
+                    $(document).ready(function () {
+                        $('#rating-comment-{$productComments[pc].id}').raty({
+                            readOnly: true,
+                            starType: 'png', /* Element used to represent a star.*/
+                            starHalf: 'star-half.png', /* The name of the half star image.*/
+                            starOff: 'star-off.png', /* Name of the star image off.*/
+                            starOn: 'star-on.png', /* Name of the star image on.*/
+                            half: true,
+                            start: parseFloat({$productComments[pc].rating})
+                        });
+                    });
+                </script>
+            </div>
+            {sectionelse}
+                <div class="commentRow">{#product_no_reviews#}</div>
+            {/section}
+            {if $productComments}
+            <div class="addCommentContainer">
+                <button class="showMoreReviews">{#view_more_reviews#}</button>
+                <button data-animation-duration="700" data-fancybox data-src="#addCommentForm" href="javascript:;" class="addCommentBtn">{#write_review#}</button>
+            </div>
+            {/if}
+        </div>
+    </div>
+</div>
+
+<div style="display: none;" id="addCommentForm" class="animated-modal">
+    <h2 data-selectable="true">{#write_review#}</h2>
+    <div data-selectable="true" class="fancyBoxContent">
+        <form method="post" id="commentPost" action="/leave-rating-comment" style="font-size: 14px;">
+            <div class="inputRow">
+                <div class="inputCol12 reviewTitleHolder">
+                    <input type="text" name="reviewTitle" placeholder="Заглавие">
+                </div>
+            </div>
+            <div class="inputRow">
+                <div class="inputCol12">
+                    <span class="rateText">{#rate#}:</span>
+                </div>
+            </div>
+            <div class="inputRow">
+                <div class="inputCol12">
+                    <div class="action rate" id="rate-box-down"></div>
+                    <input type="hidden" name="score" id="rate-box-down-result">
+                </div>
+            </div>
+            <div class="inputRow">
+                <div class="inputCol12">
+                    <textarea class="reviewContent" name="comment" placeholder="Напиши ревю"></textarea>
+                </div>
+            </div>
+            <div class="inputRow">
+                <div class="inputCol12">
+                    <input type="hidden" name="product_id" value="{$row.id}">
+                    <input type="submit" class="submitBtn" value="публикувай">
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<script>
+    
+$(document).ready(function () {
+    /*$.fn.raty.defaults.path = '/js/raty/img';*/
+    
+    $('#rate-box-down').raty({
+        cancel: true,
+        starType: 'png', /* Element used to represent a star.*/
+        starHalf: 'star-half.png', /* The name of the half star image.*/
+        starOff: 'star-off.png', /* Name of the star image off.*/
+        starOn: 'star-on.png', /* Name of the star image on.*/
+        half: true,
+        target: '#rate-box-down-result',
+        targetKeep: true,
+        targetType: 'number'
+        {*start: parseFloat({$row.rating})*}
+    });
+    
+    $("#commentPost").submit(function (e) {
+        e.preventDefault();
+            $.ajax({
+                type: "POST",
+                url: $("#commentPost").attr('action'),
+                data: $("#commentPost").serialize(),
+                success: function(data){
+                    $.fancybox.close();
+                    if( data.status == 200){
+                        location.reload();
+                        {*swal({
+                            title: "{#seccessful_review#}",
+                            text: data.description,
+                            type: "success",
+                            showCancelButton: false,
+                            confirmButtonColor: "#70AC8C",
+                            confirmButtonText: "{#ok_good#}",
+                            closeOnConfirm: false
+                        });*}
+                        /*$("#commentArea").load(location.href+" #commentArea>*","");*/
+                    }else{
+                        swal({
+                            title: "{#warning_review#}",
+                            text: data.description,
+                            type: "warning",
+                            showCancelButton: false,
+                            confirmButtonColor: "#70AC8C",
+                            confirmButtonText: "{#ok_good#}",
+                            closeOnConfirm: false
+                        });
+                    }
+                    /*var el = $("<strong style='font-size:12px; color: red;' class='"+msgClass+"'>"+data.description+"</strong>");*/
+                    /*$('#response').html(el);*/
+                    /*console.log(data);*/
+                },
+                error: function(er){
+                }
+         });
+    });
+ });
+</script>
+{if $similar_products}
+<div class="suggestedProductsContainer">
+    <div class="container">
+        <h2 class="title">{#heading_similar_products#}</h2>
+        <div class="slider">
+			<div id="slickSlider1" class="productsRow">
+                {section name=sp loop=$similar_products}
+				<div class="swiper-slide singleItem">
+                    <a class="product" href="{if $similar_products[sp].htaccess_url}{$similar_products[sp].htaccess_url}{else}/{#htaccess_product#}/{$similar_products[sp].id}{/if}">
+                        <div class="imgContainer" style="background-image: url({if $similar_products[sp].pic}/files/tn/{$similar_products[sp].pic}{else}/images/noImage.png{/if});"></div>
+                        <h3 class="name">{$similar_products[sp].brand_name}</h3>
+                        {if $lng != "en"}
+                        <span class="excerpt" style="color: #212E27; font-weight: bold;">{$similar_products[sp].name_en}</span>
+                        {/if}
+                        <span class="excerpt">{$similar_products[sp].name}</span>
+                        {if $similar_products[sp].price_specialoffer > 0.0}
+                            <span class="d-flex flex-row justify-content-around">
+                                <span class="price color-red">{if $abb_before_amount}{$currency_abb}{/if}{$similar_products[sp].price_specialoffer|number_format: 2} {if !$abb_before_amount}{$currency_abb}{/if}</span>
+                                <del class="price-old">{if $abb_before_amount}{$currency_abb}{/if}{$similar_products[sp].price|number_format: 2} {if !$abb_before_amount}{$currency_abb}{/if}</del>
+                            </span>
+                        {elseif $similar_products[sp].price > 0.0}
+                            <span class="price">{if $abb_before_amount}{$currency_abb}{/if}{$similar_products[sp].price|number_format: 2} {if !$abb_before_amount}{$currency_abb}{/if}</span>
+                        {/if}
+                    </a>
+                    <div class="starsRow" id="rating-{$smarty.section.sp.index}{$similar_products[sp].id}"></div>
+                    <script>
+                        $(document).ready(function () {
+                            $.fn.raty.defaults.path = '/js/raty/img';
+                            $('#rating-{$smarty.section.sp.index}{$similar_products[sp].id}').raty({
+                                readOnly:  true,
+                                starType: 'png', /* Element used to represent a star.*/
+                                starHalf: 'star-half.png', /* The name of the half star image.*/
+                                starOff: 'star-off.png', /* Name of the star image off.*/
+                                starOn: 'star-on.png', /* Name of the star image on.*/
+                                half:  true,
+                                start: parseFloat({$similar_products[sp].rating})
+                           });
+                        });
+                    </script>
+                </div>
+                {/section}
+            </div>
+			
+        </div>
+    </div>
+</div>
+{/if}
+{if 0}
+<div class="bannerTop bannerTopinFooter">
+    <div class="container">
+        <div class="backgroundImage" style="background-image: url(/images/cat-banner.jpg);">
+            <h2 class="heading">Промоция на <span class="stronger">Всички Мъжки Аромати!</span></h2>
+            <a class="goTo" href="">Пазарувай Сега</a>
+            <span class="discount">
+                20% <br> OFF
+            </span>
+        </div>
+    </div>
+</div>
+{/if}                        
+<script>
+    $( document ).ready(function() {
+        {*$('#playBtn').on('click', function(ev) {
+            $(this).parent().next("iframe")[0].src += "&autoplay=1";
+            $(this).parent().hide();
+            ev.preventDefault();
+        });*}
+        
+        $("input[name=option_id]").bind("click", function () {
+            var variant_id = $(this).val();
+            $.ajax({
+                type: "POST",
+                url: "/site/index.php",
+                data: "param=get-variant-details&product_id={$row.id}&variant_id="+variant_id+"&lang={$lng}",
+                dataType: "json",
+                success: function(response){
+                    $(".priceBox .currentPrice").html("{if $abb_before_amount}{$currency_abb}{/if}"+response.price.toFixed(2)+"{if !$abb_before_amount} {$currency_abb}{/if}");
+                    if(response.code != ""){
+                    	$("#barcodeProd").html(response.code);
+                    }
+                    else{
+                    	$("#barcodeProd").html('{$row.barcode}');
+                    }
+                    if ( response.price_strikethrough ){
+                        $(".priceBox .oldPrice").html("{if $abb_before_amount}{$currency_abb}{/if}"+response.price_strikethrough.toFixed(2)+" {if !$abb_before_amount}{$currency_abb}{/if}");
+                    }
+                    {*//$("#priceBonusPoints").empty();
+                    //$("#priceBonusPointsWon").empty();
+                    //$("#priceBonusPoints").append(response.bonus_points_price);
+                    //$("#priceBonusPointsWon").append(response.bonus_points_won);
+                    var productWeightContent = $("#product-weight .product-weight-content").length;
+                    var productWeightAttributeContent = $("#product-weight-attribute .product-weight-content").length;
+                    //console.log("productWeightContent",productWeightContent);
+                    if(response.weight > 0.0){
+                        var weightHTML = '';
+                        weightHTML += '<span class="product-weight-content badge badge-info px-3 py-2">';
+                        weightHTML += '  <i class="fas fa-weight-hanging"></i>';
+                        weightHTML += '  {#weight#}: <span class="weight-num">'+ parseFloat(response.weight).toFixed(3)+'</span> кг.';
+                        weightHTML += '</span>';
+
+                        var weightAttributeHTML = '';
+                        weightAttributeHTML += '<span class="product-weight-content">';
+                        weightAttributeHTML += '  <i class="fas fa-weight-hanging"></i>';
+                        weightAttributeHTML += '  <span class="weight-num">'+ parseFloat(response.weight).toFixed(3)+'</span> кг.';
+                        weightAttributeHTML += '</span>';
+
+                        $("#product-weight").html(weightHTML);
+                        $("#product-weight-attribute").html(weightAttributeHTML);
+                    }else{
+                        if(productWeightContent){
+                            $("#product-weight .product-weight-content").remove();
+                        }
+                        if(productWeightAttributeContent){
+                            $("#product-weight-attribute .product-weight-content").remove();
+                        }
+                    }
+                    var freeDeliveryMedalContent = $("#free-delivery-medal .free-delivery-medal-content").length;*}
+                    /*console.log("freeDeliveryMedalContent",freeDeliveryMedalContent);*/
+                    /*console.log("isFreeDelivery",response.isFreeDelivery);*/
+                    if(response.isFreeDelivery){
+                        {*if(!freeDeliveryMedalContent){
+                            var freeDeliveryMedalHTML = '';
+                            freeDeliveryMedalHTML += '<div class="free-delivery-medal-content">';
+                            freeDeliveryMedalHTML += '   <i class="fas fa-truck"></i>';
+                            freeDeliveryMedalHTML += '   <span class="free-delivery-medal-text">';
+                            freeDeliveryMedalHTML += '       {#free_delivery_medal_text#}';
+                            freeDeliveryMedalHTML += '   </span>';
+                            freeDeliveryMedalHTML += '</div>';
+                            var freeDeliveryTextHTML = "";
+                            freeDeliveryTextHTML = '<span class="product-free-delivery-content badge badge-info px-3 py-2"><i class="fas fa-truck"></i> {#free_delivery#}</span>';
+
+                            $("#free-delivery-medal").html(freeDeliveryMedalHTML);
+                            $("#product-free-delivery").html(freeDeliveryTextHTML);
+                        }*}
+                    }else{
+                        {*if(freeDeliveryMedalContent){
+                            $("#free-delivery-medal .free-delivery-medal-content").remove();
+                            $("#product-free-delivery .product-free-delivery-content").remove();
+                        }*}
+                    }
+                },
+                error: function(er){
+                    
+                }
+            })
+        });
+
+        $('#slickSlider1').slick({
+			
+            slidesToShow: 8,
+            autoplay: false,
+            autoplaySpeed: 2000,
+            infinite: true,
+            speed: 2000,
+            centerMode: true,
+            slidesToScroll: 8,
+			
+            responsive: [
+            {
+                breakpoint: 1780,
+                settings: {
+                    slidesToShow: 7,
+                    slidesToScroll: 7,
+                }
+            },
+            {
+                breakpoint: 1600,
+                settings: {
+                    slidesToShow: 6,
+                    slidesToScroll: 6,
+                }
+            },
+            {
+                breakpoint: 1400,
+                settings: {
+                    slidesToShow: 5,
+                    slidesToScroll: 5,
+                }
+            },
+            {
+                breakpoint: 1200,
+                settings: {
+                    slidesToShow: 4,
+                    slidesToScroll: 4,
+                }
+            },
+            {
+                breakpoint: 1024,
+                settings: {
+                    slidesToShow: 3,
+                    slidesToScroll: 3,
+                }
+            },
+            {
+                breakpoint: 690,
+                settings: {
+                    slidesToShow: 2,
+                    slidesToScroll: 2
+                }
+            },
+            {
+                breakpoint: 480,
+                settings: {
+                    slidesToShow: 2,
+                    slidesToScroll: 2
+                }
+            }
+            ]
+        });
+
+
+
+        var galleryTop = new Swiper('.gallery-top', {
+            spaceBetween: 10,
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            },
+            loop: false,
+            loopedSlides: 4
+        });
+		{if !$display_options_as_buttons}
+        var galleryThumbs = new Swiper('.gallery-thumbs', {
+            spaceBetween: 10,
+			conterMode: true,
+            centeredSlides: true,
+            slidesPerView: 4,
+            touchRatio: 0.2,
+            slideToClickedSlide: true,
+            loop: false
+        });
+		{/if}
+		
+		$(".option-groups-buttons .color, .button_option").click(function(){
+            if($(this).hasClass("button_option")){
+                var index = $(this).data("pic-index");
+            }else{
+                var index = $(this).data("color-index");
+            }
+			galleryTop.slideTo(index, 500, true);
+			
+		});
+
+		{if !$display_options_as_buttons}
+        galleryTop.controller.control = galleryThumbs;
+        galleryThumbs.controller.control = galleryTop;
+		{/if}
+
+        $.fancybox.defaults.backFocus = false;
+        
+        $('.prodSize').select2({
+            minimumResultsForSearch: -1,
+        });
+
+        $('.prodQuantity').select2({
+            minimumResultsForSearch: -1,
+        });
+
+    });
+</script>
+
+<style>
+	.moreInfoContainer dl, .moreInfoContainer ol,.moreInfoContainer ul {
+    margin-top: 0 !important;
+    margin-bottom: 1rem !important;
+    padding-inline-start: 40px !important;
+	}
+	.moreInfoContainer p{
+		margin-top: 1em !important;
+		margin-bottom: 1em !important;
+	}
+</style>
+
+{*<!-- Go to www.addthis.com/dashboard to customize your tools --> <script type="text/javascript" src="//s7.addthis.com/js/300/addthis_widget.js#pubid=ra-5de651569c86dcac" defer></script>*}
+<div>
+    <div class="socials_bar">
+        <a class="facebook" href="javascript: void(0);" onClick="window.open('https://www.facebook.com/sharer/sharer.php?u=https://www.arthabeauty.com{$smarty.server.REQUEST_URI}&picture={$host}files/{$images[0].pic}&title={$row.name_en} {$row.name_bg}&description={$row.name_en} {$row.name_bg}', '_blank', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');">
+            <i class="fab fa-facebook-f"></i>
+        </a>
+        <a class="twitter" href="javascript: void(0);" onClick="window.open('http://twitter.com/home?status={$row.name_en} {$row.name_bg} https://www.arthabeauty.com{$smarty.server.REQUEST_URI}', '_blank', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');" title="{$row.name_en} {$row.name_bg}">
+            <i class="fab fa-twitter"></i>
+        </a>
+        <a class="pinterest" href="http://pinterest.com/pin/create/link/?url=https://www.arthabeauty.com{$smarty.server.REQUEST_URI} &media={$host}files/{$images[0].pic}&description={$row.name_en} {$row.name_bg}" onclick="javascript:window.open(this.href,'', 'menubar=no,toolbar=no,resizable=yes,scrollbars=yes,height=600,width=600');return false;">
+            <i class="fab fa-pinterest-p"></i>
+        </a>
+    </div>
+</div>
+
+{include file="footer.html"}

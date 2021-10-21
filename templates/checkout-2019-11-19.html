@@ -1,0 +1,969 @@
+{include file="header.html"}
+<div class="breadcrumbsContainer">
+    <div class="container">
+        <div class="breadcrubsRow">
+            {$breadcrumbs}
+        </div>
+    </div>
+</div>
+<div class="catBackgroundGradient">
+    <form method="post" action="/{#htaccess_checkout_final#}/" name="formCheckout" id="formCheckout">
+        <div class="cartWrapper checkOutWrapper">
+            {*<div class="container">
+                <div class="countDown"> Оставащо време: <span class="time">00:20:20</span></div>
+            </div>*}
+            <div class="container">
+                <div class="leftColumn">
+                    <div class="paymentForm">
+                        <h3 class="title">{#payment_information#}</h3>
+                        {*<div class="radio-item">
+                            <input type="radio" id="opt1" name="payment" value="bank transaction">
+                            <label for="opt1">Банков превод</label>
+                        </div>
+
+                        <div class="radio-item">
+                            <input type="radio" id="opt2" name="payment" value="borica system">
+                            <label for="opt2">Кредитна/дебитна карта</label>
+                        </div>
+
+                        <div class="radio-item">
+                            <input type="radio" id="opt3" name="payment" value="easypay">
+                            <label for="opt3">Easypay</label>
+                        </div>*}
+                        <div class="addressForm mt-3">
+                            <div class="inputRow">
+                                <div class="inputCol6">
+                                    <label for="billing_name">{#first_name#}*</label>
+                                    <input value="{$billing_address.firstname}" id="billing_name" type="text" name="billing_name" placeholder="{if 0}{#first_name#}*{/if}">
+                                    <div id="error7" class="errorMessage">
+                                        {#invalid_name#}
+                                    </div>
+                                </div>
+                                <div class="inputCol6">
+                                    <label for="billing_family_name">{#last_name#}*</label>
+                                    <input value="{$billing_address.lastname}" id="billing_family_name" type="text" name="billing_family_name" placeholder="{if 0}{#family_name#}*{/if}">
+                                    <div id="error8" class="errorMessage">
+                                        {#invalid_family_name#}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="inputRow">
+                                <div class="inputCol6">
+                                    <label for="billing_region">{#region#}</label>
+                                    <select name="billing_region" class="checkoutSelectRegion w-100">
+                                        <option value="">{#please_select#} {#region#}</option>
+                                        {section name=r loop=$regions}
+                                            <option value="{$regions[r].id}" {if $regions[r].id == $billing_address.district_id}selected{/if}>{$regions[r].name}</option>
+                                        {/section}
+                                    </select>
+                                    <div id="error102" class="errorMessage mt-1">
+                                        {#invalid_region#}
+                                    </div>
+                                </div>
+                                <div class="inputCol6">
+                                    <div id="billing_city_cont">
+                                        <label for="billing_city">{#city#}</label>
+                                        <select name="billing_city" class="checkoutSelectCity w-100">
+                                            <option value="">{#please_select#} {#city#}</option>
+                                            {section name=dc loop=$billing_cities}
+                                                <option value="{$billing_cities[dc].id}" {if $billing_cities[dc].name == $billing_address.city_name}selected{/if}>{$billing_cities[dc].name}</option>
+                                            {/section}
+                                        </select>
+                                    </div>
+                                    <div id="preloader_billing_city" class="mb-2" style="display: none;">
+                                        <i class="fas fa-cog fa-spin"></i>
+                                        Моля, изчакайте..
+                                    </div>
+                                    <div id="error10" class="errorMessage mt-1">
+                                        {#invalid_city#}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="inputRow">
+                                <div class="inputCol12">
+                                    <label for="billing_phone">{#phone#}*</label>
+                                    <input id="billing_phone" type="text" name="billing_phone" placeholder="{if 0}{#phone#}*{/if}">
+                                    <div id="error101" class="errorMessage">
+                                        {#invalid_phone#}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="inputRow">
+                                <div class="inputCol12">
+                                    <label for="billing_address_line_1">{#address_1#}*</label>
+                                    <input value="{$billing_address.address_line_1}" id="billing_address_line_1" type="text" name="billing_address_line_1" placeholder="{if 0}{#address_1#}*{/if}">
+                                    <div id="error9" class="errorMessage">
+                                        {#invalid_address_1#}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="inputRow">
+                                <div class="inputCol12">
+                                    <label for="billing_address_line_2">{#address_2#}</label>
+                                    <input value="{$billing_address.address_line_2}" id="billing_address_line_2" type="text" name="billing_address_line_2" placeholder="{if 0}{#address_2#}{/if}">
+                                </div>
+                            </div>
+                            <div class="inputRow">
+                                <div class="inputCol4">
+                                    <label for="billing_postcode">{#postcode#}*</label>
+                                    <input value="{$billing_address.postcode}" id="billing_postcode" type="text" name="billing_postcode" placeholder="{if 0}{#postcode#}*{/if}">
+                                    <div id="error11" class="errorMessage">
+                                        {#invalid_postcode#}
+                                    </div>
+                                </div>
+                                <div class="inputCol8">
+                                    <label for="billing_email">{#email#}*</label>
+                                    <input value="{$billing_address.email}" id="billing_email" type="text" name="billing_email" placeholder="{if 0}{#email#}*{/if}">
+                                    <div id="error81" class="errorMessage">
+                                        {#invalid_email#}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="addressForm">
+                        <h3 class="title">{#delivery_information#}</h3>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <label for="sameDelivery" class="form-check">
+                                    <input name="sameDelivery" type="checkbox" value="1" checked id="sameDelivery" class="form-check-input" style="width: unset; height: unset;">
+                                    <span class="form-check-label">
+                                        {#delivery_same#}
+                                    </span>
+                                </label> <!-- form-check.// -->
+                            </div>
+                        </div>
+                        <div id="deliveryInformation" style="display: none;">
+                            <div class="inputRow">
+                                <div class="inputCol6">
+                                    <label for="delivery_name">{#first_name#}*</label>
+                                    <input value="{$delivery_address.firstname}" id="delivery_name" type="text" name="delivery_name" placeholder="{if 0}{#first_name#}*{/if}">
+                                    <div id="error1" class="errorMessage">
+                                        {#invalid_name#}
+                                    </div>
+                                </div>
+                                <div class="inputCol6">
+                                    <label for="delivery_family_name">{#last_name#}*</label>
+                                    <input value="{$delivery_address.lastname}" id="delivery_family_name" type="text" name="delivery_family_name" placeholder="{if 0}{#family_name#}*{/if}">
+                                    <div id="error2" class="errorMessage">
+                                        {#invalid_family_name#}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="inputRow">
+                                <div class="inputCol6">
+                                    <label for="delivery_region">{#region#}</label>
+                                    <select name="delivery_region" class="checkoutSelectRegion w-100">
+                                        <option value="">{#please_select#} {#region#}</option>
+                                        {section name=r loop=$regions}
+                                            <option value="{$regions[r].id}" {if $regions[r].id == $delivery_address.district_id}selected{/if}>{$regions[r].name}</option>
+                                        {/section}
+                                    </select>
+                                    <div id="error41" class="errorMessage mt-1">
+                                        {#invalid_region#}
+                                    </div>
+                                </div>
+                                <div class="inputCol6">
+                                    <div id="delivery_city_cont">
+                                        <label for="delivery_city">{#city#}</label>
+                                        <select name="delivery_city" class="checkoutSelectCity w-100">
+                                            <option value="">{#please_select#} {#city#}</option>
+                                            {section name=dc loop=$delivery_cities}
+                                                <option value="{$delivery_cities[dc].id}" {if $delivery_cities[dc].name == $delivery_address.city_name}selected{/if}>{$delivery_cities[dc].name}</option>
+                                            {/section}
+                                        </select>
+                                    </div>
+                                    <div id="preloader_delivery_city" class="mb-2 mt-1" style="display: none;">
+                                        <i class="fas fa-cog fa-spin"></i>
+                                        Моля, изчакайте..
+                                    </div>
+                                    <div id="error4" class="errorMessage mt-1">
+                                        {#invalid_city#}
+                                    </div>
+                                </div>
+                            </div>
+                            {*<div class="inputRow">
+                                <div class="inputCol12">
+                                    <label for="delivery_phone">{#phone#}</label>
+                                    <input id="delivery_phone" type="text" name="delivery_phone" placeholder="{#phone#}*">
+                                </div>
+                            </div>*}
+                            <div class="inputRow mt-3">
+                                <div class="inputCol12">
+                                    <label for="delivery_address_line_1">{#address_1#}*</label>
+                                    <input value="{$delivery_address.address_line_1}" id="delivery_address_line_1" type="text" name="delivery_address_line_1" placeholder="{if 0}{#address_1#}*{/if}">
+                                    <div id="error3" class="errorMessage">
+                                        {#invalid_address_1#}
+                                    </div>
+                                    <div id="error31" class="errorMessage"></div>
+                                    <div id="error32" class="errorMessage"></div>
+                                </div>
+                            </div>
+                            <div class="inputRow">
+                                <div class="inputCol12">
+                                    <label for="delivery_address_line_2">{#address_2#}</label>
+                                    <input value="{$delivery_address.address_line_2}" id="delivery_address_line_2" type="text" name="delivery_address_line_2" placeholder="{if 0}{#address_2#}{/if}">
+                                </div>
+                            </div>
+                            <div class="inputRow">
+                                <div class="inputCol12">
+                                    <label for="delivery_postcode">{#postcode#}*</label>
+                                    <input value="{$delivery_address.postcode}" id="delivery_postcode" type="text" name="delivery_postcode" placeholder="{if 0}{#postcode#}*{/if}">
+                                    <div id="error5" class="errorMessage">
+                                        {#invalid_postcode#}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="inputRow">
+                            <div class="inputCol6 selectedDeliveryType">
+                                <label for="delivery_type_id">{#delivery_type#}</label>
+                                <select name="delivery_type_id" class="checkoutSelectDeliveryTypeId w-100">
+                                    <option value="">{#please_select#} {#delivery_type#}</option>
+                                    {*<option value="1">{#delivery_speedy_address#}</option>
+                                    <option value="2">{#delivery_speedy_office#}</option>*}
+                                    <option value="3">{#delivery_econt_address#}</option>
+                                    <option value="4">{#delivery_econt_office#}</option>
+                                </select>
+                                <div id="preloader_offices">
+                                    <i class="fas fa-cog fa-spin"></i>
+                                    Моля, изчакайте..
+                                </div>
+                                <div id="error91" class="errorMessage mt-2">
+                                    {#invalid_delivery_type#}
+                                </div>
+                                <div id="error_delivery_city_or_region" class="errorMessage mt-2">
+                                    {#please_check_delivery_city_and_region#}
+                                </div>
+                            </div>
+                            <div class="inputCol6 w-100" id="selectedDeliveryOffice" style="display: none; width: 100%;">
+                                <label for="delivery_office_id">{#delivery_office#}</label>
+                                <select name="delivery_office_id" class="checkoutSelectDeliveryOfficeId w-100">
+                                    <option value="">{#please_select#} {#delivery_office#}</option>
+                                </select>
+                                <div id="error92" class="errorMessage">
+                                    {#invalid_delivery_office#}
+                                </div>
+                            </div>
+                            <div id="error93" class="errorMessage">
+                                {#no_office#}
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="rightColumn">
+                    <div class="orderWrapper">
+                        <div class="order">
+                            <span class="title">ТВОЯТА ПОРЪЧКА</span>
+                            {if $discount_promo_code_amount > 0}
+                            <div class="orderRow" id="cartProductsAmountCont">
+                                <span class="left">Стойност</span>
+                                <span class="right" id="cartProductsAmount">{if $abb_before_amount}{$currency_abb}{/if}{$productsAmount|number_format: 2} {if !$abb_before_amount}{$currency_abb}{/if}</span></span>
+                            </div>
+                            <div class="orderRow" id="cartProductsPromoDiscountCont">
+                                <span class="left">Отстъпка (Промо код):</span>
+                                <span class="right" id="cartProductsPromoDiscount">{if $abb_before_amount}{$currency_abb}{/if}-{$discount_promo_code_amount|number_format: 2} {if !$abb_before_amount}{$currency_abb}{/if}</span>
+                            </div>
+                            {/if}
+                            <div class="totalContainer{if !$discount_promo_code_amount > 0} checkoutTotalContainer{/if}">
+                                <div class="orderRow">
+                                    <span class="left">{#total_amount#}</span>
+                                    <span class="right">{if $abb_before_amount}{$currency_abb}{/if}{$total_amount|number_format: 2} {if !$abb_before_amount}{$currency_abb}{/if}</span>
+                                </div>
+                                {*<div class="promoCodeForm">
+                                    <div class="inputField">
+                                        <input type="text" name="promo_code_number" id="promo_code_number" placeholder="{#if_promo_code#}" autocomplete="off">
+                                    </div>
+                                    <div class="errorMessage mt-2" id="promo_codeError">{#invalid_promo_code_number#}</div>
+                                    <div class="successMessage mt-2" id="promo_codeSuccess"></div>
+                                    <div class="btnHolder">
+                                        <button class="promoBtn">приложи</button>
+                                    </div>
+                                </div>
+                                <script>
+                                    $("#promo_code_number").keyup(function(){
+                                        $("#promo_codeError").hide();
+                                        var code = $(this).val();
+                                        $.ajax({
+                                            type: "POST",
+                                            url: "/check-promocode",
+                                            data: {
+                                                "code": code,
+                                                "total_amount": {$total_amount_base_currency},
+                                            },
+                                            dataType: "json",
+                                            success: function (response) {
+                                                if(response.code == 200){
+                                                    $("#promo_codeError").hide();
+                                                    $("#promo_codeError").html("");
+                                                    $("#promo_codeSuccess").html(response.name + "<br>" + response.message);
+                                                    $("#promo_codeSuccess").show();
+                                                }else if(response.code == 400){
+                                                    $("#promo_codeSuccess").hide();
+                                                    $("#promo_codeSuccess").html("");
+                                                    $("#promo_codeError").html(response.message);
+                                                    $("#promo_codeError").show();
+                                                }else if(response.code == 401){
+                                                    $("#promo_codeSuccess").hide();
+                                                    $("#promo_codeSuccess").html("");
+                                                    $("#promo_codeError").html(response.message);
+                                                    $("#promo_codeError").show();
+                                                }else if(response.code == 402){
+                                                    $("#promo_codeSuccess").hide();
+                                                    $("#promo_codeSuccess").html("");
+                                                    $("#promo_codeError").html(response.message);
+                                                    $("#promo_codeError").show();
+                                                }
+                                            },
+                                            error: function(er){
+                                                //console.log(er);
+                                            }
+                                        });
+                                    });
+                                </script>*}
+                                
+                                {if $presentProducts}
+                                    <div class="alert alert-info my-3">
+                                        <small>{#you_can_choose_present#}</small>
+                                    </div>
+                                    <div id="presentProductsCont" class="pb-3">
+                                        <label for="present_product_id">{#presents#}</label>
+                                        <select name="present_product_id" class="checkoutSelectPresent w-100">
+                                            <option value="">{#please_select#} {#present#}</option>
+                                            {section name=pp loop=$presentProducts}
+                                                <option value="{$presentProducts[pp].id}">{$presentProducts[pp].name}</option>
+                                            {/section}
+                                        </select>
+                                    </div>
+                                {/if}
+
+                                <label for="agree_terms" class="form-check">
+                                    <input name="agree_terms" type="checkbox" value="1" id="agree_terms" class="form-check-input">
+                                    <span class="form-check-label">
+                                        {#i_agree#} <a href="/{#htaccess_info#}/511" target="_blank"><strong>{#terms#}</strong></a> {#of_the_site#}
+                                    </span>
+                                </label> <!-- form-check.// -->
+                                <div class="errorMessage" id="agree_terms_Error">{#invalid_agree_terms#}</div><br />
+
+                                <label for="agree_terms_gdpr" class="form-check">
+                                    <input name="agree_terms_gdpr" type="checkbox" value="1" id="agree_terms_gdpr" class="form-check-input">
+                                    <span class="form-check-label">
+                                        {#i_agree#} <a href="/{#htaccess_info#}/511" target="_blank"><strong>{#terms_gdpr#}</strong></a> {#of_the_site#}
+                                    </span>
+                                </label> <!-- form-check.// -->
+                                <div class="errorMessage" id="agree_terms_gdpr_Error">{#invalid_agree_terms_gdpr#}</div>
+                            </div>
+                            <div class="actionsContainer">
+                                <div class="submitBtnHolder">
+                                    <button type="submit" name="buttonCheckout" value="1" id="buttonCheckout" class="submitBtn orderBtn">{#finalise_order#}</button>
+                                    <div id="preloader" style="display: none;">
+                                        <i class="fas fa-cog fa-spin"></i>
+                                        Изпращане на поръчката<br />
+                                        Моля, изчакайте
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Ako e minala validaciqta i vsichko e ok, da se dobavi na button-a class="success" -->
+                            <!-- Ako e minala validaciqta da se dobavi na korektno popylnenite inputi class="successInput" -->
+                            <!-- Ako e minala validaciqta da se dobavi na nepopylnenite inputite class="errorInput" -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<script>
+    $('.checkoutSelectRegion').select2({
+        minimumResultsForSearch: -1
+    });
+    $('.checkoutSelectPresent').select2({
+        minimumResultsForSearch: -1
+    });
+    $('.checkoutSelectCity').select2({
+        minimumResultsForSearch: -1
+    });
+    $('.checkoutSelectDeliveryTypeId').select2({
+        minimumResultsForSearch: -1
+    });
+    
+    
+    function animateToError (obj) {
+        if (obj.length){
+            $('html,body').animate( { scrollTop: obj.offset().top - 120 }, 200, function() {
+                obj.focus();
+            });
+        }
+    }
+    
+    function ajaxPutDeliveryCitiesByRegion(region) {
+        // NOTE:  This function must return the value 
+        //        from calling the $.ajax() method.
+        return $.ajax({
+            type: "POST",
+            url: "/get-cities",
+            data: "region=" + region,
+            dataType: "json",
+            success: function (response) {
+                $("select[name=delivery_city]").empty();
+                $("select[name=delivery_city]").append('<option value="">{#please_select#} {#city#}</option>');
+                for (i = 0; i < response.length; i++) {
+                    $("select[name=delivery_city]").append('<option value="' + response[i].id + '">' + response[i].name + '</option>');
+                }
+                $("select[name=delivery_city]").val($("select[name=billing_city]").val());
+            }
+        });
+    }
+    
+    function sameDelivery() {
+        if ($("input[name=sameDelivery]").is(":checked")) {
+            $("input[name=delivery_name]").val($("input[name=billing_name]").val());
+            $("input[name=delivery_family_name]").val($("input[name=billing_family_name]").val());
+            $("input[name=delivery_address_line_1]").val($("input[name=billing_address_line_1]").val());
+            $("input[name=delivery_address_line_2]").val($("input[name=billing_address_line_2]").val());
+            $("select[name=delivery_region]").val($("select[name=billing_region]").val());
+            var delivery_region = $("select[name=billing_region]").val();
+            if(delivery_region){
+                ajaxPutDeliveryCitiesByRegion(delivery_region);
+            }
+            $('.checkoutSelectRegion').select2({
+                minimumResultsForSearch: -1
+            });
+            $('.checkoutSelectCity').select2({
+                minimumResultsForSearch: -1
+            });
+            $("select[name=delivery_city]").val($("select[name=billing_city]").val());
+            $("input[name=delivery_postcode]").val($("input[name=billing_postcode]").val());
+        }
+    }
+    $(document).ready(function () {
+        $("select[name=delivery_city]").bind("change", function () {
+            $("select[name=delivery_type_id]").val("");
+            $("select[name=delivery_office_id]").empty();
+            $("#selectedDeliveryOffice").hide();
+        });
+        
+        $("select[name=billing_region]").bind("change", function () {
+            $("#billing_city_cont").hide();
+            $("#preloader_billing_city").show();
+            
+            //$("select[name=delivery_type_id]").val("");
+            //$("select[name=delivery_office_id]").empty();
+            //$("#selectedDeliveryOffice").hide();
+            
+            var billing_region = $(this).val();
+            if(billing_region){
+                $.ajax({
+                    type: "POST",
+                    url: "/get-cities",
+                    data: "region=" + billing_region,
+                    dataType: "json",
+                    success: function (response) {
+                        $("select[name=billing_city]").empty();
+                        $("select[name=billing_city]").append('<option value="">{#please_select#} {#city#}</option>');
+                        for (i = 0; i < response.length; i++) {
+                            $("select[name=billing_city]").append('<option value="' + response[i].id + '">' + response[i].name + '</option>');
+                        }
+                        $("#preloader_billing_city").hide();
+                        $("#billing_city_cont").show();
+                        $("select[name=billing_city]").focus();
+                    },
+                    error: function (er){
+                        //console.log(er);
+                    }
+                });
+            }
+        });
+        $("select[name=delivery_region]").bind("change", function () {
+            $("#delivery_city_cont").hide();
+            $("#preloader_delivery_city").show();
+            
+            $("select[name=delivery_type_id]").val("");
+            $("select[name=delivery_office_id]").empty();
+            $("#selectedDeliveryOffice").hide();
+            
+            var delivery_region = $(this).val();
+            if(delivery_region){
+                $.ajax({
+                    type: "POST",
+                    url: "/get-cities",
+                    data: "region=" + delivery_region,
+                    dataType: "json",
+                    success: function (response) {
+                        $("select[name=delivery_city]").empty();
+                        $("select[name=delivery_city]").append('<option value="">{#please_select#} {#city#}</option>');
+                        for (i = 0; i < response.length; i++) {
+                            $("select[name=delivery_city]").append('<option value="' + response[i].id + '">' + response[i].name + '</option>');
+                        }
+                        $("#preloader_delivery_city").hide();
+                        $("#delivery_city_cont").show();
+                        $("select[name=delivery_city]").focus();
+                    }
+                });
+            }
+        });
+        
+        $("select[name=delivery_type_id]").bind("change", function () {
+            $("#error91").hide();
+            $("#error93").hide();
+            $("#preloader_offices").show();
+            if ($("input[name=sameDelivery]").is(":checked")) {
+                sameDelivery();
+                //$.when(ajaxPutDeliveryCitiesByRegion()).done(function(a){
+                    var delivery_type_id = $("select[name=delivery_type_id]").val();
+                    var delivery_region_id = $("select[name=billing_region]").val();
+                    var delivery_region = $("select[name=billing_region] option:selected").text();
+                    var delivery_city_id = $("select[name=billing_city]").val();
+                    var delivery_city = $("select[name=billing_city] option:selected").text();
+                    $("#error_delivery_city_or_region").hide();
+                    $("#selectedDeliveryOffice").hide();
+                    
+                //});
+            }else{
+                var delivery_type_id = $(this).val();
+                var delivery_region_id = $("select[name=delivery_region]").val();
+                var delivery_region = $("select[name=delivery_region] option:selected").text();
+                var delivery_city_id = $("select[name=delivery_city]").val();
+                var delivery_city = $("select[name=delivery_city] option:selected").text();
+                $("#error_delivery_city_or_region").hide();
+                $("#selectedDeliveryOffice").hide();
+            }
+            if(delivery_type_id == 2 || delivery_type_id == 4){
+                if(delivery_region_id && delivery_city_id){
+                    $.ajax({
+                        type: "POST",
+                        url: "/get-delivery-offices",
+                        data: "delivery_type_id="+delivery_type_id+"&region="+delivery_region+"&city="+delivery_city,
+                        dataType: "json",
+                        success: function (response) {
+                            $("#preloader_offices").hide();
+                            //console.log(response);
+                            if(response.length){
+                                $("#selectedDeliveryOffice").show();
+                                $("#selectedDeliveryOffice select[name=delivery_office_id]").empty();
+                                $("#selectedDeliveryOffice select[name=delivery_office_id]").append('<option value="">{#please_select#} {#delivery_office#}</option>');
+                                for (i = 0; i < response.length; i++) {
+                                    $("#selectedDeliveryOffice select[name=delivery_office_id]").append('<option value="' + response[i].code + '">' + response[i].name + '</option>');
+                                }
+                                $('.checkoutSelectDeliveryOfficeId').select2({
+                                    minimumResultsForSearch: -1
+                                });
+                            }else{
+                                $("#error93").show();
+                            }
+                        },
+                        error: function (er){
+                            //console.log(er);
+                        }
+                    });
+                }else{
+                    $("#preloader_offices").hide();
+                    $("#error_delivery_city_or_region").show();
+                }
+            }else{
+                $("#preloader_offices").hide();
+            }
+
+        });
+        
+        $("input[name=sameDelivery]").bind("click", function () {
+            if ($(this).is(":checked")) {
+                $("#deliveryInformation").slideUp();
+                sameDelivery();
+            } else {
+                $("#deliveryInformation").slideDown();
+            }
+        });
+
+        $("input[name=wantInvoice]").bind("click", function () {
+            if ($(this).is(":checked")) {
+                $("#invoiceInformation").slideDown();
+            } else {
+                $("#invoiceInformation").slideUp();
+            }
+        });
+        {if !$user}
+        $("input[name=billing_email]").keyup(function(){
+            var email = $(this).val();
+            if(isEmail(email)){
+                $.ajax({
+                    type: "POST",
+                    url: "/check-email-exists",
+                    data: "email="+email,
+                    success: function(res){
+                        if (res == "1"){
+                            $("#login_pass_cont").slideDown();
+                            //console.log("Email exists");
+                        }else{
+                            $("#login_pass_cont").slideUp();
+                            //console.log("Email does not exists");
+                        }
+                    },
+                    error: function(er){
+                        //console.log(er);
+                    }
+                });
+            }
+            //else{
+                //console.log("It is NOT an email!");
+            //}
+        });
+        {/if}
+        $("#buttonCheckout").bind("click", function (ev) {
+            ev.preventDefault();
+            if ($("input[name=sameDelivery]").is(":checked")) {
+                sameDelivery();
+            }
+            
+            var delivery_name = $("input[name=delivery_name]").val();
+            var delivery_family_name = $("input[name=delivery_family_name]").val();
+            var delivery_address_line_1 = $("input[name=delivery_address_line_1]").val();
+            var delivery_region = $("select[name=delivery_region]").val();
+            var delivery_city = $("select[name=delivery_city]").val();
+            var delivery_postcode = $("input[name=delivery_postcode]").val();
+            //var delivery_phone = $("input[name=delivery_phone]").val();
+            //var delivery_country = $("select[name=delivery_country_id]").val();
+            var billing_name = $("input[name=billing_name]").val();
+            var billing_family_name = $("input[name=billing_family_name]").val();
+            var billing_address_line_1 = $("input[name=billing_address_line_1]").val();
+            var billing_region = $("select[name=billing_region]").val();
+            var billing_city = $("select[name=billing_city]").val();
+            var billing_phone = $("input[name=billing_phone]").val();
+            var billing_postcode = $("input[name=billing_postcode]").val();
+            var billing_email = $("input[name=billing_email]").val();
+            //var billing_country = $("select[name=billing_country_id]").val();
+            var delivery_type_id = $("select[name=delivery_type_id]").val();
+            var delivery_office_id = $("select[name=delivery_office_id]").val();
+            var promo_code_number = $("input[name=promo_code_number]").val();
+            
+            var wantInvoice = $("input[name=wantInvoice]").is(":checked");
+            
+            var company_name = $("input[name=company_name]").val();
+            var company_bulstat = $("input[name=company_bulstat]").val();
+            var company_city = $("input[name=company_city]").val();
+            var company_mol = $("input[name=company_mol]").val();
+            
+            /*
+            if (promo_code_number != ""){
+               $.ajax({
+                    type: "POST",
+                    url: "/getVoucher.php",
+                    data: "promo_code_number="+promo_code_number,
+                    async: false,
+                    success: function(html){
+                        if (html == "1"){
+                            $("#promo_codeError").hide();
+                        }else{
+                            $("#promo_codeError").show();
+                        }
+                    }
+               });
+            }else{
+               $("#promo_codeError").hide();
+            }*/
+            
+            var error1 = false;
+            var error2 = false;
+            var error3 = false;
+            var error4 = false;
+            var error41 = false;
+            var error5 = false;
+            var error6 = false;
+            var error7 = false;
+            var error8 = false;
+            var error9 = false;
+            var error10 = false;
+            var error11 = false;
+            var error12 = false;
+            var error81 = false;
+            var error82 = false;
+            var error83 = false;
+            var error91 = false;
+            var error92 = true;
+            var error93 = true;
+            var error101 = false;
+            var error102 = false;
+            var error_company_name = true;
+            var error_company_bulstat = true;
+            var error_company_city = true;
+            var error_company_mol = true;
+
+                if (delivery_name == "") {
+                    error1 = false;
+                    $("#error1").show();
+                    animateToError($("#error1"));
+                } else {
+                    error1 = true;
+                    $("#error1").hide();
+                }
+                if (delivery_family_name == "") {
+                    error2 = false;
+                    $("#error2").show();
+                    animateToError($("#error2"));
+                } else {
+                    error2 = true;
+                    $("#error2").hide();
+                }
+                {*if (delivery_phone == "") {
+                    error101 = false; //error101 is for billing_phone
+                    $("#error101").show();
+                    animateToError($("#error101"));
+                } else {
+                    error101 = true;
+                    $("#error101").hide();
+                }*}
+                console.log("delivery_type_id: ", delivery_type_id);
+                if (delivery_type_id == ""){
+                    console.log("111");
+                    error91 = false;
+                    $("#error91").show();
+                    animateToError($("#error91"));
+                } else {
+                    error91 = true;
+                    $("#error91").hide();
+                }
+                
+                if (delivery_type_id == 2 || delivery_type_id == 4) {
+                    if (delivery_office_id == "" || delivery_office_id == null){
+                        error92 = false;
+                        $("#error92").show();
+                        animateToError($("#error92"));
+                        if(delivery_office_id == null){
+                            error93 = false;
+                            $("#error93").show();
+                            animateToError($("#error93"));
+                        }
+                    } else {
+                        error92 = true;
+                        $("#error92").hide();
+                    }
+                }
+                
+                if (delivery_type_id == 1 || delivery_type_id == 3) {
+                    if (delivery_address_line_1 == "") {
+                        error3 = false;
+                        $("#error3").show();
+                        animateToError($("#error3"));
+                    } else {
+                        error3 = true;
+                        $("#error3").hide();
+                    }
+                } else {
+                    error3 = true;
+                    $("#error3").hide();
+                }
+                if (delivery_type_id == 1 || delivery_type_id == 3) {
+                    if (billing_address_line_1 == "") {
+                        error9 = false;
+                        $("#error9").show();
+                        animateToError($("#error9"));
+                    } else {
+                        error9 = true;
+                        $("#error9").hide();
+                    }
+                } else {
+                    error9 = true;
+                    $("#error9").hide();
+                }
+                
+                if (delivery_city == "") {
+                    error4 = false;
+                    $("#error4").show();
+                    animateToError($("#error4"));
+                } else {
+                    error4 = true;
+                    $("#error4").hide();
+                }
+                if (delivery_region == "") {
+                    error41 = false;
+                    $("#error41").show();
+                    animateToError($("#error41"));
+                } else {
+                    error41 = true;
+                    $("#error41").hide();
+                }
+                if (delivery_postcode == "") {
+                    error5 = false;
+                    $("#error5").show();
+                    animateToError($("#error5"));
+                } else {
+                    error5 = true;
+                    $("#error5").hide();
+                }
+                
+                if (billing_name == "") {
+                    error7 = false;
+                    $("#error7").show();
+                    animateToError($("#error7"));
+                } else {
+                    error7 = true;
+                    $("#error7").hide();
+                }
+                if (billing_family_name == "") {
+                    error8 = false;
+                    $("#error8").show();
+                    animateToError($("#error8"));
+                } else {
+                    error8 = true;
+                    $("#error8").hide();
+                }
+                if (billing_region == "") {
+                    error102 = false;
+                    $("#error102").show();
+                    animateToError($("#error102"));
+                } else {
+                    error102 = true;
+                    $("#error102").hide();
+                }
+                if (billing_city == "") {
+                    error10 = false;
+                    $("#error10").show();
+                    animateToError($("#error10"));
+                } else {
+                    error10 = true;
+                    $("#error10").hide();
+                }
+                if (billing_phone == "") {
+                    error101 = false; //error101 is for billing_phone
+                    $("#error101").show();
+                    animateToError($("#error101"));
+                } else {
+                    error101 = true;
+                    $("#error101").hide();
+                }
+                if (billing_postcode == "") {
+                    error11 = false;
+                    $("#error11").show();
+                    animateToError($("#error11"));
+                } else {
+                    error11 = true;
+                    $("#error11").hide();
+                }
+                if (billing_email == "") {
+                    error81 = false;
+                    $("#error81").show();
+                    animateToError($("#error81"));
+                } else {
+                    error81 = true;
+                    $("#error81").hide();
+                }
+                if(wantInvoice){
+                    if (company_name == "") {
+                        error_company_name = false;
+                        $("#error_company_name").show();
+                        animateToError($("#error_company_name"));
+                    } else {
+                        error_company_name = true;
+                        $("#error_company_name").hide();
+                    }
+
+                    if (company_bulstat == "") {
+                        error_company_bulstat = false;
+                        $("#error_company_bulstat").show();
+                        animateToError($("#error_company_bulstate"));
+                    } else {
+                        error_company_bulstat = true;
+                        $("#error_company_bulstat").hide();
+                    }
+
+                    if (company_city == "") {
+                        error_company_city = false;
+                        $("#error_company_city").show();
+                        animateToError($("#error_company_city"));
+                    } else {
+                        error_company_city = true;
+                        $("#error_company_city").hide();
+                    }
+
+                    if (company_mol == "") {
+                        error_company_mol = false;
+                        $("#error_company_mol").show();
+                        animateToError($("#error_company_mol"));
+                    } else {
+                        error_company_mol = true;
+                        $("#error_company_mol").hide();
+                    }
+                }
+                
+                if ($("input[name=agree_terms]").is(":checked") == false) {
+                    error82 = false;
+                    console.log("1");
+                    $("#agree_terms_Error.errorMessage").show();
+                    //animateToError($("#agree_terms_Error"));
+                } else {
+                    error82 = true;
+                    $("#agree_terms_Error.errorMessage").hide();
+                }
+                if ($("input[name=agree_terms_gdpr]").is(":checked") == false) {
+                    error83 = false;
+                    console.log("3");
+                    $("#agree_terms_gdpr_Error.errorMessage").show();
+                    //animateToError($("#agree_terms_gdpr_Error"));
+                } else {
+                    error83 = true;
+                    $("#agree_terms_gdpr_Error").hide();
+                }
+
+                {*console.log("------------");
+                console.log("error1: ", error1);
+                console.log("error2: ", error2);
+                console.log("error3: ", error3);
+                console.log("error4: ", error4);
+                console.log("error5: ", error5);
+                console.log("error7: ", error7);
+                console.log("error8: ", error8);
+                console.log("error9: ", error9);
+                console.log("error10: ", error10);
+                console.log("error11: ", error11);
+                console.log("error81: ", error81);
+                console.log("error82: ", error82);
+                console.log("error83: ", error83);
+                console.log("error91: ", error91);
+                console.log("error101: ", error101);
+                console.log("error102: ", error102);
+                console.log("error41: ", error41);
+                console.log("error promo code: ", $("#promo_codeError").css("display") == "none");
+                console.log("error_company_name: ", error_company_name);
+                console.log("error_company_bulstat: ", error_company_bulstat);
+                console.log("error_company_city: ", error_company_city);
+                console.log("error_company_mol: ", error_company_mol);
+                console.log("----------------------");*}
+                
+                if (error1 && error2 && error3 && error4 && error5 /*&& error6*/ && error7 && error8 && error9 && error10 && error11 && /*error12 &&*/ error81 && error82 && error83 && error91 && error92 && error93 && error101 && error102 && error41 && error_company_name && error_company_bulstat && error_company_city && error_company_mol) {
+                    $("#preloader").show();
+                    $("#buttonCheckout").hide();
+                    /*$.ajax({
+                        type: "POST",
+                        url: "/checkEcontShipping.php",
+                        data: $("form[name=formCheckout]").serialize(),
+                        dataType: "json",
+                        success: function (response) {
+                            //alert(response);
+                            if (response.error == 1) {
+                                $("#error31").empty();
+                                $("#error31").append(response.error_text);
+                                $("#error31").show();
+                                $("#preloader").hide();
+                                $("#buttonCheckout").show();
+                                return false;
+                            } else {
+                                $("#preloader").show();
+                                $("#buttonCheckout").hide();
+                                document.formCheckout.submit();
+                            }
+                        }
+                    });*/
+                    document.formCheckout.submit();
+                } else {
+                    return false;
+                }
+        });
+        
+    });
+    function isEmail(email) {
+        var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{literal}{2,4}{/literal})+$/;
+        return regex.test(email);
+    }
+</script>
+{include file="footer.html"}

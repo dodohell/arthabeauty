@@ -1,0 +1,62 @@
+{include file="./admin/left.html"}
+<div id="content">
+	<fieldset id="fieldsetStyle">
+		<legend id="legendStyle">{#add_users_admin#}</legend>
+		
+		<form method="post" action="{$_self}" enctype="multipart/form-data">
+			<span style="color: #ff0000;">
+				{if $error == 1}<br />{#users_error_1#}<br />{/if}
+				{if $error == 2}<br />{#users_error_2#}<br />{/if}
+				{if $error == 3}<br />{#users_error_3#}<br />{/if}
+				{if $error == 4}<br />{#users_error_4#}<br />{/if}
+			</span>	
+			<div class="BoxForm">
+				<label for="uname" class="labelStyle" >{#users_user_name#}:</label> <input type="text" name="uname" value="{$row.uname}" id="uname" class="inputField" /> <br />
+				<div class="clear"></div>
+				<label for="upass" class="labelStyle">{#users_pass#}:</label> <input type="text" name="upass" id="upass" class="inputField" /> <br />
+				<label for="reupass" class="labelStyle">{#users_repass#}:</label> <input type="text" name="reupass" id="reupass" class="inputField" /> <br />
+				<label for="level" class="labelStyle">{#users_access_level#}:</label> 
+				<select name="level" id="level" class="selectStyle">
+					<option value="0" {if $row.level == 0}selected{/if}>{$levels[0]}</option>
+					<option value="1" {if $row.level == 1}selected{/if}>{$levels[1]}</option>
+					<option value="2" {if $row.level == 2}selected{/if}>{$levels[2]}</option>
+				</select><br />
+				<label for="active" class="labelStyle">{#active#}:</label> <input type="checkbox" name="active" {$row.active} value="checked" id="active" /> <br />
+				<br />	
+				<label for="firstname" class="labelStyle">{#users_firstname#}:</label> <input type="text" name="firstname" value="{$row.firstname}" id="firstname" class="inputField" /> <br />
+				<label for="lastname" class="labelStyle">{#users_lastname#}:</label> <input type="text" name="lastname" value="{$row.lastname}" id="lastname" class="inputField" /> <br />
+				<label for="ru" class="labelStyle">{#users_email#}:</label> <input type="text" name="email" value="{$row.email}" id="email" class="inputField" /> <br />
+				<label for="businessaddress" class="labelStyle">{#users_address#}:</label> <input type="text" name="businessaddress" value="{$row.businessaddress}" id="businessaddress" class="inputField" /> <br />
+				<label for="phone" class="labelStyle">{#users_phone#}:</label> <input type="text" name="phone" value="{$row.phone}" id="phone" class="inputField" /> <br />
+				<input type="submit" name="Save" class="submitField" value="{#save#}" />
+                <input type="submit" name="SaveAndStay" class="submitField" value="{#save_and_stay#}" />
+			</div>			
+			<div class="BoxForm">
+				Достъп
+				<table>
+				<tr>
+					<td>Меню</td>
+					<td>Преглед</td>
+					<td>Редакция</td>
+					<td>Пълен достъп</td>
+				</tr>
+				{section name=lm loop=$fullmenu}
+				<tr>
+				{if $fullmenu[lm].name}
+					<td><label for="access_menu_{$fullmenu[lm].menu_id}" class="labelStyle">{$fullmenu[lm].name}:</label> </td>
+					<td><input type="checkbox" name="read_menu[{$fullmenu[lm].menu_id}]" {if $fullmenu[lm].access>0} checked{/if} value="checked" /> </td>
+					<td><input type="checkbox" name="edit_menu[{$fullmenu[lm].menu_id}]"  {if $fullmenu[lm].access>1} checked{/if} value="checked" /> </td>
+					<td><input type="checkbox" name="full_menu[{$fullmenu[lm].menu_id}]"  {if $fullmenu[lm].access>2}  checked{/if} value="checked" /> </td>
+				{/if}
+				</tr>
+				{/section}
+				</table>
+			</div>
+			{if $id}<input type="hidden" name="id" value="{$id}" />{/if}
+			{if $act}<input type="hidden" name="act" value="{$act}" />{/if}			
+		</form>
+	</fieldset>
+	
+</div>	
+
+{include file="./admin/footer.html"}

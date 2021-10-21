@@ -1,0 +1,232 @@
+{include file="header.html"}
+<div class="row">
+    <div class="col-lg-3">
+        {include file="side_bar.html"}
+    </div>
+    <!-- /.col-lg-3 -->
+
+    <div class="col-lg-9">
+        <div class="row mt-3">
+            <div class="col-sm-12">
+                <article class="box">
+                    <figure class="itemside">
+                        <div class="aside align-self-center">
+                            <span class="icon-wrap icon-md round bg-primary text-white">
+                                <i class="fas fa-door-open"></i>
+                            </span>
+                        </div>
+                        <figcaption class="text-wrap">
+                            <p class="text-muted">{$welcome.description}</p>
+                        </figcaption>
+                    </figure> <!-- iconbox // -->
+                </article> <!-- panel-lg.// -->
+            </div><!-- col // -->
+        </div>
+        <div id="carouseIndicators" class="carousel slide my-4" data-ride="carousel">
+            <ol class="carousel-indicators">
+            {section name=m loop=$homepage}
+                <li data-target="#carouseIndicators" data-slide-to="{$smarty.section.m.index}" {if $smarty.section.m.first}class="active"{/if}></li>
+            {/section}
+            </ol>
+            <div class="carousel-inner" role="listbox">
+            {section name=m1 loop=$homepage}
+                <div class="carousel-item {if $smarty.section.m1.first}active{/if}">
+                    {*<a class="d-block" {if $homepage[m1].url}href="{$homepage[m1].url}" target="{$homepage[m1].target}"{else}href="/{#htaccess_info#}/{$homepage[m1].id}"{/if}>*}
+                        <img class="slide-img d-block img-fluid" src="{if $homepage[m1].pic_1}/files/{$homepage[m1].pic_1}{else}/images/noImage.png{/if}"alt="{$homepage[m1].name}">
+                        <span class="carousel-caption">{$homepage[m1].excerpt}</span>
+                    {*</a>*}
+                </div>
+            {/section}
+            </div>
+            <a class="carousel-control-prev" href="#carouseIndicators" role="button" data-slide="prev">
+                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                <span class="sr-only">Previous</span>
+            </a>
+            <a class="carousel-control-next" href="#carouseIndicators" role="button" data-slide="next">
+                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                <span class="sr-only">Next</span>
+            </a>
+        </div>
+
+        <div class="row">
+            {section name=ct loop=$category_types}
+            <div class="col-lg-6 col-md-6 mb-4">
+                <div class="card h-100">
+                    <a href="{if $category_types[ct].htaccess_url}{$category_types[ct].htaccess_url}{else}/{#htaccess_categorytypes#}/{$category_types[ct].id}{/if}" class="card-category-type-img-link"><img class="card-img-top card-category-type-img" src="{if $category_types[ct].pic_1}/files/{$category_types[ct].pic_1}{else}http://placehold.it/700x400{/if}" alt="{$category_types[ct].name}"></a>
+                    <div class="card-body">
+                        <h4 class="card-title text-center mb-0">
+                            <a href="{if $category_types[ct].htaccess_url}{$category_types[ct].htaccess_url}{else}/{#htaccess_categorytypes#}/{$category_types[ct].id}{/if}" class="text-dark">{$category_types[ct].name}</a>
+                        </h4>
+                    </div>
+                </div>
+            </div>
+            {/section}
+        </div>
+        <!-- /.row -->
+        
+        
+        <div class="card hotoffer">
+            <div class="card-body">
+                <h3 class="card-title main">Горещи оферти</h3>
+                <div class="row">
+                    {section name=ho loop=$hotoffers}
+                        <div class="col-lg-4 col-md-6 mb-4 px-1">
+                            <div class="card h-100">
+                                <a href="/{#htaccess_product#}/{$hotoffers[ho].id}"><img class="card-img-top" src="{if $hotoffers[ho].mainPic}/files/tn/{$hotoffers[ho].mainPic}{else}http://placehold.it/700x400{/if}" alt="{$hotoffers[ho].name}"></a>
+                                <div class="card-body">
+                                    <h4 class="card-title">
+                                        <a href="/{#htaccess_product#}/{$hotoffers[ho].id}">{$hotoffers[ho].name}</a>
+                                    </h4>
+                                    <p class="card-text hotoffer-excerpt">{$hotoffers[ho].excerpt}</p>
+                                </div>
+                                <div class="px-3 d-flex flex-column bottom-wrap">
+                                    <span>{#price#}: </span>
+                                    <span class="price-wrap">
+                                    {if $hotoffers[ho].price_specialoffer > 0.0}
+                                        <span class="price-new text-danger"><strong>{$hotoffers[ho].price_specialoffer|number_format: 2} {#currency#}</strong></span> <del class="price-old">{$hotoffers[ho].price|number_format: 2} {#currency#}</del>
+                                    {elseif $hotoffers[ho].price > 0.0}
+                                        <span class="price-new"><strong>{$hotoffers[ho].price|number_format: 2} {#currency#}</strong></span>
+                                    {/if}
+                                    </span>
+                                </div>
+                                <div class="px-3 pb-4 pt-2">
+                                    <a href="/{#htaccess_product#}/{$hotoffers[ho].id}" class="btn btn-dark d-block"><i class="fas fa-shopping-cart"></i> Виж повече</a>
+                                </div>
+                                {*<div class="card-footer">
+                                    <div class="rating-wrap">
+                                        <div id="rating-{$hotoffers[ho].id}"></div>
+                                        {if $hotoffers[ho].reviews_count > 0}<div class="label-rating"><small>{$hotoffers[ho].reviews_count} {if $hotoffers[ho].reviews_count > 1}{#reviews#}{else}{#review#}{/if}</small></div>{/if}
+                                        {if $hotoffers[ho].comments > 0}<div class="label-rating"><small>{$hotoffers[ho].comments} {if $hotoffers[ho].comments > 1}{#comments#}{else}{#comment#}{/if}</small></div>{/if}
+                                    </div> <!-- rating-wrap.// -->
+                                    <script>
+                                        $(document).ready(function () {
+                                            $.fn.raty.defaults.path = '/js/raty/img';
+                                            $('#rating-{$hotoffers[ho].id}').raty({
+                                                readOnly:  true,
+                                                starType:    'img', // Element used to represent a star.
+                                                starHalf:    'star-half.png', // The name of the half star image.
+                                                starOff:     'star-off.png',  // Name of the star image off.
+                                                starOn:      'star-on.png',   // Name of the star image on.
+                                                half:  true,
+                                                start: parseFloat({$hotoffers[ho].rating})
+                                           });
+                                        });
+                                    </script>
+                                </div>*}
+                            </div>
+                        </div>
+                    {/section}
+                </div>
+                <!-- /.row -->
+            </div>
+        </div>
+    </div>
+    <!-- /.col-lg-9 -->
+</div>
+<div class="card my-3" id="subscribeMessageCont" style="display: none;">
+    <article class="card-body">
+        
+    </article>
+</div>
+<!-- /.row -->
+<div class="card my-3" id="subscribeCont">
+    <article class="card-body">
+        <h4 class="card-title text-center mb-4 mt-1">{#newsletter_sign_up_heading#}</h4>
+        <hr>
+        <p class="text-secondary text-center">{#newsletter_sign_up_text#}</p>
+        <form id="subscribeForm">
+            <div class="form-group">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"> <i class="fas fa-at"></i> </span>
+                    </div>
+                    <input name="email" id="emailSubscribe" class="form-control" placeholder="Email" type="email">
+                </div> <!-- input-group.// -->
+            </div> <!-- form-group// -->
+            <div class="form-group"> 
+                <div class="checkbox">
+                    <label> <input type="checkbox" id="agree_termsSubscribe" name="agree_terms" value="1" required>{#i_agree_with#} <a href="#">{#the_terms#}</a> {#terms_of#}</label>
+                </div> <!-- checkbox .// -->
+            </div> <!-- form-group// -->  
+            <div class="form-group"> 
+                <div class="checkbox">
+                    <label> <input type="checkbox" id="agree_terms_gdprSubscribe" name="agree_terms_gdpr" value="1" required>{#i_agree_gdpr#} <a href="#">{#the_gdpr_policy#}</a> {#terms_of#}</label>
+                </div> <!-- checkbox .// -->
+            </div> <!-- form-group// -->  
+            <div class="form-group">
+                <button type="submit" id="subscribeButton" class="btn btn-primary btn-block">{#subscribe#}</button>
+            </div> <!-- form-group// -->
+            <p class="text-center">Тест тест тест тест тест тест тест тест тест тест.</p>
+        </form>
+        <script>
+            function isEmail(email) {
+                var regex = /^([a-zA-Z0-9_\.\-\+])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{literal}{2,4}{/literal})+$/;
+                if(!regex.test(email)) {
+                  return false;
+                }else{
+                  return true;
+                }
+            }
+            $("#subscribeButton").click(function(ev){
+                ev.preventDefault();
+                var email = $("#emailSubscribe").val().trim();
+                var agree_terms = $("#agree_termsSubscribe").is(":checked") ? 1 : 0;
+                var agree_terms_gdpr = $("#agree_terms_gdprSubscribe").is(":checked") ? 1 : 0;
+                var error = 0;
+                console.log(email);
+                console.log(agree_terms);
+                console.log(agree_terms_gdpr);
+                console.log(error);
+                if(!isEmail(email)){
+                    $("#emailSubscribe").addClass("errorField");
+                    $("#emailSubscribe").focus();
+                    error++;
+                }else{
+                    $("#emailSubscribe").removeClass("errorField");
+                }
+                if(!agree_terms){
+                    $("#agree_termsSubscribe").parent().addClass("errorLabel");
+                    $("#agree_termsSubscribe").focus();
+                    error++;
+                }else{
+                    $("#agree_termsSubscribe").parent().removeClass("errorLabel");
+                }
+                if(!agree_terms_gdpr){
+                    $("#agree_terms_gdprSubscribe").parent().addClass("errorLabel");
+                    $("#agree_terms_gdprSubscribe").focus();
+                    error++;
+                }else{
+                    $("#agree_terms_gdprSubscribe").parent().removeClass("errorLabel");
+                }
+                console.log(error);
+                if(error > 0){
+                    return false;
+                }
+                $(this).attr("disabled", true);
+                $(this).html("<i class='fas fa-spinner fa-pulse'></i> {#please_wait#}");
+                $.ajax({
+                    type: "POST",
+                    url: "/mailinglist-subscribe",
+                    data: $("#subscribeForm").serialize(),
+                    dataType: "json",
+                    success: function(response){
+                        console.log(response);
+                        if(response.code == 1 || response.code == 2){
+                            $("#subscribeCont").slideUp();
+                            $("#subscribeMessageCont article").html('<div class="alert alert-success my-0" role="alert">'+response.message+'</div>');
+                            $("#subscribeMessageCont").slideDown();
+                        }else if(response.code == 0){
+                            $("#subscribeCont").slideUp();
+                            $("#subscribeMessageCont article").html('<div class="alert alert-danger my-0" role="alert">'+response.message+'</div>');
+                            $("#subscribeMessageCont").slideDown();
+                        }
+                    },
+                    error: function(er1){
+                        console.log(er1.responseText);
+                    }
+                });
+            });
+        </script>
+    </article>
+</div> <!-- card.// -->
+{include file="footer.html"}

@@ -1,0 +1,49 @@
+            </div> 
+            <!-- /.container -->
+        <!-- Footer -->
+        <footer class="pt-5 pb-4 bg-light">
+            <div class="container">
+                <p class="m-0 text-center text-dark">{$copyrights.description}</p>
+                <a class="d-block text-center p-3 link" href="http://www.kakdevelopment.com">
+                    <span><img src="/images/kak-logo.png" alt="kakDevelopment"></span>
+                    <span>Уеб дизайн, уеб програмиране и SEO</span>
+                </a>
+            </div>
+            <!-- /.container -->
+        </footer>
+        <script src="	https://unpkg.com/popper.js" crossorigin="anonymous"></script>
+        <script src='https://www.google.com/recaptcha/api.js?hl=bg'></script>
+        
+        <script>
+            var timeRe = 600000; // 10 mins
+            //var timeRe = 5000; // 5 sec
+            function refreshSn (timeRe){
+                setTimeout(
+                    function (){
+                        $.ajax({
+                            type: "POST",
+                            url: '/refresh-session',
+                            cache: false,
+                            dataType:'text',
+                            complete: function () {
+                                //console.log('complete');
+                                refreshSn(timeRe);
+                            },
+                            success: function (res) {
+                                //console.log('success');
+                                //console.log(res);
+                            },
+                            error: function (er) {
+                                //console.log(er);
+                            }
+                        });
+                    },
+                    timeRe
+                );
+            };
+            refreshSn(timeRe);
+        </script>
+        
+    </body>
+
+</html>

@@ -1,0 +1,57 @@
+{include file="header.html"}
+<div class="breadcrumbsContainer">
+    <div class="container">
+        <div class="breadcrubsRow">
+            <a href="{$link_home}">{#home_breadcrumbs#}</a>
+            <span>|</span>
+            <span>{#frequently_asked_questions#}</span> 
+        </div>
+    </div>
+</div>
+
+<div class="catBackgroundGradient">
+    <div class="contactsContainer">
+        <div class="container">
+            <h1 class="pageTitle faqTitle">Често Задавани Въпроси</h1>
+
+            <div class="faqContainer">
+                {section name=sm loop=$subMenus}
+                    {*<article>
+                        <a href="{if $subMenus[sm].url}{$subMenus[sm].url}{else}{if $subMenus[sm].htaccess_url}{$subMenus[sm].htaccess_url}{else}/{#htaccess_info#}/{$subMenus[sm].id}{/if}{/if}">					
+                            <section class="imgContainer" style="background-image: url({if $subMenus[sm].pic_1}/files/tn/{$subMenus[sm].pic_1}{else}/images/article-2.jpg{/if});"></section>
+                            <section class="content">
+                                <h3 class="articleTitle">{$subMenus[sm].name}</h3>
+                                <div class="excerpt">{$subMenus[sm].excerpt}</div>
+                            </section>
+                        </a>
+                    </article>
+                            *}
+                    <button class="collapsible">{$subMenus[sm].name}</button>
+                    <div class="content">
+                        <p>{$subMenus[sm].excerpt}
+                    </div>
+                {/section}
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    var coll = document.getElementsByClassName("collapsible");
+    var i;
+
+    for (i = 0; i < coll.length; i++) {
+        coll[i].addEventListener("click", function () {
+            this.classList.toggle("active");
+            var content = this.nextElementSibling;
+            if (content.style.maxHeight) {
+                content.style.maxHeight = null;
+                content.style.marginBottom = null;
+            } else {
+                content.style.maxHeight = content.scrollHeight + "px";
+                content.style.marginBottom = 8 + "px";
+            }
+        });
+    }
+</script>
+{include file="footer.html"}

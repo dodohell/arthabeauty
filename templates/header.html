@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+
+<html lang="bg">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no, user-scalable=no">
+        <title>{if $infoTitle}{$infoTitle}{else}{$extraTitle}{$title.description}{/if}{if $pageNum} - {$pageNum}{/if}</title>
+        <meta name="description" content="{if $infoDescr}{$infoDescr}{else}{$description.description}{/if}{if $extraTitle} {$extraTitle}{/if}" />
+        {if 0}<meta name="keywords" content="{if $infoKeys}{$infoKeys}{else}{$keywords.description}{/if}{if $extraTitle}, {$extraTitle}{/if}" />		{/if}
+        {$metatags.description}
+        <link rel="image_src" href="{$host}{if $images[0].pic}files/{$images[0].pic}{else}{if $row.pic_1}files/{$row.pic_1}{else}{if $row.pic}files/{$row.pic}{else}images/logo-facebook.png{/if}{/if}{/if}" />
+        <link rel="target_url" href="https://{$smarty.server.HTTP_HOST}{$smarty.server.REQUEST_URI}{if 0}{$host}{#htaccess_product#}/{$row.id}{/if}"/>
+        <link rel="shortcut icon" href="/images/favicon.ico" />
+        {if $noindex == 1}
+        <meta name="robots" content="noindex">
+        {/if}
+        {if $link_bg}
+        	<link rel="canonical" href="https://{$smarty.server.HTTP_HOST}{$link_bg}" />
+        {else}
+        	<link rel="canonical" href="https://{$smarty.server.HTTP_HOST}{$smarty.server.REQUEST_URI}" />
+        {/if}
+        <meta property="og:locale" content="bg_BG" />
+        <meta property="og:site_name" content="{$title.description}" />
+        <meta property="og:type" content="article" />
+        <meta property="og:title" content="{if $infoTitle}{$infoTitle}{else}{$extraTitle}{$title.description}{/if}{if $pageNum} - {$pageNum}{/if}" />
+        <meta property="og:description" content="{if $infoDescr}{$infoDescr}{else}{$description.description}{/if}{if $extraTitle} {$extraTitle}{/if}" />
+        <meta property="og:image" content="{$host}{if $images[0].pic}files/{$images[0].pic}{else}{if $row.pic_1}files/{$row.pic_1}{else}{if $row.pic}files/{$row.pic}{else}images/logo-facebook.png{/if}{/if}{/if}" />
+        {*<meta property="fb:app_id" content="{$fb_api_key}" />*}
+        <link rel="stylesheet" type="text/css" href="/js/bootstrap_4_3_1/css/bootstrap.min.css" async defer>
+        <link rel="stylesheet" href="/js/fontawesome-free-5_7_2-web/css/all.min.css">
+
+        {assign var=random value=1|rand:999}
+        <link rel="stylesheet" type="text/css" href="/css/style.min.css?number={$random}" async>
+        <link rel="preconnect" href="https://apis.google.com">
+        <meta name="google-signin-scope" content="profile email">
+        <meta name="google-signin-client_id" content="{$google_client_id}">
+        <script src="https://apis.google.com/js/platform.js" async defer></script>
+        <script src="https://apis.google.com/js/api:client.js"></script>
+        <script src="/js/jquery.min.js"></script>
+{literal}
+
+<!-- Facebook Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window,document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+ fbq('init', '828468777732024');
+fbq('track', 'PageView');
+</script>
+<noscript>
+ <img height="1" width="1"
+src="https://www.facebook.com/tr?id=828468777732024&ev=PageView
+&noscript=1"/>
+</noscript>
+<!-- End Facebook Pixel Code -->
+
+
+<!-- Global site tag (gtag.js) - Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-154006437-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-154006437-1');
+</script>
+
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-WVGV2HN');</script>
+<!-- End Google Tag Manager -->
+
+<!-- Global site tag (gtag.js) - Google Ads: 687559528 -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=AW-687559528"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'AW-687559528');
+</script>
+<!-- MailerLite Universal -->
+<script>
+    (function(m,a,i,l,e,r){ m['MailerLiteObject']=e;function f(){
+        var c={ a:arguments,q:[]};var r=this.push(c);return "number"!=typeof r?r:f.bind(c.q);}
+        f.q=f.q||[];m[e]=m[e]||f.bind(f.q);m[e].q=m[e].q||f.q;r=a.createElement(i);
+        var _=a.getElementsByTagName(i)[0];r.async=1;r.src=l+'?v'+(~~(new Date().getTime()/1000000));
+        _.parentNode.insertBefore(r,_);})(window, document, 'script', 'https://static.mailerlite.com/js/universal.js', 'ml');
+
+    var ml_account = ml('accounts', '2357165', 't4g0d1k0a9', 'load');
+</script>
+<!-- End MailerLite Universal -->
+{/literal}
+
+    </head>
+    <body>
+{literal}
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-WVGV2HN"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+{/literal}
+        <script>
+
+
+            {if $showSocialLogins}
+                {*{if $useFacebookLogin}
+
+                {/if}*}
+                {if $useGoogleLogin}
+                function googleSignOut() {
+                    var auth2 = gapi.auth2.getAuthInstance();
+                    //console.log(auth2);
+                    auth2.signOut().then(function () {
+                        console.log('Google: User signed out.');
+                    });
+                }
+                {*function onLoad() {
+                    gapi.load('auth2', function () {
+                        gapi.auth2.init();
+                        //console.log("auth2.init()");
+                        attachSignin(document.getElementById('customBtn'));
+                    });
+                }*}
+                /*$(document).ready(function () {
+                    onLoad();*/
+                    var googleUser = { };
+                    var startApp = function() {
+                        gapi.load('auth2', function(){
+                          /* Retrieve the singleton for the GoogleAuth library and set up the client.*/
+                          auth2 = gapi.auth2.init();
+                          attachSignin(document.getElementById('googleLogin'));
+                          attachSignin(document.getElementById('googleLogin2'));
+                        });
+                    };
+                /*});*/
+                function attachSignin(element) {
+                    auth2.attachClickHandler(element, { },
+                        function(googleUser) {
+                            {*document.getElementById('name').innerText = "Signed in: " +
+                              googleUser.getBasicProfile().getName();*}
+                            onSignIn(googleUser);
+                        }, function(error) {
+                          /*alert(JSON.stringify(error, undefined, 2));*/
+                        });
+                }
+                {/if}
+            {/if}
+        </script>
+
+        <!-- Navigation -->
+        <header id="headerContainer">
+            <div class="mobileHeader only-mobile">
+                <div class="container">
+                    <div class="mobRow">
+
+                        <div id="menuToggle">
+                            <input type="checkbox" />
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                        <a class="logoMobile" href="/"></a>
+                        <div class="iconsBox">
+                            <a href="/cart{$lng}/" class="cart">
+                                <span class="imgHolder"></span>
+                                <span class="quantity" id="cartProductsQuantityTopMobile">{if $cart_items_count > 0}{$cart_items_count}{else}0{/if}</span>
+                            </a>
+                            <span id="searchIcon"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="topLine" id="headerTopLine">
+                <div class="container">
+                    <div class="headRow">
+                        <div class="langBox">
+                            {if $link_bg && $lng != "bg"}<a class="active" href="{$link_bg}" style="padding: .8rem;">BG</a>{/if}
+                            {if $link_en && $lng != "en"}<a class="active" href="{$link_en}" style="padding: .8rem;">EN</a>{/if}
+                        </div>
+                        <div class="sloganText"></div>
+                        <div class="sloganText">
+                          {#promo_text_head#}
+                        </div>
+						<div class="logoBox"><a href="{$link_home}"><img src="/images/logoHeader.svg" alt="{#altLogo#}"></a></div>
+                        <div class="sloganText">
+
+                        	{#promo_text_head1#}
+                        </div>
+                        <div class="usersContent">
+							<script>
+								$(document).ready(function(){
+                                    $(window).click(function() {
+                                        if($(".menuProfile").hasClass("inactive") === false){
+                                            $(".menuProfile").addClass("inactive");
+                                            $(".menuProfile").slideUp();
+                                        }
+                                        if($(".searchItemsWrapper").hasClass("d-block")){
+                                            $(".searchItemsWrapper").removeClass("d-block");
+                                        }
+                                    });
+									$(".menuProfileButton").click(function(ev){
+                                        ev.stopPropagation();
+										if ( $(".menuProfile").hasClass("inactive") === true ){
+											$(".menuProfile").removeClass("inactive");
+											$(".menuProfile").slideDown();
+										}else{
+											$(".menuProfile").addClass("inactive");
+											$(".menuProfile").slideUp();
+										}
+									});
+									$(".searchItemsWrapper").click(function(ev){
+                                        ev.stopPropagation();
+									});
+								});
+							</script>
+							{if !$user.id}
+							<div class="dropdownHeader">
+								<div class="menuProfileButton">
+									{*<i class="fas fa-user"></i>*}
+									<img src="/images/icon-person2.svg" alt="{#enter_text#}">
+								</div>
+								<div class="menuProfile inactive">
+									<a id="loginFormButton" data-animation-duration="700" data-fancybox data-src="#loginForm" href="javascript:;">{#enter_text#}</a>
+									<a data-animation-duration="700" data-fancybox data-src="#signUpForm" href="javascript:;" class="registrationButton">{#enter_register#}</a>
+								</div>
+							</div>
+
+							<div class="notLoggedIn">
+								<a data-animation-duration="700" data-fancybox data-src="#loginForm" href="javascript:;">{#enter_text#}</a><span>{#enter_or#}</span><a data-animation-duration="700" data-fancybox data-src="#signUpForm" href="javascript:;">{#enter_register#}</a>
+							</div>
+							{else}
+							<div class="dropdownHeader">
+								<div class="menuProfileButton">
+									{*<i class="fas fa-user"></i>*}
+									<img src="/images/icon-person2.svg" alt="{#enter_text#}">
+								</div>
+								<div class="menuProfile inactive">
+									<a href="{#htaccess_my_profile#}"><i class="fas fa-user"></i> {#profile#}</a>
+									<a href="{#htaccess_logout#}" class="logoutButton registrationButton"><i class="fas fa-sign-out-alt"></i> {#logout#}</a>
+								</div>
+							</div>
+
+							<div class="loggedIn">
+								<a href="{#htaccess_my_profile#}">
+									<div class="imgContainer">
+										{*<img src="/images/icon-profile.svg" alt="">*}
+										<i class="fas fa-user"></i>
+									</div>
+									<span>{#profile#}</span>
+								</a>
+								<a id="logoutButton" href="">
+									<div class="imgContainer">
+										<i class="fas fa-sign-out-alt"></i>
+									</div>
+                                    <span class="logoutButton">{#logout#}</span>
+								</a>
+							</div>
+
+							{/if}
+                            <div class="login">
+
+                                <div style="display: none;" id="signUpForm" class="animated-modal">
+                                    <h2 data-selectable="true">{#heading_registration#}</h2>
+                                    <div data-selectable="true" class="fancyBoxContent">
+                                        {*<a class="facebookLogin" href="#">{#heading_registration_facebook#}</a>
+                                        <a class="googleLogin" href="#">{#heading_registration_googleplus#}</a>*}
+                                        {if $showSocialLogins}
+                                            {if $useFacebookLogin}
+                                            <a href="/login-facebook" class="facebookLogin">{#heading_registration_facebook#}</a>
+                                            {/if}
+                                            {if $useGoogleLogin}
+                                            {*<script src="https://apis.google.com/js/platform.js?onload=renderButton" async defer></script>*}
+                                            <div id="gSignInWrapper">
+                                                {*<span class="label">Sign in with:</span>*}
+                                                <div id="googleLogin2" class="googleLogin">
+                                                    <span class="icon"></span>
+                                                    <span class="buttonText">{#heading_registration_google#}</span>
+                                                    {*<div class="g-signin2 mb-2" data-onsuccess="onSignIn" data-width="254" data-height="40" data-longtitle="true" data-theme="dark"></div>*}
+                                                    {*<div id="g-signin2Mobile" class="g-signin2 mb-2"></div>*}
+                                                    <script>
+                                                        {*function renderButton() {
+                                                            gapi.signin2.render('g-signin2Mobile', {
+                                                                'scope': 'profile email',
+                                                                'width': 240,
+                                                                'height': 50,
+                                                                'longtitle': true,
+                                                                'theme': 'dark',
+                                                                'onsuccess': onSignIn
+                                                                //'onfailure': onFailure
+                                                            });
+                                                        }*}
+                                                        function onSignIn(googleUser) {
+                                                            /* Useful data for your client-side scripts:*/
+                                                            var profile = googleUser.getBasicProfile();
+                                                            {*console.log("ID: " + profile.getId()); // Don't send this directly to your server!
+                                                            console.log('full_name: ' + profile.getName());
+                                                            console.log('Given Name: ' + profile.getGivenName());
+                                                            console.log('Family Name: ' + profile.getFamilyName());
+                                                            console.log("Image URL: " + profile.getImageUrl());
+                                                            console.log("Email: " + profile.getEmail());*}
+
+                                                            /* The ID token you need to pass to your backend:
+                                                            var id_token = googleUser.getAuthResponse().id_token;
+                                                            console.log("ID Token: " + id_token);*/
+
+                                                            $.ajax({
+                                                                type: "POST",
+                                                                url: "/login-proceed",
+                                                                data: {
+                                                                    google_id: profile.getId(),
+                                                                    full_name: profile.getName(),
+                                                                    given_name: profile.getGivenName(),
+                                                                    family_name: profile.getFamilyName(),
+                                                                    image_url: profile.getImageUrl(),
+                                                                    login_email: profile.getEmail(),
+                                                                    googleLogin: 1
+                                                                },
+                                                                /*dataType: "json",*/
+                                                                success: function (res) {
+                                                                    window.location.href = "/myprofile";
+                                                                }
+                                                            });
+                                                        }
+                                                    </script>
+                                                </div>
+                                            </div>
+                                            {*<a href="" class="btn btn-block btn-danger"> <i class="fab fa-google"></i> &nbsp; Login via Twitter</a>*}
+                                            {/if}
+
+                                            <div class="orSeparator">
+                                                <span class="text">{#or#}</span>
+                                                <span class="line"></span>
+                                            </div>
+                                        {/if}
+                                        <form method="POST" action="/register-proceed" id="registerForm">
+                                            <div class="inputRow">
+                                                <div class="inputCol6">
+                                                    <input type="text" name="first_name" placeholder="{#firstname#}">
+                                                    <div id="errorR1" class="errorMessage2">
+                                                        {#error_firstname#}
+                                                    </div>
+                                                </div>
+                                                <div class="inputCol6">
+                                                    <input type="text" name="last_name" placeholder="{#lastname#}">
+                                                    <div id="errorR2" class="errorMessage2">
+                                                        {#error_lastname#}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="inputRow">
+                                                <div class="inputCol12">
+                                                    <input type="text" name="email" placeholder="{#email#}" id="registerEmail">
+                                                    <div id="errorR3" class="errorMessage2">
+                                                        {#error_email#}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="inputRow">
+                                                <div class="inputCol12">
+                                                    <input type="password" name="password" placeholder="{#register_password#}">
+                                                    <div id="errorR5" class="errorMessage2">
+                                                        {#error_password#}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="inputRow">
+                                                <div class="inputCol12">
+                                                    <input type="password" name="confirm_password" placeholder="{#register_password_confirm#}">
+                                                    <div id="errorR6" class="errorMessage2">
+                                                        {#error_confirm_password#}
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="inputRow">
+                                                <div class="inputCol12">
+                                                    <label>
+                                                        <input type="checkbox" name="mailinglist" value="1" class="registerFormCheckbox">
+                                                        <span>{#join_newsletter#}</span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="inputRow">
+                                                <div class="inputCol12">
+                                                    <label>
+                                                        <input type="checkbox" name="agree_terms" value="1" class="registerFormCheckbox">
+                                                        <span>{#i_agree_with#} <a href="/{#htaccess_info#}/511" target="_blank"><strong>{#the_terms#}</strong></a> {#terms_of#}</span>
+                                                    </label>
+                                                    <div class="errorMessage2" id="agree_terms_Error">{#register_invalid_agree_terms#}</div>
+                                                </div>
+                                            </div>
+                                            <div class="inputRow">
+                                                <div class="inputCol12">
+                                                    <label>
+                                                        <input type="checkbox" name="agree_terms_gdpr" value="1" class="registerFormCheckbox">
+                                                        <span>{#i_agree_gdpr#} <a href="/{#htaccess_info#}/511" target="_blank"><strong>{#the_gdpr_policy#}</strong></a> {#terms_of#}</span>
+                                                    </label>
+                                                    <div class="errorMessage2" id="agree_terms_gdpr_Error">{#register_invalid_agree_terms_gdpr#}</div>
+                                                </div>
+                                            </div>
+
+                                            <div class="inputRow">
+                                                <div class="inputCol12">
+                                                    <input type="submit" name="buttonCreateAccount" id="buttonCreateAccount" class="submitBtn" value="{#registration#}">
+                                                </div>
+                                            </div>
+                                        </form>
+                                        <div class="loginBox">
+                                            {#have_an_account#} <a class="loginBtn" data-animation-duration="700" data-fancybox data-src="#loginForm" href="javascript:;">{#enter#}</a>
+                                        </div>
+                                        <script>
+                                            $('#buttonCreateAccount').click(function(e) {
+                                                e.preventDefault();
+                                                var errors = 0;
+                                                var first_name = $("input[name=first_name]").val();
+                                                var last_name = $("input[name=last_name]").val();
+                                                var email = $("#registerEmail").val();
+                                                var password = $("input[name=password]").val();
+                                                var confirm_password = $("input[name=confirm_password]").val();
+                                                var agree_terms = $("input[name=agree_terms]").is(':checked');
+                                                var agree_terms_gdpr = $("input[name=agree_terms_gdpr]").is(':checked');
+
+                                                var errorFirstName = false;
+                                                var errorLastName = false;
+                                                var errorEmail = false;
+                                                var errorPassword = false;
+                                                var errorConfirmPassword = false;
+                                                var errorAgreeTerms = false;
+                                                var errorAgreeTermsGdpr = false;
+
+                                                if (first_name == "") {
+                                                    errorFirstName = false;
+                                                    $("#errorR1").show();
+                                                } else {
+                                                    errorFirstName = true;
+                                                    $("#errorR1").hide();
+                                                }
+                                                if (last_name == "") {
+                                                    errorLastName = false;
+                                                    $("#errorR2").show();
+                                                } else {
+                                                    errorLastName = true;
+                                                    $("#errorR2").hide();
+                                                }
+                                                if (email == "") {
+                                                    errorEmail = false;
+                                                    $("#errorR3").show();
+                                                } else {
+                                                    errorEmail = true;
+                                                    $("#errorR3").hide();
+                                                }
+                                                if (password == "") {
+                                                    errorPassword = false;
+                                                    $("#errorR5").show();
+                                                } else {
+                                                    errorPassword = true;
+                                                    $("#errorR5").hide();
+                                                }
+                                                if (confirm_password == "" || password != confirm_password) {
+                                                    errorConfirmPassword = false;
+                                                    $("#errorR6").show();
+                                                } else {
+                                                    errorConfirmPassword = true;
+                                                    $("#errorR6").hide();
+                                                }
+                                                if (!agree_terms) {
+                                                    errorAgreeTerms = false;
+                                                    $("#agree_terms_Error").show();
+                                                } else {
+                                                    errorAgreeTerms = true;
+                                                    $("#agree_terms_Error").hide();
+                                                }
+                                                if (!agree_terms_gdpr) {
+                                                    errorAgreeTermsGdpr = false;
+                                                    $("#agree_terms_gdpr_Error").show();
+                                                } else {
+                                                    errorAgreeTermsGdpr = true;
+                                                    $("#agree_terms_gdpr_Error").hide();
+                                                }
+                                                if (errorFirstName && errorLastName && errorEmail && errorPassword && errorConfirmPassword && errorAgreeTerms && errorAgreeTermsGdpr){
+                                                    $("#buttonCreateAccount").hide();
+                                                    $("#preloader").show();
+                                                    {*grecaptcha.ready(function() {
+                                                        grecaptcha.execute('{$recaptcha_site_key}', { action: 'createAccountRegister' }).then(function(token) {
+                                                            $('#g-recaptcha-response').val(token);
+                                                            $('#registerForm').submit();
+                                                        });
+                                                    });*}
+                                                    $('#registerForm').submit();
+                                                }else{
+                                                    $(".errorMessage2:visible").eq(0).siblings("input").focus();
+                                                }
+                                            });
+                                            </script>
+                                        <div class="termsBox">
+                                            <a href="/{#htaccess_info#}/511">{#gdpr_policy#}</a>
+                                            <a href="/{#htaccess_info#}/511">{#terms_of_use#}</a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div style="display: none;" id="loginForm" class="animated-modal">
+                                    <h2 data-selectable="true">{#login#}</h2>
+                                    <div data-selectable="true" class="fancyBoxContent">
+
+                                        {*<a class="facebookLogin" href="#">{#login_with_facebook#}</a>
+                                        <a class="googleLogin" href="#">{#login_with_google#}</a>*}
+
+                                        {if $showSocialLogins}
+                                            {if $useFacebookLogin}
+                                            <a href="/login-facebook" class="facebookLogin">{#heading_continue_with_facebook#}</a>
+                                            {/if}
+                                            {if $useGoogleLogin}
+                                            <div id="gSignInWrapper2" class="mb-3">
+                                                {*<span class="label">Sign in with:</span>*}
+                                                <div id="googleLogin" class="googleLogin">
+                                                    <span class="icon"></span>
+                                                    <span class="buttonText">{#heading_continue_with_google#}</span>
+                                                    {*<div class="g-signin2 mb-2" data-onsuccess="onSignIn" data-width="254" data-height="40" data-longtitle="true" data-theme="dark"></div>*}
+                                                    {*<div id="g-signin2" class="g-signin2 mb-2"></div>*}
+                                                    <script>
+                                                        {*function renderButton() {
+                                                            gapi.signin2.render('g-signin2', {
+                                                                'scope': 'profile email',
+                                                                'width': 240,
+                                                                'height': 50,
+                                                                'longtitle': true,
+                                                                'theme': 'dark',
+                                                                'onsuccess': onSignIn
+                                                                //'onfailure': onFailure
+                                                            });
+                                                        }*}
+                                                        function onSignIn(googleUser) {
+                                                            /* Useful data for your client-side scripts:*/
+                                                            var profile = googleUser.getBasicProfile();
+                                                            {*console.log("ID: " + profile.getId()); // Don't send this directly to your server!
+                                                            console.log('full_name: ' + profile.getName());
+                                                            console.log('Given Name: ' + profile.getGivenName());
+                                                            console.log('Family Name: ' + profile.getFamilyName());
+                                                            console.log("Image URL: " + profile.getImageUrl());
+                                                            console.log("Email: " + profile.getEmail());*}
+
+                                                            /* The ID token you need to pass to your backend:
+                                                            var id_token = googleUser.getAuthResponse().id_token;
+                                                            console.log("ID Token: " + id_token);*/
+
+                                                            $.ajax({
+                                                                type: "POST",
+                                                                url: "/login-proceed",
+                                                                data: {
+                                                                    google_id: profile.getId(),
+                                                                    full_name: profile.getName(),
+                                                                    given_name: profile.getGivenName(),
+                                                                    family_name: profile.getFamilyName(),
+                                                                    image_url: profile.getImageUrl(),
+                                                                    login_email: profile.getEmail(),
+                                                                    googleLogin: 1
+                                                                },
+                                                                /*dataType: "json",*/
+                                                                success: function (res) {
+                                                                    window.location.href = "/myprofile";
+                                                                }
+                                                            });
+                                                        }
+
+                                                        $(".logoutButton").click(function(ev){
+                                                            ev.preventDefault();
+                                                            {if $showSocialLogins}
+                                                                {*{if $useFacebookLogin}fbLogout();{/if}*}
+                                                                {if $useGoogleLogin}googleSignOut();{/if}
+                                                            {/if}
+                                                            window.location.href = "{#htaccess_logout#}";
+                                                        });
+                                                    </script>
+                                                </div>
+                                            </div>
+                                            <div id="name"></div>
+                                            <script>startApp();</script>
+                                            {*<a href="" class="btn btn-block btn-danger"> <i class="fab fa-google"></i> &nbsp; Login via Twitter</a>*}
+                                            {/if}
+
+                                            <div class="orSeparator">
+                                                <span class="text">{#or#}</span>
+                                                <span class="line"></span>
+                                            </div>
+                                        {/if}
+
+                                        <form id="loginFormFields">
+                                            <div class="inputRow">
+                                                <div class="inputCol12">
+                                                    <input type="email" name="login_email" placeholder="{#email#}">
+                                                </div>
+                                            </div>
+                                            <div class="inputRow">
+                                                <div class="inputCol12">
+                                                    <input type="password" name="login_password" placeholder="{#password#}">
+                                                </div>
+                                            </div>
+                                            <div class="inputRow">
+                                                <div class="inputCol12">
+                                                    <div class="forgotPass">
+                                                        <a data-animation-duration="700" data-fancybox data-src="#forgotPassForm" href="javascript:;">{#forgotten_password#}?</a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="inputRow">
+                                                <div class="inputCol12">
+                                                    <input type="hidden" name="login" value="1">
+                                                    <button type="submit" name="login" id="buttonLogin" class="submitBtn">{#login#}</button>
+                                                </div>
+                                            </div>
+                                        </form>
+                                        <div class="loginBox">
+                                            Нямаш акаунт? <a data-animation-duration="700" data-fancybox data-src="#signUpForm" href="javascript:;">Регистрирай се</a>
+                                        </div>
+                                        <div class="termsBox">
+                                            <a href="/{#htaccess_info#}/511">{#gdpr_policy#}</a>
+                                            <a href="/{#htaccess_info#}/511">{#terms_of_use#}</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <script>
+                                $('#buttonLogin').click(function(ev) {
+                                    ev.preventDefault();
+                                    $("#buttonLogin").html('<i class="fas fa-cog fa-spin"></i> {#please_wait#}');
+                                    $.ajax({
+                                        type: "POST",
+                                        url: "/login-proceed",
+                                        data: $("#loginFormFields").serialize(),
+                                        dataType: "json",
+                                        success: function(response){
+                                            if(response.code == 200){
+                                                window.location.href = '{#htaccess_my_profile#}';
+                                            }else if(response.code == 405){
+                                                swal({
+                                                    title: response.title,
+                                                    text: response.message,
+                                                    type: "warning",
+                                                    showCancelButton: false,
+                                                    confirmButtonColor: "#312783",
+                                                    confirmButtonText: "{#ok_good#}",
+                                                    closeOnConfirm: false
+                                                });
+                                                $("#buttonLogin").html("{#login#}");
+                                            }else if(response.code == 301){
+                                                swal({
+                                                    title: response.title,
+                                                    text: response.message,
+                                                    type: "warning",
+                                                    showCancelButton: false,
+                                                    confirmButtonColor: "#312783",
+                                                    confirmButtonText: "{#ok_good#}",
+                                                    closeOnConfirm: false
+                                                });
+                                                $("#buttonLogin").html("{#login#}");
+                                            }
+                                        },
+                                        error: function(er){
+                                        }
+                                    });
+                                });
+                                </script>
+
+                                <div style="display: none;" id="forgotPassForm" class="animated-modal">
+                                    <h2 data-selectable="true">{#heading_forgot_password#}</h2>
+                                    <div data-selectable="true" class="fancyBoxContent">
+                                        <div class="instruction">{$forgot_password.description}</div>
+                                        <form method="post" action="/forgot-password-proceed" name="forgotPasswordForm" id="forgotPasswordForm">
+                                            <div class="inputRow">
+                                                <div class="inputCol12">
+                                                    <input type="email" name="email" placeholder="{#register_email#}">
+                                                </div>
+                                            </div>
+                                            <div class="inputRow">
+                                                <div class="inputCol12">
+                                                    <input type="hidden" name="param" value="forgot-password-proceed">
+                                                    <input type="submit" name="buttonForgotPassword" id="buttonForgotPassword" class="submitBtn" value="{#send#}">
+                                                </div>
+                                            </div>
+                                        </form>
+                                        <div class="termsBox">
+                                            <a href="/{#htaccess_info#}/511">{#gdpr_policy#}</a>
+                                            <a href="/{#htaccess_info#}/511">{#terms_of_use#}</a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <script>
+                                    $(document).ready(function(){
+                                        $("#buttonForgotPassword").click(function(ev){
+                                            ev.preventDefault();
+                                            var errors = 0;
+                                            $("#forgotPasswordForm input").removeClass("errorField");
+                                            $("#forgotPasswordForm input").each(function(e, i){
+                                                if ( $(this).hasClass("required") ){
+                                                    if ( $(this).val().trim() == "" ){
+                                                        errors++;
+                                                        $(this).addClass("errorField");
+                                                    }
+                                                    if ( $(this).attr("name") == "email" && isEmail($(this).val()) == false){
+                                                        errors++;
+                                                        $(this).addClass("errorField");
+                                                    }
+                                                }
+                                            });
+
+                                            /*console.log(errors);*/
+                                            if ( errors == 0 ){
+                                                document.forgotPasswordForm.submit();
+                                            }else{
+                                                return false;
+                                            }
+                                        });
+                                    });
+                                    function isEmail(email) {
+                                        var regex = /^([a-zA-Z0-9_\.\-\+])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{literal}{2,4}{/literal})+$/;
+                                        if(!regex.test(email)) {
+                                          return false;
+                                        }else{
+                                          return true;
+                                        }
+                                    }
+                                </script>
+                            </div>
+                            <div class="iconsBox">
+								<script>
+									$(document).ready(function(){
+										$(".cart").hover(function(){
+											$.ajax({
+												type: "POST",
+												url: "/",
+												data: "param=cart-ajax",
+												dataType: "json",
+												success: function(response){
+													var html = '';
+													if (response.products && response.products.length ){
+                                                        for ( var i = 0; i < response.products.length; i++ ){
+                                                            html += '<li>';
+                                                            html += '	<div class="productImage">';
+                                                            html += '		<div class="image" style="background-image: url(/files/tn/'+response.products[i].pic+');"></div>';
+                                                            html += '	</div>';
+                                                            html += '	<div class="productInfo">';
+                                                            html += '		<span class="name">'+response.products[i].product_name+'</span>';
+                                                            /*html += '		<span class="excerpt">'+response.products[i].excerpt+'</span>';*/
+                                                            html += '	</div>';
+                                                            html += '	<div class="productPrice">';
+                                                            html += '		'+response.products[i].quantity+' x '+response.products[i].product_price_total+' {#currency#}';
+                                                            html += '	</div>';
+                                                            html += '</li>';
+
+                                                        }
+														$("#cartDropDownTotal").empty();
+														$("#cartDropDownTotal").append(response.total_amount);
+														$("#productsDropDown").empty();
+														$("#productsDropDown").append(html);
+													}
+												}
+											});
+										});
+									});
+								</script>
+                                <span class="cart">
+                                    <span class="imgHolder"  style="width: 25px;"></span>
+                                    <span class="quantity" id="cartProductsQuantityTop">{if $cart_items_count > 0}{$cart_items_count}{else}0{/if}</span>
+                                    <div class="cartItemsWrapper">
+                                        <div class="cartItemsList">
+                                            <div class="headingRow">
+                                                <span class="headTitle">{#cart_header#}</span>
+                                                <span class="headText">{if $cart_items_count > 0}{$cart_items_count}{else}0{/if} {#cart_products#}</span>
+                                            </div>
+                                            <ul class="products" id="productsDropDown">
+
+                                            </ul>
+                                            <div class="cartFooter">
+                                                <span class="total">{#total_amount#}:<strong>{if $abb_before_amount}{$currency_abb}{/if}<span id="cartDropDownTotal">0.00</span> {if !$abb_before_amount}{$currency_abb}{/if}</strong></span>
+                                                <a href="/{#htaccess_cart#}/" class="checkout">{#pay#}</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </span>
+                                <a href="/{#htaccess_favourites#}" class="hearth" id="favouritesTopButton">
+                                    <span class="imgHolder" style="width: 28px; height: 32px;"></span>
+                                    <span class="quantity" id="favouritesQuantityTopButton">{$favouritesCount}</span>
+                                </a>
+                                <script>
+                                    $("#favouritesTopButton").click(function(ev){
+                                        ev.preventDefault();
+                                        {if $user.id}
+                                        var link = $(this).prop("href");
+                                        window.location = link;
+                                        {else}
+                                        swal({
+                                            title: "{#error_favourites_login_title#}",
+                                            text: "{#error_favourites_login_message#}",
+                                            type: "warning",
+                                            showCancelButton: false,
+                                            confirmButtonColor: "#70AC8C",
+                                            confirmButtonText: "{#ok_good#}",
+                                            closeOnConfirm: false
+                                        });
+                                        {/if}
+                                    });
+                                </script>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="bottomLine" id="headerBottomLine">
+                <div class="container">
+                    <nav class="headRow">
+                        <div class="menuHolder">
+                            <ul class="menu">
+                                <li class="menuLi only-mobile favoriteItems">
+                                    <a class="menuLink" href="/{#htaccess_favourites#}"><span class="imgContainer"><img src="/images/icon-hearth.png" alt=""></span>любими</a>
+                                </li>
+                                <li class="menuLi only-mobile favoriteItems">
+                                    <a class="menuLink" href="/">{#home_breadcrumbs#}</a>
+                                </li>
+                                {section name=c loop=$categories}
+                                    <li class="menuLi">
+                                        <a class="menuLink{if $categories[c].subcategories} hasSubMenu{/if}" {if $categories[c].id == 5} style="padding: 7px;background: #E40A2D;color: white;"{/if} href="{if $categories[c].url}{$categories[c].url}{elseif $categories[c].htaccess_url}{$categories[c].htaccess_url}{else}/{#htaccess_categories#}/{$categories[c].id}{/if}">{$categories[c].name}</a>
+                                        {if $categories[c].subcategories}
+                                        <div class="submenuHolder">
+                                            <ul class="submenu">
+                                                {section name=subcat loop=$categories[c].subcategories}
+                                                <li class="submenuLi"><a href="{if $categories[c].subcategories[subcat].htaccess_url}{$categories[c].subcategories[subcat].htaccess_url}{else}/{#htaccess_categories#}/{$categories[c].subcategories[subcat].id}{/if}">{$categories[c].subcategories[subcat].name}</a></li>
+                                                {/section}
+                                            </ul>
+                                        </div>
+                                        {/if}
+                                    </li>
+                                {/section}
+                                <!--<li class="menuLi">-->
+                                <!--    <a class="menuLink" href="/offers">ОФЕРТИ</a>-->
+                                <!--</li> --->
+                            </ul>
+                        </div>
+                        <form class="searchHolder" action="/{#htaccess_search#}" id="searchHolder">
+                            <input type="text" name="search_string" placeholder="{#search_label#}" value="{$search_string}" id="searchStringField" autocomplete="off">
+                            <input type="hidden" name="param" value="search">
+                            <input type="hidden" name="lang" value="{$lng}">
+                            <input class="submitBtn" type="submit" value="">
+                            <div class="searchItemsWrapper">
+                                <div class="searchItemsList">
+                                    <div class="headingRow">
+                                        <span class="headTitle">{#products#}</span>
+                                        <span class="headText" id="searchBoxProductsCount"></span>
+                                    </div>
+                                    <ul class="products" id="searchProductsDropDown">
+
+                                    </ul>
+                                    <div class="searchFooter">
+                                        <button class="viewAll w-100" id="searchBoxViewAllButton">{#show_all_results#}</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                        <script>
+                            $(document).ready(function(){
+                                $("#searchStringField").keyup(function(){
+                                    var search_string = $(this).val();
+                                    if(search_string.length > 3){
+                                        $.ajax({
+                                            type: "POST",
+                                            url: "/simple-search-ajax",
+                                            data: {
+                                                "search_string": search_string
+                                            },
+                                            dataType: "json",
+                                            success: function(response){
+                                                // console.log(response);
+                                                var html = '';
+                                                if (response.products && response.products.length ){
+                                                    for ( var i = 0; i < response.products.length; i++ ){
+                                                        if(response.products[i].htaccess_url){
+                                                            var link = response.products[i].htaccess_url;
+                                                        }else{
+                                                            var link = "/{#htaccess_product#}/"+response.products[i].id;
+                                                        }
+                                                        html += '<a href="'+link+'">';
+                                                        html += '<li>';
+                                                        html += '	<div class="productImage">';
+                                                        html += '		<div class="image" style="background-image: url(/files/tn/'+response.products[i].mainPic+');"></div>';
+                                                        html += '	</div>';
+                                                        html += '	<div class="productInfo">';
+                                                        html += '		<span class="name">'+response.products[i].name_en+' '+response.products[i].name_bg+'</span>';
+                                                        /*html += '		<span class="excerpt">'+response.products[i].excerpt+'</span>';*/
+                                                        html += '	</div>';
+                                                        html += '	<div class="productPrice">';
+                                                        if(response.products[i].price_specialoffer > 0){
+                                                            html += '{if $abb_before_amount}{$currency_abb}{/if}'+response.products[i].price_specialoffer+' {if !$abb_before_amount}{$currency_abb}{/if}';
+                                                        }else{
+                                                            html += '{if $abb_before_amount}{$currency_abb}{/if}'+response.products[i].price+' {if !$abb_before_amount}{$currency_abb}{/if}';
+                                                        }
+                                                        html += '	</div>';
+                                                        html += '</li>';
+                                                        html += '</a>';
+
+                                                    }
+                                                    $("#searchBoxViewAllButton").click(function(){
+                                                        $(this).html('<i class="fas fa-cog fa-spin"></i> {#please_wait#}');
+                                                        $(this).attr("disabled", true);
+                                                        $("#searchHolder").submit();
+                                                    });
+                                                    $("#searchBoxProductsCount").html("("+response.count+")");
+                                                    $("#searchBoxProductsCount").html("("+response.count+")");
+                                                    $("#searchProductsDropDown").html(html);
+                                                    $(".searchItemsWrapper").addClass("d-block");
+                                                }
+                                            },
+                                            error: function(er){
+                                                console.log(er);
+                                            }
+                                        });
+                                    }
+                                });
+                            });
+                        </script>
+                    </nav>
+                </div>
+            </div>
+        </header>
+
+        <script>
+            $(document).ready(function(){
+                ( function( $ ) {
+                    $('[data-fancybox]').fancybox({
+                        closeExisting: true,
+                        loop: true
+                    });
+                } )( jQuery )
+            });
+        </script>
+
+        <!--=====================================
+        =        End of Header section          =
+        ======================================-->

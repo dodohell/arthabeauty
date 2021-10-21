@@ -1,0 +1,329 @@
+{include file="header.html"}
+<script src="https://www.google.com/recaptcha/api.js?render={$recaptcha_site_key}"></script>
+<div class="breadCrumps">
+    {$breadcrumbs}
+</div>
+<div class="row">
+    <div class="col-sm-7">
+        <div class="card my-4">
+            <header class="card-header">
+                {*<a href="" class="float-right btn btn-outline-primary mt-1">Log in</a>*}
+                <h4 class="card-title mt-2">{#heading_register_user#}</h4>
+            </header>
+            <article class="card-body">
+                <p>{$register.description}</p>
+                <form method="POST" action="/register-proceed" id="registerForm">
+                    <div class="form-row">
+                        <div class="col form-group">
+                            <label>{#firstname#}</label>
+                            <input type="text" name="first_name" class="form-control required" placeholder="{#firstname#}" required>
+                            <div id="errorR1" class="errorMessage2">
+                                {#error_firstname#}
+                            </div>
+                        </div> <!-- form-group end.// -->
+                        <div class="col form-group">
+                            <label>{#lastname#}</label>
+                            <input type="text" name="last_name" class="form-control required" placeholder="{#lastname#}" required>
+                            <div id="errorR2" class="errorMessage2">
+                                {#error_lastname#}
+                            </div>
+                        </div> <!-- form-group end.// -->
+                    </div> <!-- form-row end.// -->
+                    <div class="form-group">
+                        <label>{#email#}</label>
+                        <input type="email" name="email" class="form-control required" placeholder="{#email#}" required>
+                        <small class="form-text text-muted">Никога няма да споделим вашият email на трета страна.</small>
+                        <div id="errorR3" class="errorMessage2">
+                            {#error_email#}
+                        </div>
+                    </div> <!-- form-group end.// -->
+                    <div class="form-row">
+                        <div class="col form-group">
+                            <label>{#register_password#}</label>
+                            <input type="password" name="password" class="form-control required" placeholder="{#register_password#}" required>
+                            <div id="errorR5" class="errorMessage2">
+                                {#error_password#}
+                            </div>
+                        </div> <!-- form-group end.// -->
+                        <div class="col form-group">
+                            <label>{#register_password_confirm#}</label>
+                            <input type="password" name="confirm_password" class="form-control required" placeholder="{#register_password_confirm#}" required>
+                            <div id="errorR6" class="errorMessage2">
+                                {#error_confirm_password#}
+                            </div>
+                        </div> <!-- form-group end.// -->
+                    </div> <!-- form-row end.// -->
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>{#how_did_you_hear#}</label>
+                            <select name="how_did_you_hear" id="inputState" class="form-control">
+                                <option value="">{#how_did_you_hear#}</option>
+                                <option value="Интернет">Интернет</option>
+                                <option value="Рекламни брошури и печатни материали">Рекламни брошури и печатни материали</option>
+                                <option value="От приятел">От приятел</option>
+                            </select>
+                        </div> <!-- form-group end.// -->
+                    </div> <!-- form-row.// -->
+                    <div class="form-group">
+                        <label for="mailinglist" class="form-check mb-0">
+                            <input class="form-check-input" type="checkbox" name="mailinglist" value="1">
+                            <span class="form-check-label">
+                                {#join_newsletter#}
+                            </span>
+                        </label> <!-- form-check.// -->
+                        <div class="mb-2">
+                            <small class="text-muted">Ще получавате не повече от един мейл седмично.</small>
+                        </div>
+                        <label for="agree_terms" class="form-check">
+                            <input class="form-check-input required" id="agree_terms" type="checkbox" name="agree_terms" value="1" required>
+                            <span class="form-check-label">
+                                Съгласен съм с <a href="/{#htaccess_info#}/511" target="_blank"><strong>условията</strong></a> на Вистамар ЕООД
+                            </span>
+                            <div class="errorMessage2" id="agree_terms_Error">{#register_invalid_agree_terms#}</div>
+                        </label> <!-- form-check.// -->
+                        <label for="agree_terms_gdpr" class="form-check">
+                            <input class="form-check-input required" id="agree_terms_gdpr" type="checkbox" name="agree_terms_gdpr" value="1" required>
+                            <span class="form-check-label">
+                                Прочетох, разбрах и съм съгласен с <a href="/{#htaccess_info#}/533" target="_blank"><strong>Декларацията за защита на личните данни</strong></a> на Вистамар ЕООД
+                            </span>
+                            <div class="errorMessage2" id="agree_terms_gdpr_Error">{#register_invalid_agree_terms_gdpr#}</div>
+                        </label> <!-- form-check.// -->
+                    </div> <!-- form-group end.// -->  
+                    <input type="hidden" name="g-recaptcha-response" id="g-recaptcha-response">
+                    <div class="form-group">
+                        <button type="submit" name="buttonCreateAccount" id="buttonCreateAccount" class="btn btn-primary btn-block">{#registration#}</button>
+                    </div> <!-- form-group// -->   
+                    <div id="preloader" style="display: none;">
+                        <img src="/images/preloader.gif">
+                        Моля, изчакайте
+                    </div>
+                    {*<small class="text-muted">By clicking the 'Sign Up' button, you confirm that you accept our <br> Terms of use and Privacy Policy.</small>*}
+                </form>
+                <script>
+                $('#buttonCreateAccount').click(function(e) {
+                    e.preventDefault();
+                    var errors = 0;
+                    var first_name = $("input[name=first_name]").val();
+                    var last_name = $("input[name=last_name]").val();
+                    var email = $("input[name=email]").val();
+                    var password = $("input[name=password]").val();
+                    var confirm_password = $("input[name=confirm_password]").val();
+                    var agree_terms = $("input[name=agree_terms]").is(':checked');
+                    var agree_terms_gdpr = $("input[name=agree_terms_gdpr]").is(':checked');
+                    
+                    var errorFirstName = false;
+                    var errorLastName = false;
+                    var errorEmail = false;
+                    var errorPassword = false;
+                    var errorConfirmPassword = false;
+                    var errorAgreeTerms = false;
+                    var errorAgreeTermsGdpr = false;
+                    
+                    if (first_name == "") {
+                        errorFirstName = false;
+                        $("#errorR1").show();
+                    } else {
+                        errorFirstName = true;
+                        $("#errorR1").hide();
+                    }
+                    if (last_name == "") {
+                        errorLastName = false;
+                        $("#errorR2").show();
+                    } else {
+                        errorLastName = true;
+                        $("#errorR2").hide();
+                    }
+                    if (email == "") {
+                        errorEmail = false;
+                        $("#errorR3").show();
+                    } else {
+                        errorEmail = true;
+                        $("#errorR3").hide();
+                    }
+                    if (password == "") {
+                        errorPassword = false;
+                        $("#errorR5").show();
+                    } else {
+                        errorPassword = true;
+                        $("#errorR5").hide();
+                    }
+                    if (confirm_password == "" || password != confirm_password) {
+                        errorConfirmPassword = false;
+                        $("#errorR6").show();
+                    } else {
+                        errorConfirmPassword = true;
+                        $("#errorR6").hide();
+                    }
+                    if (!agree_terms) {
+                        errorAgreeTerms = false;
+                        $("#agree_terms_Error").show();
+                    } else {
+                        errorAgreeTerms = true;
+                        $("#agree_terms_Error").hide();
+                    }
+                    if (!agree_terms_gdpr) {
+                        errorAgreeTermsGdpr = false;
+                        $("#agree_terms_gdpr_Error").show();
+                    } else {
+                        errorAgreeTermsGdpr = true;
+                        $("#agree_terms_gdpr_Error").hide();
+                    }
+                    if (errorFirstName && errorLastName && errorEmail && errorPassword && errorConfirmPassword && errorAgreeTerms && errorAgreeTermsGdpr){
+                        $("#buttonCreateAccount").hide();
+                        $("#preloader").show();
+                        grecaptcha.ready(function() {
+                            grecaptcha.execute('{$recaptcha_site_key}', { action: 'createAccount' }).then(function(token) {
+                                $('#g-recaptcha-response').val(token);
+                                $('#registerForm').submit();
+                            });
+                        });
+                    }else{
+                        $(".errorMessage2:visible").eq(0).siblings("input").focus();
+                    }
+                });
+                </script>
+            </article> <!-- card-body end .// -->
+            <div class="border-top card-body text-center">Have an account? <a href="">Log In</a></div>
+        </div> <!-- card.// -->
+    </div>
+                
+    <div class="col-sm-5 my-4">
+        <div class="card">
+            <article class="card-body" id="formLogin">
+                {*<a href="" class="float-right btn btn-outline-primary">Sign up</a>*}
+                <h4 class="card-title mb-4 mt-1">{#login#}</h4>
+                {if $showSocialLogins}
+                <p>
+                    {if $useGoogleLogin}
+                    <div class="googleLogin pt-4">
+                        <div class="g-signin2 mb-2" data-onsuccess="onSignIn" data-width="254" data-height="40" data-longtitle="true" data-theme="dark"></div>
+                        <script>
+                            function onSignIn(googleUser) {
+                                // Useful data for your client-side scripts:
+                                var profile = googleUser.getBasicProfile();
+                                {*console.log("ID: " + profile.getId()); // Don't send this directly to your server!
+                                console.log('full_name: ' + profile.getName());
+                                console.log('Given Name: ' + profile.getGivenName());
+                                console.log('Family Name: ' + profile.getFamilyName());
+                                console.log("Image URL: " + profile.getImageUrl());
+                                console.log("Email: " + profile.getEmail());*}
+
+                                // The ID token you need to pass to your backend:
+                                //var id_token = googleUser.getAuthResponse().id_token;
+                               // console.log("ID Token: " + id_token);
+
+                                $.ajax({
+                                    type: "POST",
+                                    url: "/login-proceed",
+                                    data: {
+                                        google_id: profile.getId(),
+                                        full_name: profile.getName(),
+                                        given_name: profile.getGivenName(),
+                                        family_name: profile.getFamilyName(),
+                                        image_url: profile.getImageUrl(),
+                                        login_email: profile.getEmail(),
+                                        googleLogin: 1
+                                    },
+                                    //dataType: "json",
+                                    success: function (res) {
+                                        //console.log("-----google logged in-----");
+                                        //console.log(res);
+                                        window.location.href = "/myprofile";
+                                    }
+                                    //,
+                                    //error: function(er){
+                                    //    console.log(er);
+                                    //}
+                                });
+                            }
+                        </script>
+                    </div>
+                    {*<a href="" class="btn btn-block btn-danger"> <i class="fab fa-google"></i> &nbsp; Login via Twitter</a>*}
+                    {/if}
+                    {if $useFacebookLogin}
+                    <a href="/login-facebook" class="btn btn-block btn-facebook"> <i class="fab fa-facebook-f"></i> &nbsp; Login via facebook</a>
+                    {/if}
+                </p>
+                {/if}
+                <hr>
+                <form {*method="post" action="/login-proceed"*} id="loginForm">
+                    <div class="form-group input-icon">
+                        <i class="fa fa-user"></i>
+                        <input class="form-control" placeholder="{#email#}" type="email" name="login_email">
+                    </div> <!-- form-group// -->
+                    <div class="form-group input-icon">
+                        <i class="fa fa-lock"></i> 
+                        <input class="form-control" placeholder="{#password#}" type="password" name="login_password">
+                    </div> <!-- form-group// -->                                      
+                    <div class="form-group">
+                        <input type="hidden" name="g-recaptcha-response" id="g-recaptcha-response-login">
+                        <input type="hidden" name="login" value="1">
+                        <button type="submit" name="login" id="buttonLogin" class="btn btn-primary btn-block">{#login#}</button>
+                    </div> <!-- form-group// -->
+                    <div id="preloader2" style="display: none;">
+                        <img src="/images/preloader.gif">
+                        Моля, изчакайте
+                    </div>
+                    <p class="text-center">
+                        <a class="btn btn-default" href="/forgot-password">{#forgotten_password#}?</a>
+                    </p>
+                    <script>
+                    $('#buttonLogin').click(function(ev) {
+                        ev.preventDefault();
+                        $("#buttonLogin").hide();
+                        $("#preloader2").show();
+                        grecaptcha.ready(function() {
+                            grecaptcha.execute('{$recaptcha_site_key}', { action: 'createAccountLogin' }).then(function(token) {
+                                $('#g-recaptcha-response-login').val(token);
+                                //$('#loginForm').submit();
+                                $.ajax({
+                                    type: "POST",
+                                    url: "/login-proceed",
+                                    data: $("#loginForm").serialize(),
+                                    dataType: "json",
+                                    success: function(response){
+                                        //console.log(response);
+                                        if(response.code == 200){
+                                            window.location.href = '{#htaccess_my_profile#}';
+                                        }else if(response.code == 405){
+                                            swal({
+                                                title: response.title,
+                                                text: response.message,
+                                                type: "warning",
+                                                showCancelButton: false,
+                                                confirmButtonColor: "#312783",
+                                                confirmButtonText: "{#ok_good#}",
+                                                closeOnConfirm: false
+                                            });
+                                            $("#preloader2").hide();
+                                            $("#buttonLogin").show();
+                                        }else if(response.code == 301){
+                                            swal({
+                                                title: response.title,
+                                                text: response.message,
+                                                type: "warning",
+                                                showCancelButton: false,
+                                                confirmButtonColor: "#312783",
+                                                confirmButtonText: "{#ok_good#}",
+                                                closeOnConfirm: false
+                                            });
+                                            $("#preloader2").hide();
+                                            $("#buttonLogin").show();
+                                        }
+                                    },
+                                    error: function(er){
+                                        //console.log(er);
+                                    }
+                                });
+                            });
+                        });
+                    });
+                    </script>
+                </form>
+            </article>
+        </div> <!-- card.// -->
+    </div>
+</div>
+<link rel="stylesheet" href="/js/sweetalert/sweetalert.css" />
+<script src="/js/sweetalert/sweetalert-dev.js"></script>
+{include file="footer.html"}

@@ -1,0 +1,53 @@
+<link href="/js/select2/dist/css/select2.min.css" rel="stylesheet" />
+<script src="/js/select2/dist/js/select2.min.js"></script>
+<form method="get" action="/search{$lng}" id="searchForm">
+    <div class="card">
+        <div class="filter-content px-2 py-3">
+            <div>
+                <input type="text" name="search_string" placeholder='{#search_keywords#}' id="search_string" class="form-control" value="{$filter_search_string}">
+            </div>
+            <div>
+                <input type="text" name="code" placeholder='{#search_by_code#}' id="code" class="form-control" value="{$filter_code}">
+            </div>
+            {*{if $row.filter_categories}*}
+            <div class="category">
+                <select name="category_id" class="searchCategory form-control">
+                    <option value="">{#filter_categories#}</option>
+                    {section name=fc loop=$filter_categories}
+                        <option style="font-weight: bold;" value="{$filter_categories[fc].id}"{if $filter_categories[fc].id == $filter_category_id} selected{/if}>{$filter_categories[fc].name}</option>
+                        {if $filter_categories[fc].subcategories}
+                            {section name=fcsub loop=$filter_categories[fc].subcategories}
+                            <option value="{$filter_categories[fc].subcategories[fcsub].id}"{if $filter_categories[fc].subcategories[fcsub].id == $filter_category_id} selected{/if}>&nbsp;&nbsp;&nbsp;- {$filter_categories[fc].subcategories[fcsub].name}</option>
+                            {/section}
+                        {/if}
+                    {/section}
+                </select>
+                <script>
+                    $('.searchCategory').select2({
+                        dropdownAutoWidth : true
+                    });
+                </script>
+            </div>
+            {*{else}
+            <input type="hidden" value="{$row.id}" name="category_id">
+            {/if}*}
+            {if $filter_category_id}
+                {if $row.filter_category_types}
+                    <div>
+                        <select name="category_type_id" class="form-control">
+                            <option value="">{#filter_category_types#}</option>
+                            {section name=fct loop=$filter_category_types}
+                                <option value="{$filter_category_types[fct].id}"{if $filter_category_types[fct].id == $filter_category_type_id} selected{/if}>{$filter_category_types[fct].name}</option>
+                            {/section}
+                        </select>
+                    </div>
+                {/if}
+            {/if}
+            <div>
+                <input type="hidden" name="param" value="search">
+                <button type="submit" class="btn btn-primary">{#button_search#}</button>
+            </div>
+        </div>
+
+    </div>
+</form>

@@ -1,0 +1,97 @@
+<script src="https://www.google.com/recaptcha/api.js?render={$recaptcha_site_key}"></script>
+
+<h3 class="headingBig">{#contacts#}</h3>
+<div class="form-container alert alert-success" id="contactCustomerSuccess">
+    {#contact_thank_you#}
+</div>
+<form method="post" action="#" id="contactCustomer" name="contactCustomer">
+    <div class="form-container form-group d-flex flex-column">
+        <div class="fieldContainer mb-2 long">
+            <input type="text" name="contact_name" placeholder="{#label_name#}" class="form-control required">
+        </div>
+        <div class="fieldContainer mb-2 long">
+            <input type="text" name="contact_phone" placeholder="{#phone#}"  class="form-control required phone">
+        </div>
+        <div class="fieldContainer mb-2 long">
+            <input type="text" name="contact_email" placeholder="Email"  class="form-control required">
+        </div>
+        <div class="fieldContainer mb-2 text">
+            <textarea name="contact_comments" placeholder="{#message_description#}" class="form-control required"></textarea>
+        </div>
+        {*<div class="fieldContainer mb-2 d-flex flex-row">
+            <img src="/captcha" class="inlineMiddle"/>
+            <input type="text" placeholder="Captcha" class="form-control required" name="contact_captcha">
+        </div>*}
+        <input type="hidden" name="g-recaptcha-response" id="g-recaptcha-response">
+        <div class="fieldContainer mb-2">
+            <input type="hidden" value="{$row.id}" name="info_id">
+            <input type="submit" value="{#send#}" name="buttonSendContact" id="buttonSendContact" class="btn btn-primary">
+            <div id="preloader" style="display: none;">
+                <img src="/images/preloader.gif">
+                Моля, изчакайте
+            </div>
+            <script>
+                function checkEmailAddress(email){
+                    var pattern=/^([a-zA-Z0-9_.-])+@([a-zA-Z0-9_.-])+\.([a-zA-Z])*([a-zA-Z])/;
+                     if(pattern.test(email)){         
+                        return true;
+                    }else{   
+                        return false;
+                    }
+                }
+                $(document).ready(function () {
+                    $("#buttonSendContact").bind("click", function (ev) {
+                        ev.preventDefault();
+                        $("#buttonSendContact").hide();
+                        $("#preloader").show();
+                        var errors = 0;
+                        
+                        grecaptcha.ready(function() {
+                            grecaptcha.execute('{$recaptcha_site_key}', { action: 'sendContact' }).then(function(token) {
+                                $('#g-recaptcha-response').val(token);
+                                
+                                $("#contactCustomer .required").removeClass("errorField");
+                                $("#contactCustomer input").each(function (e, i) {
+                                    if ($(this).hasClass("required")) {
+                                        if ($(this).val().trim() == "") {
+                                            errors++;
+                                            $(this).addClass("errorField");
+                                            
+                                        }
+                                        if ($(this).attr("name") == "contact_email" && checkEmailAddress($(this).val()) == false) {
+                                            errors++;
+                                            $(this).addClass("errorField");
+                                        }
+                                    }
+                                });
+
+                                if (errors == 0) {
+                                    $.ajax({
+                                        type: "POST",
+                                        url: "/",
+                                        data: "param=post-contact&" + $("#contactCustomer").serialize(),
+                                        success: function (res) {
+                                            if (res == "1") {
+                                                $("#contactCustomerSuccess").slideDown();
+                                                $("#contactCustomer").slideUp();
+                                            }
+                                        }
+                                    });
+                                    return false;
+                                } else {
+                                    $(".errorField:eq(0)").focus();
+                                    $("#preloader").hide();
+                                    $("#buttonSendContact").show();
+                                    return false;
+                                }
+                                
+                            });
+                        });
+
+                       
+                    });
+                });
+            </script>
+        </div>
+    </div>
+</form>

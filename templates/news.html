@@ -1,0 +1,136 @@
+{include file="header.html"}
+    <div class="breadcrumbsContainer">
+		<div class="container">
+			<div class="breadcrubsRow">
+				<a href="{$link_home}">{#home_breadcrumbs#}</a>
+				<span>|</span>
+				<a href="{#htaccess_blog#}">{#blog#}</a> 
+			</div>
+		</div>
+	</div>
+	<div class="catBackgroundGradient">
+		<div class="mainArticleContainer">
+			<div class="container">
+				<h1 class="title">блог</h1>
+				{if $accent_news[1].id}
+				<div class="articleWrapper">
+					<a href="{if $accent_news[0].url}{$accent_news[0].url}{else}{if $subMenus[sm].htaccess_url}{$accent_news[0].htaccess_url}{else}/{#htaccess_news_article#}/{$accent_news[0].id}{/if}{/if}">
+						<div class="imgContainer" style="background-image: url({if $accent_news[0].pic_header}/files/{$accent_news[0].pic_header}{else}/images/main-article.jpg{/if});"></div>
+						<div class="overlay">
+							<h2>{$accent_news[0].name}</h2>
+							<span class="customBtn">Прочети</span>
+						</div>
+					</a>
+				</div>
+				{/if}
+			</div>
+		</div>
+	</div>
+
+	<div class="newArticlesContainer">
+		<div class="container">
+			<h3 class="title">{#last_news#}</h3>
+
+			<div class="articleRow">
+				{section name=ln loop=$latest_news}
+					{if $smarty.section.ln.index < 4}
+						<article>
+							<a href="{if $latest_news[ln].url}{$latest_news[ln].url}{else}{if $latest_news[ln].htaccess_url}{$latest_news[ln].htaccess_url}{else}/{#htaccess_news_article#}/{$latest_news[ln].id}{/if}{/if}">
+								<section class="imgContainer" {if $latest_news[ln].pic}style="background-image: url(/files/{$latest_news[ln].pic});"{/if}>
+									{if $latest_news[ln].news_categories[0].id}<span class="categoryType1">{$latest_news[ln].news_categories[0].name}</span>{/if}
+								</section>
+								<section class="content">
+									<h3 class="articleTitle">{$latest_news[ln].name}</h3>
+									{if $latest_news[ln].author.id}
+									<div class="authorInfo">
+										<div class="userPic">
+											{if $latest_news[ln].author.pic}<img src="/files/tntn/{$latest_news[ln].author.pic}" alt="{$latest_news[ln].author.name}">{/if}
+										</div>
+										<div class="userInfo">
+											<span class="name">{$latest_news[ln].author.name}</span>
+											<span class="date">{$latest_news[ln].news_date} {$latest_news[ln].news_categories[0].name}</span>
+										</div>
+									</div>
+									{/if}
+								</section>
+							</a>
+						</article>
+					{/if}
+				{/section}
+			</div>
+		</div>
+	</div>
+
+	<div class="grayBackgroundContainer">
+		{if $accent_news[1].id}
+		<div class="importantArticle">
+			<div class="container">
+				<div class="articleWrapper">
+					<a href="{if $accent_news[1].url}{$accent_news[1].url}{else}{if $accent_news[1].htaccess_url}{$accent_news[1].htaccess_url}{else}/{#htaccess_news_article#}/{$accent_news[1].id}{/if}{/if}">
+						<div class="imgContainer" style="background-image: url({if $accent_news[1].pic_header}/files/{$accent_news[1].pic_header}{else}/images/main-article.jpg{/if});"></div>
+						<div class="overlay">
+							<h2>{$accent_news[1].name}</h2>
+							<span class="customBtn">{#read#}</span>
+						</div>
+					</a>
+				</div>
+			</div>
+		</div>
+		{/if}
+		<div class="twoArticlesOnRow">
+			<div class="container">
+				<div class="articleRow">
+					{section name=ln loop=$latest_news}
+						{if $smarty.section.ln.index >= 4 && $smarty.section.ln.index < 6}
+							<article>
+								<a href="{if $latest_news[ln].url}{$latest_news[ln].url}{else}{if $latest_news[ln].htaccess_url}{$latest_news[ln].htaccess_url}{else}/{#htaccess_news_article#}/{$latest_news[ln].id}{/if}{/if}">
+									<section class="imgContainer" {if $latest_news[ln].pic}style="background-image: url(/files/{$latest_news[ln].pic});"{/if}>
+										{if $latest_news[ln].news_categories[0].id}<span class="categoryType1">{$latest_news[ln].news_categories[0].name}</span>{/if}
+									</section>
+									<section class="content">
+										<h3 class="articleTitle">{$latest_news[ln].name}</h3>
+										<div class="excerpt">{$latest_news[ln].excerpt}</div>
+										{if $latest_news[ln].author.id}
+										<div class="authorInfo">
+											<div class="userPic">
+												{if $latest_news[ln].author.pic}<img src="/files/tntn/{$latest_news[ln].author.pic}" alt="{$latest_news[ln].author.name}">{/if}
+											</div>
+											<div class="userInfo">
+												<span class="name">{$latest_news[ln].author.name}</span>
+												<span class="date">{$latest_news[ln].news_date} {$latest_news[ln].news_categories[0].name}</span>
+											</div>
+										</div>
+										{/if}
+									</section>
+								</a>
+							</article>
+						{/if}
+					{/section}
+					
+				</div>
+			</div>
+		</div>
+		{if $accent_news[2].id}
+		<div class="fullWidthArticle">
+			<div class="articleWrapper">
+				<a href="{if $accent_news[2].url}{$accent_news[2].url}{else}{if $subMenus[sm].htaccess_url}{$accent_news[2].htaccess_url}{else}/{#htaccess_news_article#}/{$accent_news[2].id}{/if}{/if}">
+					<div class="imgContainer" style="background-image: url({if $accent_news[2].pic_header}/files/{$accent_news[2].pic_header}{else}/images/main-article.jpg{/if});"></div>
+					<div class="overlay">
+						<h2>{$accent_news[2].name}</h2>
+						<span class="customBtn">{#read_more#}</span>
+					</div>
+				</a>
+			</div>
+		</div>
+		{/if}
+	</div>
+
+	<div class="subscribeContainer">
+		<div class="container">
+			<div class="ml-form-embed"
+              data-account="2357165:t4g0d1k0a9"
+              data-form="2728046:b4z6v5">
+            </div>
+		</div>
+	</div>
+{include file="footer.html"}

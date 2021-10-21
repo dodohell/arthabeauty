@@ -1,0 +1,94 @@
+{include file="header.html"}
+
+<div class="breadCrumps">
+    {$breadcrumbs}
+</div>
+<div class="row mt-3">
+    <div class="col-sm-12">
+        <article class="box">
+            <figure class="itemside">
+                <div class="aside align-self-center">
+                    <span class="icon-wrap icon-md round bg-primary text-white">
+                        <i class="fas fa-shopping-cart"></i>
+                    </span>
+                </div>
+                <figcaption class="text-wrap">
+                    <h5 class="title">{#order_rating_title#}</h5>
+                    <p class="text-muted">{if $cart}{#order_rating_description#}{else}{#no_items_ordered#}{/if}</p>
+                </figcaption>
+            </figure> <!-- iconbox // -->
+        </article> <!-- panel-lg.// -->
+    </div><!-- col // -->
+</div>
+{if $products}
+<div class="card mt-3">
+    <form name="orderRatingForm" id="orderRatingForm" method="post" action="#">
+        <table class="table table-hover shopping-cart-wrap" style="border-bottom: 1px solid #ddd;">
+            <thead class="text-muted">
+                <tr>
+                    <th scope="col">{#product#}</th>
+                    <th scope="col" width="200" class="text-left">{#your_rating#}</th>
+                </tr>
+            </thead>
+            <tbody>
+                {section name=p loop=$products}
+                <tr>
+                    <td>
+                        <figure class="media">
+                            <div class="img-wrap"><img src="{if $products[p].pic}/files/tntn/{$products[p].pic}{else}/images/noImage.png{/if}" class="img-thumbnail img-sm"></div>
+                            <figcaption class="media-body">
+                                <h6 class="title text-truncate">{$products[p].product_name}</h6>
+                            </figcaption>
+                        </figure>
+                    </td>
+                    <input type="hidden" name="products[{$products[p].product_id}][product_id]" value="{$products[p].product_id}">
+                    <input type="hidden" name="products[{$products[p].product_id}][hash]" value="{$products[p].hash}">
+                    <input type="hidden" name="products[{$products[p].product_id}][rating_score]" id="rating-score-product-{$products[p].product_id}">
+                    <td class="text-right">
+                        <div class="rating-wrap text-center">
+                            {if $products[p].rated != 1}
+                            <div id="rating-{$products[p].product_id}"></div>
+                            {else}
+                                <div class="badge badge-primary">{#rated#}</div>
+                            {/if}
+                            {*{if $products[p].reviews_count > 0}<div class="label-rating">{$products[p].reviews_count} {if $products[p].reviews_count > 1}{#reviews#}{else}{#review#}{/if}</div>{/if}
+                            {if $products[p].comments > 0}<div class="label-rating">{$products[p].comments} {if $products[p].comments > 1}{#comments#}{else}{#comment#}{/if}</div>{/if}*}
+                        </div> <!-- rating-wrap.// -->
+                        {if $products[p].rated != 1}
+                        <script>
+                            $(document).ready(function () {
+                                $.fn.raty.defaults.path = '/js/raty/img';
+                                {*var rated_{$products[p].product_id} = parseInt({$products[p].rated});*}
+                                $('#rating-{$products[p].product_id}').raty({
+                                    click: function(score){
+                                        $("#rating-score-product-{$products[p].product_id}").val(score);
+                                    },
+                                    //targetScore: $("#rating-score-product-{$products[p].product_id}"),
+                                    //readOnly:    false,
+                                    starType:    'img', // Element used to represent a star.
+                                    starHalf:    'star-half.png', // The name of the half star image.
+                                    starOff:     'star-off.png',  // Name of the star image off.
+                                    starOn:      'star-on.png',   // Name of the star image on.
+                                    half:  true,
+                                    start: parseFloat(0)
+                                });
+                            });
+                        </script>
+                        {/if}
+                    </td>
+                </tr>
+                {sectionelse}
+                    <td class="text-center"> 
+                        {#no_items_ordered#}
+                    </td>
+                {/section}
+            </tbody>
+        </table>
+        {if $hasUnrated}
+        <button form="orderRatingForm" type="submit" value="1" name="order_rating_proceed"  class="btn btn-primary mx-auto mb-3 d-block">{#order_rating_proceed#}</button>
+        {/if}
+    </form>
+</div> <!-- card.// -->
+{/if}
+<div class="mt-4"></div>
+{include file="footer.html"}

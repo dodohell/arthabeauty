@@ -1,0 +1,900 @@
+{include file="header.html"}
+<div class="breadcrumbsContainer">
+    <div class="container">
+        <div class="breadcrubsRow">
+            <a href="{$link_home}">{#home_breadcrumbs#}</a>
+            <span>|</span>
+            <span>{#myprofile_breadcrumbs#}</span> 
+        </div>
+    </div>
+</div>
+
+<div class="profileOverflow">
+    <div class="userWelcome">
+        <div class="container">
+            <div class="topRow">
+                <div class="initials">{$user.name_initials}</div>
+                <span class="welcomeText">{#welcome#}, {$user.first_name} {$user.last_name}</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="catBackgroundGradient">
+        <div class="mobileProfilePageContainer">
+            <div class="profHolder">
+                <ul class="profOptions">
+                    <li class="profLi">
+                        <a class="profLink hasSubProf" href="">
+                            <span class="icons iconContainer1"></span>
+                            {#account_management#}
+                            <span class="arrowRight"></span>
+                        </a>
+                        <div class="subprofHolder">
+                            <ul class="subprof">
+                            </ul>
+                            <div class="profContent">
+                                <div class="formContainer">
+                                    <form method="post" action="/save-user" id="formSaveUserMobile">
+                                        <div class="inputRow">
+                                            <div class="inputCol6">
+                                                <label for="first_name">{#first_name#}</label>
+                                                <input id="first_nameMobile" type="text" name="first_name" value="{$user.first_name}" placeholder="{#enter#} {#first_name#}">
+                                            </div>
+                                            <div class="inputCol6">
+                                                <label for="last_name">{#last_name#}</label>
+                                                <input id="last_nameMobile" type="text" name="last_name" value="{$user.last_name}" placeholder="{#enter#} {#last_name#}">
+                                            </div>
+                                        </div>
+                                        <div class="inputRow">
+                                            <div class="inputCol12">
+                                                <label for="email">{#email#}</label>
+                                                <input id="emailMobile" type="text" name="email" value="{$user.email}" placeholder="{#enter#} {#email#}">
+                                            </div>
+                                        </div>
+
+                                        <div class="inputRow">
+                                            <div class="inputCol6">
+                                                <label for="password">{#password#}</label>
+                                                <input id="passwordMobile" type="password" name="password">
+                                            </div>
+                                            <div class="inputCol6">
+                                                <label for="confirm_passwordMobile">{#confirm_password#}</label>
+                                                <input id="confirm_passwordMobile" type="password" name="confirm_passwordMobile">
+                                            </div>
+                                        </div>
+                                        <div class="submitBtnHolder">
+                                            <input class="submitBtn" type="submit" name="buttonChangePassword" value="{#save#}" id="buttonChangePasswordMobile">
+                                        </div>
+                                        <script>
+                                        $(document).ready(function () {
+                                            $("#buttonChangePasswordMobile").bind("click", function () {
+                                                var errors = 0;
+                                                $("#formSaveUserMobile input").each(function (i, e) {
+                                                    if ($(this).hasClass("required")) {
+                                                        if ($(this).val().trim() == "") {
+                                                            $(this).addClass("redBorderIn");
+                                                            errors++;
+                                                        }
+                                                        
+                                                        if ($(this).attr("name") == "password" && $("input[name=password]").val() != $("input[name=confirm_passwordMobile]").val()) {
+                                                            $(this).addClass("redBorderIn");
+                                                            $("input[name=confirm_passwordMobile]").addClass("redBorderIn");
+                                                            errors++;
+                                                        }
+                                                    }
+                                                });
+
+                                                if (errors > 0) {
+                                                    return false;
+                                                } else {
+                                                    return true;
+                                                }
+                                            });
+                                        });
+                                        </script>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="profLi">
+                        <a class="profLink hasSubProf" href="">
+                            <span class="icons iconContainer2"></span>
+                            {#orders#}
+                            <span class="arrowRight"></span>
+                        </a>
+                        <div class="subprofHolder">
+                            <ul class="subprof">
+                            </ul>
+                            <div class="profContent">
+                                <div class="lastOrdersContainer">
+                                    <ul class="myList">
+                                        {section name=c2 loop=$carts}
+                                        <li>
+                                            <div class="orderRow">
+                                                <div class="orderNumber">
+                                                    <span class="left"># {#order#}</span>
+                                                    <span class="right">#{$carts[c2].id}</span>
+                                                </div>
+                                                <div class="date">
+                                                    <span class="left">{#date#}</span>
+                                                    <span class="right">{$carts[c2].postdate|date_format:"%d.%m.%Y"}</span>
+                                                </div>
+                                                <div class="totalPrice">
+                                                    <span class="left">{#total_price#}</span>
+                                                    <span class="right">{if $abb_before_amount}{$currency_abb}{/if}{$carts[c2].total_amount} {if !$abb_before_amount}{$currency_abb}{/if}</span>
+                                                </div>
+                                                <div class="status">
+                                                    <span class="left">{#status#}</span>
+                                                    <span class="right green">{$carts[c2].status_name}</span>
+                                                </div>
+                                                <div class="action">
+                                                    <a data-animation-duration="700" data-fancybox data-src="#order-{$carts[c2].id}" href="javascript:;" href="#">{#preview#}</a>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        {/section}
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="profLi">
+                        <a class="profLink hasSubProf" href="">
+                            <span class="icons iconContainer3"></span>
+                            {#delivery_address#}
+                            <span class="arrowRight"></span>
+                        </a>
+                        <div class="subprofHolder">
+                            <ul class="subprof">
+                            </ul>
+                            <div class="profContent">
+                                <span class="subtitle">{#add_address#}</span>
+                                <form method="post" action="{if $delivery_address.id}/edit-delivery-address{else}/add-delivery-address{/if}">
+                                    <div class="inputRow">
+                                        <div class="inputCol6">
+                                            <label for="delivery_name">{#first_name#}</label>
+                                            <input value="{$delivery_address.firstname}" type="text" name="delivery_name" placeholder="{#first_name#}*">
+                                            {*<div id="error1" class="errorMessage">
+                                                {#invalid_name#}
+                                            </div>*}
+                                        </div>
+                                        <div class="inputCol6">
+                                            <label for="delivery_family_name">{#last_name#}</label>
+                                            <input value="{$delivery_address.lastname}" type="text" name="delivery_family_name" placeholder="{#family_name#}*">
+                                            {*<div id="error2" class="errorMessage">
+                                                {#invalid_family_name#}
+                                            </div>*}
+                                        </div>
+                                    </div>
+                                    <div class="inputRow">
+                                        <div class="inputCol6">
+                                            <label for="delivery_region">{#region#}</label>
+                                            <select name="delivery_region" class="checkoutSelectRegion w-100" id="checkoutSelectRegionDM">
+                                                <option value="">{#please_select#} {#region#}</option>
+                                                {section name=r1 loop=$regions}
+                                                    <option value="{$regions[r1].id}" {if $regions[r1].id == $delivery_address.district_id}selected{/if}>{$regions[r1].name}</option>
+                                                {/section}
+                                            </select>
+                                            {*<div id="error41" class="errorMessage">
+                                                {#invalid_region#}
+                                            </div>*}
+                                        </div>
+                                        <div class="inputCol6">
+                                            <div class="delivery_city_cont">
+                                                <label for="delivery_city">{#city#}</label>
+                                                <select name="delivery_city" class="checkoutSelectCity w-100" id="checkoutSelectCityDM">
+                                                    <option value="">{#please_select#} {#city#}</option>
+                                                    {section name=dc loop=$delivery_cities}
+                                                        <option value="{$delivery_cities[dc].id}" {if $delivery_cities[dc].name == $delivery_address.city_name}selected{/if}>{$delivery_cities[dc].name}</option>
+                                                    {/section}
+                                                </select>
+                                            </div>
+                                            <div class="preloader_delivery_city" class="mb-2" style="display: none;">
+                                                <i class="fas fa-cog fa-spin"></i>
+                                                {#please_wait#}
+                                            </div>
+                                            {*<div id="error4" class="errorMessage">
+                                                {#invalid_city#}
+                                            </div>*}
+                                        </div>
+                                    </div>
+                                    {*<div class="inputRow">
+                                        <div class="inputCol12">
+                                            <label for="delivery_phone">{#phone#}</label>
+                                            <input id="delivery_phone" type="text" name="delivery_phone" placeholder="{#phone#}*">
+                                        </div>
+                                    </div>*}
+                                    <div class="inputRow mt-3">
+                                        <div class="inputCol12">
+                                            <label for="delivery_address_line_1">{#address_1#}</label>
+                                            <input value="{$delivery_address.address_line_1}" type="text" name="delivery_address_line_1" placeholder="{#address_1#}*">
+                                            {*<div id="error3" class="errorMessage">
+                                                {#invalid_address_1#}
+                                            </div>
+                                            <div id="error31" class="errorMessage"></div>
+                                            <div id="error32" class="errorMessage"></div>*}
+                                        </div>
+                                    </div>
+                                    <div class="inputRow">
+                                        <div class="inputCol12">
+                                            <label for="delivery_address_line_2">{#address_2#}</label>
+                                            <input value="{$delivery_address.address_line_2}" type="text" name="delivery_address_line_2" placeholder="{#address_2#}">
+                                        </div>
+                                    </div>
+                                    <div class="inputRow">
+                                        <div class="inputCol12">
+                                            <label for="delivery_postcode">{#postcode#}</label>
+                                            <input value="{$delivery_address.postcode}" type="text" name="delivery_postcode" placeholder="{#postcode#}*">
+                                        </div>
+                                    </div>
+                                    <div class="submitBtnHolder">
+                                        <input type="hidden" value="{$delivery_address.id}" name="id">
+                                        <input class="submitBtn" type="submit" name="buttonSave" value="{#button_save#}">
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="profLi">
+                        <a class="profLink hasSubProf" href="">
+                            <span class="icons iconContainer4"></span>
+                            {#payment_information#}
+                            <span class="arrowRight"></span>
+                        </a>
+                        <div class="subprofHolder">
+                            <ul class="subprof">
+                            </ul>
+                            <div class="profContent">
+                                <form method="post" action="{if $billing_address.id}/edit-billing-address{else}/add-billing-address{/if}">
+                                    <div class="inputRow">
+                                        <div class="inputCol6">
+                                            <label for="billing_name">{#first_name#}</label>
+                                            <input value="{$billing_address.firstname}" type="text" name="billing_name" placeholder="{#first_name#}*">
+                                            {*<div id="error7" class="errorMessage">
+                                                {#invalid_name#}
+                                            </div>*}
+                                        </div>
+                                        <div class="inputCol6">
+                                            <label for="billing_family_name">{#last_name#}</label>
+                                            <input value="{$billing_address.lastname}" type="text" name="billing_family_name" placeholder="{#family_name#}*">
+                                            {*<div id="error8" class="errorMessage">
+                                                {#invalid_family_name#}
+                                            </div>*}
+                                        </div>
+                                    </div>
+                                    <div class="inputRow">
+                                        <div class="inputCol6">
+                                            <label for="billing_region">{#region#}</label>
+                                            <select name="billing_region" class="checkoutSelectRegion w-100" id="checkoutSelectRegionBM">
+                                                <option value="">{#please_select#} {#region#}</option>
+                                                {section name=r2 loop=$regions}
+                                                    <option value="{$regions[r2].id}" {if $regions[r2].id == $billing_address.district_id}selected{/if}>{$regions[r2].name}</option>
+                                                {/section}
+                                            </select>
+                                            {*<div id="error102" class="errorMessage">
+                                                {#invalid_region#}
+                                            </div>*}
+                                        </div>
+                                        <div class="inputCol6">
+                                            <div class="billing_city_cont">
+                                                <label for="billing_city">{#city#}</label>
+                                                <select name="billing_city" class="checkoutSelectCity w-100" id="checkoutSelectCityBM">
+                                                    <option value="">{#please_select#} {#city#}</option>
+                                                    {section name=dc loop=$billing_cities}
+                                                        <option value="{$billing_cities[dc].id}" {if $billing_cities[dc].name == $billing_address.city_name}selected{/if}>{$billing_cities[dc].name}</option>
+                                                    {/section}
+                                                </select>
+                                            </div>
+                                            <div class="preloader_billing_city mb-2" style="display: none;">
+                                                <i class="fas fa-cog fa-spin"></i>
+                                                {#please_wait#}
+                                            </div>
+                                            {*<div id="error10" class="errorMessage">
+                                                {#invalid_city#}
+                                            </div>*}
+                                        </div>
+                                    </div>
+                                    <div class="inputRow">
+                                        <div class="inputCol12">
+                                            <label for="billing_phone">{#phone#}</label>
+                                            <input value="{$billing_address.phone}" type="text" name="billing_phone" placeholder="{#phone#}*">
+                                            {*<div id="error101" class="errorMessage">
+                                                {#invalid_phone#}
+                                            </div>*}
+                                        </div>
+                                    </div>
+                                    <div class="inputRow">
+                                        <div class="inputCol12">
+                                            <label for="billing_address_line_1">{#address_1#}</label>
+                                            <input value="{$billing_address.address_line_1}" type="text" name="billing_address_line_1" placeholder="{#address_1#}*">
+                                            {*<div id="error9" class="errorMessage">
+                                                {#invalid_address_1#}
+                                            </div>*}
+                                        </div>
+                                    </div>
+                                    <div class="inputRow">
+                                        <div class="inputCol12">
+                                            <label for="billing_address_line_2">{#address_2#}</label>
+                                            <input value="{$billing_address.address_line_2}" type="text" name="billing_address_line_2" placeholder="{#address_2#}">
+                                        </div>
+                                    </div>
+                                    <div class="inputRow">
+                                        <div class="inputCol4">
+                                            <label for="billing_postcode">{#postcode#}</label>
+                                            <input value="{$billing_address.postcode}" type="text" name="billing_postcode" placeholder="{#postcode#}*">
+                                            {*<div id="error11" class="errorMessage">
+                                                {#invalid_postcode#}
+                                            </div>*}
+                                        </div>
+                                        <div class="inputCol8">
+                                            <label for="billing_email">{#email#}</label>
+                                            <input value="{$billing_address.email}" type="text" name="billing_email" placeholder="{#email#}*">
+                                            {*<div id="error81" class="errorMessage">id="billing_email"
+                                                {#invalid_email#}
+                                            </div>*}
+                                        </div>
+                                    </div>
+                                    <div class="submitBtnHolder">
+                                        <input type="hidden" value="{$billing_address.id}" name="id">
+                                        <input class="submitBtn" type="submit" name="buttonSave" value="{#button_save#}">
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="profLi">
+                        <a class="profLink hasSubProf" href="">
+                            <span class="icons iconContainer5"></span>
+                            {#email_preferences#}
+                            <span class="arrowRight"></span>
+                        </a>
+                        <div class="subprofHolder">
+                            <ul class="subprof">
+                            </ul>
+                            <div class="profContent">
+                                <span class="subtitle2">{#promotional#}</span>
+                                <div class="grayContainerS">
+                                    <div class="left">
+                                        {#status#}: <span class="green">Абониран</span>
+                                    </div>
+                                    <div class="right">
+                                        <input id="mpromoEmail" class="active" type="submit" name="promo_email" value="Прекъсни">
+                                    </div>
+                                </div>
+                                <span class="subtitle2">{#notifications#}</span>
+                                <div class="grayContainerS">
+                                    <div class="left">
+                                        {#status#}: {if $user.mailinglist == 1}<span class="green">{#active#}</span>{else}<span class="gray">{#inactive#}</span>{/if}
+                                    </div>
+                                    <div class="right">
+                                        <button {*id="infoEmail"*} class="{if $user.mailinglist == 1}active{else}unactive{/if}" type="submit" name="info_email" onClick="$(this).hide(); $('#preloader').show(); window.location.href = '/mailinglist-subscribe-unsubscribe'">{#subscribe_title#}</button>
+                                        <div id="preloader" style="display: none;">
+                                            <i class="fas fa-cog fa-spin"></i>
+                                            {#please_wait#}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+        </div>
+
+        <div class="profilePageContainer">
+            <div class="container">
+                <div class="matTabsBox">
+
+
+                    <div id="holderLeft">
+                        <div id="material-tabs">
+                            <a id="tab1-tab" href="#tab1" class="active"><span class="icons iconContainer1"></span>{#account_management#}</a>
+                            <a id="tab2-tab" href="#tab2"><span class="icons iconContainer2"></span>{#orders#}</a>
+                            <a id="tab3-tab" href="#tab3"><span class="icons iconContainer3"></span>{#delivery_address#}</a>
+                            <a id="tab4-tab" href="#tab4"><span class="icons iconContainer4"></span>{#billing_information#}</a>
+                            <a id="tab5-tab" href="#tab5"><span class="icons iconContainer5"></span>{#email_preferences#}</a>
+                        </div>
+                    </div>
+
+                    <div id="holderRight">
+                        <div class="tab-content">
+                            <div id="tab1">
+                                <h3 class="title">{#account_management#}</h3>
+                                <div class="formContainer">
+                                    <form method="post" action="/save-user" id="formSaveUser">
+                                        <div class="inputRow">
+                                            <div class="inputCol6">
+                                                <label for="first_name">{#first_name#}</label>
+                                                <input id="first_name" type="text" name="first_name" value="{$user.first_name}" placeholder="{#enter#} {#first_name#}" class="required">
+                                            </div>
+                                            <div class="inputCol6">
+                                                <label for="last_name">{#last_name#}</label>
+                                                <input id="last_name" type="text" name="last_name" value="{$user.last_name}" placeholder="{#enter#} {#last_name#}" class="required">
+                                            </div>
+                                        </div>
+                                        <div class="inputRow">
+                                            <div class="inputCol12">
+                                                <label for="email">{#email#}</label>
+                                                <input id="memail" type="text" name="email" value="{$user.email}" placeholder="{#enter#} {#email#}" disabled>
+                                            </div>
+                                        </div>
+
+                                        <div class="inputRow">
+                                            <div class="inputCol6">
+                                                <label for="password">{#password#}</label>
+                                                <input id="password" type="password" name="password">
+                                            </div>
+                                            <div class="inputCol6">
+                                                <label for="confirm_password">{#confirm_password#}</label>
+                                                <input id="confirm_password" type="password" name="confirm_password">
+                                            </div>
+                                        </div>
+                                        <div class="submitBtnHolder">
+                                            <input class="submitBtn" type="submit" name="buttonChangePassword" value="{#save#}" id="buttonChangePassword">
+                                        </div>
+                                        <script>
+                                        $(document).ready(function () {
+                                            $("#buttonChangePassword").bind("click", function () {
+                                                var errors = 0;
+                                                $("#formSaveUser input").each(function (i, e) {
+                                                    if ($(this).hasClass("required")) {
+                                                        if ($(this).val().trim() == "") {
+                                                            $(this).addClass("redBorderIn");
+                                                            errors++;
+                                                        }
+                                                        
+                                                        if ($(this).attr("name") == "password" && $("input[name=password]").val() != $("input[name=confirm_password]").val()) {
+                                                            $(this).addClass("redBorderIn");
+                                                            $("input[name=confirm_password]").addClass("redBorderIn");
+                                                            errors++;
+                                                        }
+                                                    }
+                                                });
+                                                
+                                                if (errors > 0) {
+                                                    return false;
+                                                } else {
+                                                    return true;
+                                                }
+                                            });
+                                        });
+                                        </script>
+                                    </form>
+                                </div>
+                            </div>
+                            <div id="tab2">
+                                <h3 class="title">{#orders#}</h3>
+                                <div class="lastOrdersContainer">
+                                    <div class="orderRow headingRow">
+                                        <div class="orderNumber"># {#order#}</div>
+                                        <div class="date">{#date#}</div>
+                                        <div class="totalPrice">{#total_price#}</div>
+                                        <div class="status">{#status#}</div>
+                                        <div class="action"></div>
+                                    </div>
+                                    <ul class="myList">
+                                        {section name=c loop=$carts}
+                                        <li>
+                                            <div class="orderRow">
+                                                <div class="orderNumber">#{$carts[c].id}</div>
+                                                <div class="date">{$carts[c].postdate|date_format:"%d.%m.%Y"}</div>
+                                                <div class="totalPrice">{if $abb_before_amount}{$currency_abb}{/if}{$carts[c].total_amount} {if !$abb_before_amount}{$currency_abb}{/if}</div>
+                                                <div class="status green">{$carts[c].status_name}</div>
+                                                <div class="action">
+                                                    <a data-animation-duration="700" data-fancybox data-src="#order-{$carts[c].id}" href="javascript:;" href="#">{#preview#}</a>
+                                                </div>
+                                            </div>
+                                            <div style="display: none;" id="order-{$carts[c].id}" class="animated-modal">
+                                                <h2 data-selectable="true">{#order#} #{$carts[c].id}</h2>
+                                                <div data-selectable="true" class="fancyBoxContent">
+                                                    <ul class="products">
+                                                        {section name=p loop=$carts[c].info.products}
+                                                        <li>
+                                                            <div class="product">
+                                                                <div class="productImage" style="background-image: url(/files/tntn/{$carts[c].info.products[p].pic});"></div>
+                                                                <div class="productInfo">
+                                                                    <div class="prodName">{$carts[c].info.products[p].product_name}</div>
+                                                                    <div class="quantity">
+                                                                        {#quantity#}: <strong>{$carts[c].info.products[p].quantity}</strong>
+                                                                    </div>
+                                                                    <span class="prodPrice">{if $carts[c].info.products[p].product_price_discount > 0.0}{$carts[c].info.products[p].product_price_discount}{else}{$carts[c].info.products[p].product_price_total}{/if}</span>
+                                                                    <div class="actionsRow">
+                                                                        {*<a class="add2FavoritesList" href=""><img src="images/hearth-green-btn.svg" alt=""></a>*}
+                                                                        <a class="showProduct" href="/{#htaccess_product#}/{$carts[c].info.products[p].product_id}">{#take_a_look#}</a>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </li>
+                                                        {/section}
+                                                    </ul>
+                                                    <br>
+                                                    <div class="total" style="padding-right: 50px;">{if $carts[c].delivery_type_id == 3}{#delivery_econt_address#}{elseif $carts[c].delivery_type_id == 4}{#delivery_econt_office#}{/if}{*Доставка до: <span class="font2r">гр.София жк. Младост 5 <br> бл.100 вх. 2 ап.7</span>*}</div>
+                                                    <hr>
+                                                    <div class="total">{#total_amount#}:  <span class="font2b">{if $abb_before_amount}{$currency_abb}{/if}{$carts[c].total_amount}{if !$abb_before_amount}{$currency_abb}{/if}</span></div>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        {/section}
+                                    </ul>
+
+                                </div>
+                            </div>
+                            <div id="tab3">
+                                <h3 class="title">{#delivery_address#}</h3>
+                                <span class="subtitle">{#add_address#}</span>
+                                <form method="post" action="{if $delivery_address.id}/edit-delivery-address{else}/add-delivery-address{/if}">
+                                    <div class="inputRow">
+                                        <div class="inputCol6">
+                                            <label for="delivery_name">{#first_name#}</label>
+                                            <input value="{$delivery_address.firstname}" id="delivery_name" type="text" name="delivery_name" placeholder="{#first_name#}*">
+                                            {*<div id="error1" class="errorMessage">
+                                                {#invalid_name#}
+                                            </div>*}
+                                        </div>
+                                        <div class="inputCol6">
+                                            <label for="delivery_family_name">{#last_name#}</label>
+                                            <input value="{$delivery_address.lastname}" id="delivery_family_name" type="text" name="delivery_family_name" placeholder="{#family_name#}*">
+                                            {*<div id="error2" class="errorMessage">
+                                                {#invalid_family_name#}
+                                            </div>*}
+                                        </div>
+                                    </div>
+                                    <div class="inputRow">
+                                        <div class="inputCol6">
+                                            <label for="delivery_region">{#region#}</label>
+                                            <select name="delivery_region" class="checkoutSelectRegion w-100" id="checkoutSelectRegionD">
+                                                <option value="">{#please_select#} {#region#}</option>
+                                                {section name=r3 loop=$regions}
+                                                    <option value="{$regions[r3].id}" {if $regions[r3].id == $delivery_address.district_id}selected{/if}>{$regions[r3].name}</option>
+                                                {/section}
+                                            </select>
+                                            {*<div id="error41" class="errorMessage">
+                                                {#invalid_region#}
+                                            </div>*}
+                                        </div>
+                                        <div class="inputCol6">
+                                            <div class="delivery_city_cont">
+                                                <label for="delivery_city">{#city#}</label>
+                                                <select name="delivery_city" class="checkoutSelectCity w-100" id="checkoutSelectCityD">
+                                                    <option value="">{#please_select#} {#city#}</option>
+                                                    {section name=dc2 loop=$delivery_cities}
+                                                        <option value="{$delivery_cities[dc2].id}" {if $delivery_cities[dc2].name == $delivery_address.city_name}selected{/if}>{$delivery_cities[dc2].name}</option>
+                                                    {/section}
+                                                </select>
+                                            </div>
+                                            <div class="preloader_delivery_city" class="mb-2" style="display: none;">
+                                                <i class="fas fa-cog fa-spin"></i>
+                                                {#please_wait#}
+                                            </div>
+                                            {*<div id="error4" class="errorMessage">
+                                                {#invalid_city#}
+                                            </div>*}
+                                        </div>
+                                    </div>
+                                    {*<div class="inputRow">
+                                        <div class="inputCol12">
+                                            <label for="delivery_phone">{#phone#}</label>
+                                            <input id="delivery_phone" type="text" name="delivery_phone" placeholder="{#phone#}*">
+                                        </div>
+                                    </div>*}
+                                    <div class="inputRow mt-3">
+                                        <div class="inputCol12">
+                                            <label for="delivery_address_line_1">{#address_1#}</label>
+                                            <input value="{$delivery_address.address_line_1}" id="delivery_address_line_1" type="text" name="delivery_address_line_1" placeholder="{#address_1#}*">
+                                            {*<div id="error3" class="errorMessage">
+                                                {#invalid_address_1#}
+                                            </div>
+                                            <div id="error31" class="errorMessage"></div>
+                                            <div id="error32" class="errorMessage"></div>*}
+                                        </div>
+                                    </div>
+                                    <div class="inputRow">
+                                        <div class="inputCol12">
+                                            <label for="delivery_address_line_2">{#address_2#}</label>
+                                            <input value="{$delivery_address.address_line_2}" id="delivery_address_line_2" type="text" name="delivery_address_line_2" placeholder="{#address_2#}">
+                                        </div>
+                                    </div>
+                                    <div class="inputRow">
+                                        <div class="inputCol12">
+                                            <label for="delivery_postcode">{#postcode#}</label>
+                                            <input value="{$delivery_address.postcode}" id="delivery_postcode" type="text" name="delivery_postcode" placeholder="{#postcode#}*">
+                                        </div>
+                                    </div>
+                                    <div class="submitBtnHolder">
+                                        <input type="hidden" value="{$delivery_address.id}" name="id">
+                                        <input class="submitBtn" type="submit" name="buttonSave" value="{#button_save#}">
+                                    </div>
+                                </form>
+                            </div>
+                            <div id="tab4">
+                                <h3 class="title">{#billing_information#}</h3>
+                                <form method="post" action="{if $billing_address.id}/edit-billing-address{else}/add-billing-address{/if}">
+                                    <div class="inputRow">
+                                        <div class="inputCol6">
+                                            <label for="billing_name">{#first_name#}</label>
+                                            <input value="{$billing_address.firstname}" id="billing_name" type="text" name="billing_name" placeholder="{#first_name#}*">
+                                            {*<div id="error7" class="errorMessage">
+                                                {#invalid_name#}
+                                            </div>*}
+                                        </div>
+                                        <div class="inputCol6">
+                                            <label for="billing_family_name">{#last_name#}</label>
+                                            <input value="{$billing_address.lastname}" id="billing_family_name" type="text" name="billing_family_name" placeholder="{#family_name#}*">
+                                            {*<div id="error8" class="errorMessage">
+                                                {#invalid_family_name#}
+                                            </div>*}
+                                        </div>
+                                    </div>
+                                    <div class="inputRow">
+                                        <div class="inputCol6">
+                                            <label for="billing_region">{#region#}</label>
+                                            <select name="billing_region" class="checkoutSelectRegion w-100" id="checkoutSelectRegionB">
+                                                <option value="">{#please_select#} {#region#}</option>
+                                                {section name=r4 loop=$regions}
+                                                    <option value="{$regions[r4].id}" {if $regions[r4].id == $billing_address.district_id}selected{/if}>{$regions[r4].name}</option>
+                                                {/section}
+                                            </select>
+                                            {*<div id="error102" class="errorMessage">
+                                                {#invalid_region#}
+                                            </div>*}
+                                        </div>
+                                        <div class="inputCol6">
+                                            <div class="billing_city_cont">
+                                                <label for="billing_city">{#city#}</label>
+                                                <select name="billing_city" class="checkoutSelectCity w-100" id="checkoutSelectCityB">
+                                                    <option value="">{#please_select#} {#city#}</option>
+                                                    {section name=dc2 loop=$billing_cities}
+                                                        <option value="{$billing_cities[dc2].id}" {if $billing_cities[dc2].name == $billing_address.city_name}selected{/if}>{$billing_cities[dc2].name}</option>
+                                                    {/section}
+                                                </select>
+                                            </div>
+                                            <div class="preloader_billing_city mb-2" style="display: none;">
+                                                <i class="fas fa-cog fa-spin"></i>
+                                                {#please_wait#}
+                                            </div>
+                                            {*<div id="error10" class="errorMessage">
+                                                {#invalid_city#}
+                                            </div>*}
+                                        </div>
+                                    </div>
+                                    <div class="inputRow">
+                                        <div class="inputCol12">
+                                            <label for="billing_phone">{#phone#}</label>
+                                            <input value="{$billing_address.phone}" id="billing_phone" type="text" name="billing_phone" placeholder="{#phone#}*">
+                                            {*<div id="error101" class="errorMessage">
+                                                {#invalid_phone#}
+                                            </div>*}
+                                        </div>
+                                    </div>
+                                    <div class="inputRow">
+                                        <div class="inputCol12">
+                                            <label for="billing_address_line_1">{#address_1#}</label>
+                                            <input value="{$billing_address.address_line_1}" id="billing_address_line_1" type="text" name="billing_address_line_1" placeholder="{#address_1#}*">
+                                            {*<div id="error9" class="errorMessage">
+                                                {#invalid_address_1#}
+                                            </div>*}
+                                        </div>
+                                    </div>
+                                    <div class="inputRow">
+                                        <div class="inputCol12">
+                                            <label for="billing_address_line_2">{#address_2#}</label>
+                                            <input value="{$billing_address.address_line_2}" id="billing_address_line_2" type="text" name="billing_address_line_2" placeholder="{#address_2#}">
+                                        </div>
+                                    </div>
+                                    <div class="inputRow">
+                                        <div class="inputCol4">
+                                            <label for="billing_postcode">{#postcode#}</label>
+                                            <input value="{$billing_address.postcode}" id="billing_postcode" type="text" name="billing_postcode" placeholder="{#postcode#}*">
+                                            {*<div id="error11" class="errorMessage">
+                                                {#invalid_postcode#}
+                                            </div>*}
+                                        </div>
+                                        <div class="inputCol8">
+                                            <label for="billing_email">{#email#}</label>
+                                            <input value="{$billing_address.email}" id="billing_email" type="text" name="billing_email" placeholder="{#email#}*">
+                                            {*<div id="error81" class="errorMessage">
+                                                {#invalid_email#}
+                                            </div>*}
+                                        </div>
+                                    </div>
+                                    <div class="submitBtnHolder">
+                                        <input type="hidden" value="{$billing_address.id}" name="id">
+                                        <input class="submitBtn" type="submit" name="buttonSave" value="{#button_save#}">
+                                    </div>
+                                </form>
+                            </div>
+                            <div id="tab5">
+                                <h3 class="title">{#email_preferences#}</h3>
+                                <span class="subtitle2">{#promotional#}</span>
+                                <div class="grayContainerS">
+                                    <div class="left">
+                                        {#status#}: <span class="green">Абониран</span>
+                                    </div>
+                                    <div class="right">
+                                        <input id="promoEmail" class="active" type="submit" name="promo_email" value="Прекъсни">
+                                    </div>
+                                </div>
+
+                                <span class="subtitle2">{#notifications#}</span>
+                                <div class="grayContainerS">
+                                    <div class="left">
+                                        {#status#}: {if $user.mailinglist == 1}<span class="green">{#active#}</span>{else}<span class="gray">{#inactive#}</span>{/if}
+                                    </div>
+                                    <div class="right">
+                                        {*<input id="infoEmail" class="unactive" type="submit" name="info_email" value="Абонирай се">*}
+                                        <button id="infoEmail" class="{if $user.mailinglist == 1}active{else}unactive{/if}" type="submit" name="info_email" onClick="$(this).hide(); $('#preloader').show(); window.location.href = '/mailinglist-subscribe-unsubscribe'">{#subscribe_title#}</button>
+                                        <div id="preloader" style="display: none;">
+                                            <i class="fas fa-cog fa-spin"></i>
+                                            {#please_wait#}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+                                            
+<script>
+    var updated2 = 0;
+    $( document ).ready(function() {
+        $(".hasSubProf").bind('click',function(e){
+            if ($(".only-mobile").css("display") == "block") {
+                e.preventDefault();
+                var menuName = $(this).text();
+                $(".subprofHolder").removeClass("menuShow");
+                if($(this).parent().children(".subprofHolder").hasClass("menuShow")){		
+                    $(".subprofHolder").removeClass("menuShow");
+                }else{
+                    if(updated2==0){
+                        updated2 = 1;
+                    }
+                    if ($(this).parent().children(".subprofHolder").children(".subprof").children(".subprofLi").hasClass("subProfBackBtn")) {
+                    }else {
+                        $(this).parent().children(".subprofHolder").children(".subprof").prepend("<li class='subprofLi subProfBackBtn'><span>"+menuName+"</span> </li>" );
+                    }
+
+                    $(this).parent().children(".subprofHolder").addClass("menuShow");
+
+                    $(".subProfBackBtn").bind("click", function(){
+                        $(this).parent().parent().removeClass("menuShow");
+                    });
+                } 
+            }
+        });
+
+
+        $('#material-tabs').each(function() {
+            var $active, $content, $links = $(this).find('a');
+
+            $active = $($links[0]);
+            $active.addClass('active');
+
+            $content = $($active[0].hash);
+
+            $links.not($active).each(function() {
+                $(this.hash).hide();
+            });
+
+            $(this).on('click', 'a', function(e) {
+
+                $active.removeClass('active');
+                $content.hide();
+
+                $active = $(this);
+                $content = $(this.hash);
+
+                $active.addClass('active');
+                $content.show();
+
+                e.preventDefault();
+            });
+        });
+    });
+    
+    $('#checkoutSelectRegionD').select2({
+        minimumResultsForSearch: -1
+    });
+    $('#checkoutSelectRegionB').select2({
+        minimumResultsForSearch: -1
+    });
+    $('#checkoutSelectRegionDM').select2({
+        minimumResultsForSearch: -1
+    });
+    $('#checkoutSelectRegionBM').select2({
+        minimumResultsForSearch: -1
+    });
+    $('#checkoutSelectCityD').select2({
+        minimumResultsForSearch: -1
+    });
+    $('#checkoutSelectCityB').select2({
+        minimumResultsForSearch: -1
+    });
+    $('#checkoutSelectCityDM').select2({
+        minimumResultsForSearch: -1
+    });
+    $('#checkoutSelectCityBM').select2({
+        minimumResultsForSearch: -1
+    });
+    
+    function ajaxPutDeliveryCitiesByRegion(region) {
+        // NOTE:  This function must return the value 
+        //        from calling the $.ajax() method.
+        return $.ajax({
+            type: "POST",
+            url: "/get-cities",
+            data: "region=" + region,
+            dataType: "json",
+            success: function (response) {
+                $("select[name=delivery_city]").empty();
+                $("select[name=delivery_city]").append('<option value="">{#please_select#} {#city#}</option>');
+                for (i = 0; i < response.length; i++) {
+                    $("select[name=delivery_city]").append('<option value="' + response[i].id + '">' + response[i].name + '</option>');
+                }
+                $("select[name=delivery_city]").val($("select[name=billing_city]").val());
+            }
+        });
+    }
+    
+    $(document).ready(function(){
+        $("select[name=delivery_region]").bind("change", function () {
+            $(".delivery_city_cont").hide();
+            $(".preloader_delivery_city").show();
+            
+            var delivery_region = $(this).val();
+            if(delivery_region){
+                $.ajax({
+                    type: "POST",
+                    url: "/get-cities",
+                    data: "region=" + delivery_region,
+                    dataType: "json",
+                    success: function (response) {
+                        $("select[name=delivery_city]").empty();
+                        $("select[name=delivery_city]").append('<option value="">{#please_select#} {#city#}</option>');
+                        for (i = 0; i < response.length; i++) {
+                            $("select[name=delivery_city]").append('<option value="' + response[i].id + '">' + response[i].name + '</option>');
+                        }
+                        $(".preloader_delivery_city").hide();
+                        $(".delivery_city_cont").show();
+                        $("select[name=delivery_city]").focus();
+                    }
+                });
+            }
+        });
+        
+        $("select[name=billing_region]").bind("change", function () {
+            $(".billing_city_cont").hide();
+            $(".preloader_billing_city").show();
+            
+            var billing_region = $(this).val();
+            if(billing_region){
+                $.ajax({
+                    type: "POST",
+                    url: "/get-cities",
+                    data: "region=" + billing_region,
+                    dataType: "json",
+                    success: function (response) {
+                        $("select[name=billing_city]").empty();
+                        $("select[name=billing_city]").append('<option value="">{#please_select#} {#city#}</option>');
+                        for (i = 0; i < response.length; i++) {
+                            $("select[name=billing_city]").append('<option value="' + response[i].id + '">' + response[i].name + '</option>');
+                        }
+                        $(".preloader_billing_city").hide();
+                        $(".billing_city_cont").show();
+                        $("select[name=billing_city]").focus();
+                    },
+                    error: function (er){
+                        //console.log(er);
+                    }
+                });
+            }
+        });
+    });
+</script>                                            
+                                            
+{include file="footer.html"}

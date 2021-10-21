@@ -1,0 +1,240 @@
+{include file="header.html"}
+<div class="breadcrumbsContainer">
+    <div class="container">
+        <div class="breadcrubsRow">
+            <a href="/">{#home_breadcrumbs#}</a>
+            <span>|</span>
+            <span>{#quiz_breadcrumbs#}</span> 
+        </div>
+    </div>
+</div>
+
+<form method="POST" action="/proceed-quiz" id="quizForm" class="quizForm">
+    <div class="catBackgroundGradient">
+        <div class="quizContainer">
+            <div class="container">
+                {*{section name=i loop=$items}
+                    {if $items[i].type_id == 1}
+                    <div class="radioSection mb-4">
+                        <span class="heading">{$items[i].name}</span>
+                        <div class="radioRow required row col-sm-12">
+                            {section name=o loop=$items[i].options}
+                            <div class="inputHolder col-sm-4">
+                                <input type="radio" name="questions[{$items[i].id}]" value="{$items[i].options[o].id}" id="option-{$items[i].options[o].id}">
+                                <label for="option-{$items[i].options[o].id}">{$items[i].options[o].option_text}</label>
+                            </div>
+                            {/section}
+                        </div>
+                    </div>
+                    {/if}
+                {/section}*}
+
+                <div class="radioSection mb-4">
+                    <span class="heading">{#choose_age#}</span>
+                    <div class="radioRow required">
+                        {section name=ag loop=$age_groups}
+                        <div class="inputHolder">
+                            <input type="radio" name="age" value="{$age_groups[ag].id}" id="age-{$age_groups[ag].id}">
+                            <label for="age-{$age_groups[ag].id}">{$age_groups[ag].name}</label>
+                        </div>
+                        {/section}
+                    </div>
+                </div>
+                    
+                <div class="radioSection mb-4">
+                    <span class="heading">{#choose_sex#}</span>
+                    <div class="radioRow required">
+                        <div class="inputHolder">
+                            <input type="radio" name="sex" value="1" id="sex-1">
+                            <label for="sex-1">{#male#}</label>
+                        </div>
+                        <div class="inputHolder">
+                            <input type="radio" name="sex" value="2" id="sex-2">
+                            <label for="sex-2">{#female#}</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="radioSection radioSection3" id="quizCategoriesCont" style="display: none;">
+                    <div class="quizExcerpt">
+                        {#complete_the_questionnaire#}
+                    </div>
+                    <span class="heading pt-4">{#choose_consulting_category#}</span>
+                    <div class="radioRow required" id="quizCategories">
+                      
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        $('input[type=radio][name=sex]').change(function() {
+            $("#quizCategoriesCont").slideUp();
+            $("#quizQuestionsCont").slideUp();
+            var sex = 0;
+            if (this.value == 1) {
+                sex = 1;
+            }
+            else if (this.value == 2) {
+                sex = 2;
+            }
+            
+            $.ajax({
+                type: "POST",
+                url: "/",
+                data:{
+                    "param": "get-quiz-categories",
+                    "sex": sex
+                },
+                dataType: "json",
+                success: function(res){
+                    var html = "";
+                    $.each(res, function(k, v){
+                        html += '<div class="inputHolder">'
+                        html += '   <input type="radio" name="quiz_category_id" value="'+v.id+'" id="quiz_category-'+v.id+'">';
+                        html += '   <label for="quiz_category-'+v.id+'">'+v.name+'</label>';
+                        html += '</div>';
+                    });
+                    $("#quizCategories").html(html);
+                    $("#quizCategoriesCont").slideDown();
+                    getQuizQuestins();
+                }
+            });
+        });
+        
+        function getQuizQuestins(){
+            $('input[type=radio][name=quiz_category_id]').change(function() {
+                $("#quizQuestionsCont").slideUp();
+                var quiz_category_id = this.value;
+
+                $.ajax({
+                    type: "POST",
+                    url: "/",
+                    data:{
+                        "param": "get-quiz-questions",
+                        "quiz_category_id": quiz_category_id
+                    },
+                    dataType: "json",
+                    success: function(res){
+                        console.log(res);
+                        var html = "";
+                        if(res.length > 0){
+                            $.each(res, function(k, v){
+                            		html += '<div class="clear"></div>';
+                                html += '<div class="heading pt-3">'+v.name+'</div>';
+                                
+                                var qtype = '';
+                                var extra = '';
+                                if(v.multiple == 1){
+                                	qtype = 'checkbox';
+                                	extra = '[]';
+                                	html += '   <div class="radioRow row col-sm-12">';
+                                }
+                                else{
+                                	qtype = 'radio';
+                                	extra = '';
+                                	html += '   <div class="radioRow required row col-sm-12">';
+                                }
+                                $.each(v.options, function(kk, vv){
+                                    
+                                    if(vv.pic){
+                                    		html +=     '<div class="inputHolder col-sm-6 d-block float-left">'
+                                        html +=     '<div class="optionImgHolder">'
+                                        html +=         '<img src="/files/tn/'+vv.pic+'">'
+                                        html +=     '</div>'
+                                    }
+                                    else{
+																				html +=     '<div class="inputHolder col-sm-6 d-block float-left">'	
+                                    }
+                                    html +=     '   <input class="optionsInput" type="'+qtype+'" name="questions['+v.id+']'+extra+'" value="'+vv.id+'" id="option-'+vv.id+'">';
+                                    html +=     '   <label class="optionsLabel" for="option-'+vv.id+'">'+vv.option_text+'</label>';
+                                    html +=     '</div>';
+                                });
+                                html += '   </div>';
+                                html += '</div>';
+                            });
+                        }else{
+                            html = "{#no_questions#}";
+                        }
+                        $("#quizQuestions").html(html);
+                        $("#quizQuestionsCont").slideDown();
+                    }
+                });
+            });
+        }
+    </script>
+    <div class="quizContainer2">
+        <div class="container">
+            <div class="emailForm">
+                <div class="heading">{#email_for_personal_offer#}</div>
+                <div class="inputHolder">
+                    <input type="text" name="email" id="emailField" placeholder="{#email_address#}" value="{$smarty.session.user.email}">
+                </div>
+                {*<a class="login" href="">Влез в профила си</a>
+                <a class="signin" href="">Създай профил</a>*}
+            </div>
+        </div>
+    </div>
+
+    <div class="quizContainer3" id="quizQuestionsCont">
+        <div class="container">
+            <div class="quizSection" id="quizQuestions">
+                {*<div class="heading">{$items[i3].name}</div>
+                <div class="radioRow required">
+                    <div class="inputHolder">
+                        <input class="optionsInput" type="radio" id="option-{$items[i3].options[o].id}" name="questions[{$items[i3].id}]" value="{$items[i3].options[o].id}">
+                        <label class="optionsLabel" for="option-{$items[i3].options[o].id}">{$items[i3].options[o].option_text}</label>
+                    </div>
+                </div>*}
+            </div>
+        </div>
+        <div class="clear"></div>
+    </div>
+    <div class="quizContainer4">
+        <div class="container">
+            <button type="submit" class="signin" id="sendQuizButton">{#send#}</button>
+        </div>
+    </div>
+</form>
+<script>
+    $("#sendQuizButton").click(function(ev){
+        ev.preventDefault();
+        var hasError = 0
+        console.log("1");
+        var email = $("#emailField");
+        email.css("border", "none");
+        if(email.val() == ""){
+            hasError = 1;
+            email.css("border", "1px solid red");
+            $('html, body').animate({
+                scrollTop: email.offset().top
+            }, 1000);
+            console.log("2");
+        }
+        $(".required").each(function(i, v){
+            console.log("val-"+i+": ", $(this).find(".inputHolder").has(":radio:checked").length);
+            $(this).siblings(".heading").css("color", "#212E27");
+            //console.log($(this).siblings(".heading").text()+'-');
+            
+            if($(this).find(".inputHolder").has(":radio:checked").length === 0){
+                console.log("3");
+                hasError = 1;
+                $(this).siblings(".heading").css("color", "red");
+                $('html, body').animate({
+                    scrollTop: $(this).siblings(".heading").offset().top
+                }, 1000);
+                return false;
+            }
+        });
+
+        if(hasError == 0){
+            $("#sendQuizButton").prop("disabled", true);
+            $("#sendQuizButton").html("<i class='fas fa-cog fa-spin'></i> &nbsp; {#please_wait#}");
+            $("#quizForm").submit();
+        }else{
+            return false;
+        }
+    });
+</script>
+
+{include file="footer.html"}

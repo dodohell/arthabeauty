@@ -1,0 +1,241 @@
+====================================================================================
+PHP Speedy Web Service client library 3.5.1
+====================================================================================
+  - New property "payCodToLoggedInClient" added to ParamPicking.
+  - New property "requireUnsuccessfulDeliveryStickerImage" added to ParamPicking.
+
+* Version 3.5.0
+  - New property addressTypeParamsCurrent added to ResultCountry.
+  - ResultCountry's addressTypeParams property has been deprecated.
+
+* Version 3.4.9
+  - New property "retMoneyTransferReqAmount" added in "ParamCalculation" class.
+  - New property "optionsBeforePayment" added in "ParamCalculation" class. 
+  - New property "testBeforePayment" added in "ResultsAmount" class.
+
+* Version 3.4.8
+  - New property "additionalInfo" added in "ResultTrackPickingEx" class.
+
+* Version 3.4.7
+  - New property "ref1" added in "ParamParcelInfo" class.
+  - New property "ref2" added in "ParamParcelInfo" class.
+  - New property "consolidationRef" added in "ParamPicking" class.
+
+* Version 3.4.6
+  - Added missing property "siteAddressString" in the "ResultAddressEx" class.
+  - Added missing property "localAddressString" in the "ResultAddressEx" class.
+
+* Version 3.4.5
+  - New property addrPickupSurchargehas been added to ResultAmounts.
+  - New property addrDeliverySurchargehas been added to ResultAmounts.
+  - New property nonStdDeliveryDateSurcharge been added to ResultAmounts.
+
+* Version 3.4.4
+  - New property includeReturnBols added for ParamSearchByRefNum.
+
+* Version 3.4.3
+  - New property additionalCopyForSender - added for ParamPDF.
+
+* Version 3.4.2
+  - New property infoURL has been added to ResultTrackPickingEx.
+
+* Version 3.4.1
+  - New property addressTypeParams added to ResultCountry.
+
+* Version 3.4.0
+  - New method convertToWin1251 introduced. It is used to transliterate texts from Unicode to ANSI (Latin). Acceptable characters which are not transliterated are ANSI (Latin) characters (a-z, A-Z), Cyrillic characters (à-ÿ, À-ß), digits (0-9), ¹, ˆ, §. API supports only printable ANSI (Latin) and Cyrillic characters.
+  - New request property automaticConvertionToWin1251 added to ParamPicking used for transliteration of some of the text fields, using convertToWin1251 method. 
+
+* Version 3.3.2
+  - New property nearbyOfficeId added to ResultOfficeEx.
+  - New property requireParcelsData added for ResultCourierServiceExt.
+  - New property ignoreAmountInsuranceBaseIfNotApplicable added for ParamCalculation.
+
+* Version 3.3.1
+  - New property allowanceOptionsBeforePayment added for ResultCourierServiceExt. 
+  - New property allowanceReturnVoucher added for ResultCourierServiceExt. 
+
+* Version 3.3.0
+  - Added new property heavyPackageFee to ResultAmounts.
+  - Added new structure MoneyTransferPayment providing information about the date of payment and the money transfer amount. 
+
+* Version 3.2.6
+  - New request property halfWorkDayDelivery added to ParamPicking and ParamCalculation.
+  - New request property workingTimeDayOffFrom added to ResultOfficeEx. 
+  - New request property workingTimeDayOffTo added to ResultOfficeEx. 
+  - Added missing class ResultReturnServiceRequest.
+  - Changed class ResultPackings.
+ 
+* Version 3.2.5
+  - New property predefinedSize - added for ParamParcelInfo.
+
+* Version 3.2.4
+  -  The public function getOfficeType() in ResultOfficeEx.class.php used to return as argument getOfficeType and was now changed to officeType;
+
+* Version 3.2.2
+  - New property foreignParcelNumbersList added for ResultTrackPicking.
+  - New property foreignParcelNumbersList added for ResultParcelInfoEx.
+
+* Version 3.2.1
+  - New property privatePersonType added for ParamClientData.
+
+* Version 3.2.0
+  - Added missing class ResultReturnShipmentRequest.
+
+* Version 3.1.0
+  - Added missing class CODPayment.
+
+* Version 3.0.0
+  - New property officeType added for ResultOfficeEx.
+  - New property allowanceDeliveryToFloor added for ResultCourierServiceExt.
+
+* Version 3.0.0
+  - Added new method: getRoutingLabelInfo(), which returns important routing information for a parcel.
+
+* Version 2.9.4
+  - New property checkTBCOfficeWorkDay for ParamCalculation added.
+
+* Version 2.9.3
+  - New property packId is added for ResultParcelInfoEx.
+
+* Version 2.9.2
+  - Added "foreignParcelNumber" property in ResultParcelInfoEx;
+
+* Version 2.9.1
+  - New argument countryId is added for method listOfficesEx;
+
+* Version 2.9.0
+  - Added new field "foreignParcelNumber" to result structures ResultTrackPickingEx and ResultTrackPicking
+;
+  - Added new argument senderId in method getAllowedDaysForTaking;
+  - New type ParamReturnVoucher is introduced to specify return voucher details;
+  - Added new property "returnVoucher" in ParamPicking structure;
+  - Added new property "deliveryToFloorNo" in ParamPicking structure, used for pointing that the shipment should be delivered to the specified floor;
+  - Added new argument "returnOnlyLastOperation" (boolean) to methods trackPickingEx(), trackParcel(), trackParcelMultiple(), which specifies whether only the last barcode operation to be returned or the full list;
+  - Added new arguments "senderId", "receiverId", "senderOfficeId", "receiverOfficeId" in listServicesForSites;
+  - Added new arguments "senderId", "receiverId", "senderOfficeId", "receiverOfficeId" in getWeightInterval;
+  - Added new method getPickingExtendedInfo;
+  - Added new property "exceptionCode" in ResultTrackPicking and ResultTrackPickingEx structure;
+  - Added new property "includeShippingPriceInCod" introduced in ParamPicking and ParamCalculation structures, indicating whether the shipping price should be included into the cash on delivery price;
+ 
+* Version 2.8.0
+  - Added new fields "signatureImage" and "barcode" to result structures ResultTrackPickingEx and esultTrackPicking
+  - New method trackParcelMultiple() is available
+  - New field "workingTimeException" added in result structure ResultWorkingTime
+  - Added new fields willBringToOfficeId, officeToBeCalledId to ParamCalculation.
+   
+* Version 2.7.0
+   - Added "servingDays" property in ResultSite
+   - Added "test" property in ParamOptionsBeforePayment
+
+* Version 2.6.0
+  - Added "parcels" property in ParamCalcaluation
+  - New property "returnCityCenterIfNoAddress" added in ParamAddressSearch
+  - New properties "servingOfficeId", "coordX", "coordY", "coordType" are added in class ResultSite
+  - New type ResultWorkingTime is introduced to specify office working time
+  - New properties "maxParcelDimensions", "maxParcelWeight" and "workingTimeSchedule" are added in class ResultOfficeEx
+  - New method getPickingDeliveryInfo() is available.
+  
+* Version 2.5.0
+  - New field foreignParcelNumber added in ParamParcel and ParamParcelInfo
+  - New structure ParamReturnServiceRequest is introduced to order return service requests
+  - New structure ParamReturnShipmentRequest is introduced to order return shipment requests
+  - New structure ParamFilterCountry is introduced to search and filter countries
+  - New structure ResultCountry is introduced for country search request responses
+  - New structure ResultState is introduced for state search request responses
+  - New fields "siteName", "postCode", "countryId", "stateId", "frnAddressLine1", "frnAddressLine2" are added in structure ParamAddress
+  - New fields "senderCountryId", "senderPostCode", "receiverCountryId", "receiverPostCode" are added in structure ParamCalculation
+  - New fields "countryId" and "searchString" are added in structure ParamFilterSite
+  - New fields "retShipmentRequest" of type ParamReturnShipmentRequest and "retServicesRequest" of type List<ParamReturnServiceRequest> is added in structure ParamPicking
+  - New fields "countryId", "stateId", "frnAddressLine1" and "frnAddressLine2" are added in structure ResultAddress
+  - New fields "countryId", "stateId", "frnAddressLine1" and "frnAddressLine2" are added in structure ResultAddressEx
+  - New fields "discPcntRetShipment", "discountRetShipment", "specialDelivery" are added in structure ResultAmounts
+  - New field  "countryId" is added in structure ResultSite
+  - New argument "language" is added in method listServices
+  - New arguments "senderCountryId", "senderPostCode", "receiverCountryId", "receiverPostCode", "language" are added in method listServicesForSites
+  - New arguments "senderCountryId", "senderPostCode", "receiverCountryId", "receiverPostCode" are added in method getWeightInterval
+  - New argument "countryId" is added for method getAddressNomenclature
+  - Method listSites is deprecated in favor of listSitesEx()
+  - New arguments "senderCountryId" and "senderPostCode" are added in method getAllowedDaysForTaking
+  - New method listCountries is introduced to search for supported countries
+  - New method listCountriesEx is introduced to search for supported countries using filter
+  - New method listStates is introduced to search for supported country states
+  - New method getStateById is introduced to get country state by id
+  - New method validatePostCode is introduced to verify post code is valid for country 
+
+* Version 2.4.0
+  - Methods listOfficesEx, listBlocks, listCommonObjects have "language" parameter added
+
+* Version 2.3.0
+  - New method getAdditionalUserParams is available
+  - New fields payerTypePackings, payerRefPackingsId added in ParamPicking and ParamCalculation
+  - New structure ParamPackings added and new field packings added in ParamPicking. The field and the structure are for internal use only at the moment
+  - Flag retThirdPartyPayer added in ParamPicking
+  - New structure ParamOptionsBeforePayment added to specify options before payment and field optionsBeforePayment added in ParamPicking
+  - Add size and weight properties in ParamParcelInfo
+  - listSites, listSitesEx, listAllSites, listQuarters, listStreets, listQuarterTypes, listStreetTypes have language parameter
+  - New methods serializeAddress, deserializeAddress, makeAddressString and ParamAddress extended with serializedAddress field
+ 
+* Version 2.2.0
+  - New method "listContractClients" is available
+  - New method "validateAddress" is available
+  - New method "listOfficeEx" is available
+  - JQuery Speedy address form demo example is added based on current library
+  
+* Version 2.1.0
+  - New method "listSpecialDeliveryRequirements" is available
+  - New property email is added in ParamClientData class
+  
+* Version 2.0.1
+  - Fixed bug #1 "The field willBringToOfficeId is not mapped in ParamPicking stdClass instance"
+  
+* Version 2.0.0
+  - Project moved to google code
+  - Root project folder renamed to speedy-eps-php-client-soap   
+  
+* Version 1.6
+  - Method searchClients is available 
+  
+* Version 1.5
+  - Fixed bug in returning enum value in AddrNomen class
+  - Windows based directory backslash separator is changed to use php constant DIRECTORY_SEPARATOR
+  - Method getMicroregionId is available 
+  
+* Version 1.4.1
+  - Fixed createOrder error processing
+  
+* Version 1.4
+  - New method trackParcel is available
+
+* Version 1.3
+  - New property willBringToOfficeId added in ParamPicking type
+  - General example is changed to create Bill Of Lading with COD (Collection On Delivery) and "to be called" option. 
+    Caller contract preferences are used for price calculation
+  - Fixed bug in AddrNomen class to return proper enumeration value
+  - Property setter methods added and getDepth method fixed in Size class
+  - Fixed method toStdClass in class ParamPDF to return additionalBarcodes in stdClass property with the same name 
+  
+* Version 1.2.3
+  - Support for Speedy Time Zone added - it is recommended to provide datetime arguments and parameters in Speedy Time Zone to avoid miscalculations
+  - Usage of listSites is replaced with usage of more flexible listSitesEx method
+  - Additional comments added
+  
+* Version 1.2.2
+  - Fix bug "Method setSeqNo in PHP class ParamParcelInfo has no effect"
+
+* Version 1.2.1
+  - Fixes in Exception classes to support versions earlier than 5.3.0 
+  - Some code snippets in examples were commented by default
+
+* Version 1.2 
+  - Add language parameter in trackPickingEx method
+  
+* Version 1.1.1
+  - Minor fixes
+
+* Version 1.1.0
+  - Fix bug in trackPicking method
+  - Implementation of trackPickingEx with extended result class ResultTrackPickingEx
+
+* Version 1.0.0
+  - Initial Speedy EPS SOAP v01 implementation.

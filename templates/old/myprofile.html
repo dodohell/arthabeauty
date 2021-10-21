@@ -1,0 +1,221 @@
+{include file="header.html"}
+<div class="row">
+    
+        <ol class="breadcrumb">
+            {$breadcrumbs}
+        </ol>
+    
+</div>
+<div class="row flex-column my-3 card p-4">
+    <h2 class="title">{#myprofile#}</h2>
+    {if $user.facebook_id || $user.google_id}
+        <div>{if $user.facebook_id}{#facebook_login_text#}{elseif $user.google_id}{#google_login_text#}{/if}</div>
+        <hr />
+    {/if}
+    
+    {if $useBonusPoints}
+    <div class="btn btn-light d-block my-2 text-left">
+        <strong>Вие разполагате с {$user.bonus_points} бонус {if $user.bonus_points == 1}точка{else}точки{/if}, които ще бъдат използвани при следващата Ви поръчка.</strong>
+    </div>
+    {/if}
+    
+    <div class="mt-3">
+        <div class="d-flex flex-row justify-content-between flex-wrap">
+            <h3>{#my_addresses#}</h3>
+            <a href="/add-address-page" class="submitFieldNormal btn btn-primary">{#add_address#}</a>
+        </div>
+        <div class="user-addresses">
+            {section name=ua loop=$user_addresses}
+            <div class="card m-1">
+                <div class="card-header d-flex flex-row justify-content-between flex-wrap">
+                    <strong>{$user_addresses[ua].firstname} {$user_addresses[ua].lastname}</strong>
+                    <div>
+                        {if $user_addresses[ua].default_billing}<i class="fas fa-money-bill-wave" data-toggle="tooltip" title="Избран като адрес за плащане"></i> {/if}
+                        {if $user_addresses[ua].default_shipping}<i class="fas fa-shipping-fast" data-toggle="tooltip" title="Избран като адрес за доставка"></i> {/if}
+                        {if !$user_addresses[ua].default_billing && !$user_addresses[ua].default_shipping}<strong>Не е избран</strong><br />{/if}
+                    </div>
+                </div>
+                <div class="card-body">
+                    {if $user_addresses[ua].email}
+                    <dl class="dlist-align">
+                        <dt>Email: </dt>
+                        <dd>{$user_addresses[ua].email}</dd>
+                    </dl>
+                    {/if}
+                    {if $user_addresses[ua].phone}
+                    <dl class="dlist-align">
+                        <dt>Телефон: </dt>
+                        <dd>{$user_addresses[ua].phone}</dd>
+                    </dl>
+                    {/if}
+                    {if $user_addresses[ua].district_name && $user_addresses[ua].city_name}
+                    <dl class="dlist-align">
+                        <dt>Област/град: </dt>
+                        <dd>{$user_addresses[ua].district_name} / {$user_addresses[ua].city_name}</dd>
+                    </dl>
+                    {/if}
+                    {if $user_addresses[ua].address_line_1 || $user_addresses[ua].address_line_2}
+                    <br>
+                    <dl class="dlist-align">
+                        <dt>Адрес: </dt>
+                        {if $user_addresses[ua].address_line_1}
+                        <dd>{$user_addresses[ua].address_line_1}</dd>
+                        {/if}
+                        {if $user_addresses[ua].address_line_2}
+                        <dd>{$user_addresses[ua].address_line_2}</dd>
+                        {/if}
+                        <dd>{$user_addresses[ua].postcode}, {$user_addresses[ua].city_name} {$user_addresses[ua].district_name}</dd>
+                    </dl>
+                    {/if}
+
+                    {if $user_addresses[ua].company_name}
+                    <dl class="dlist-align">
+                        <dt>Фирма: </dt>
+                        <dd>{$user_addresses[ua].company_name}</dd>
+                    </dl>
+                    {/if}
+                    {if $user_addresses[ua].vat_number}
+                    <dl class="dlist-align">
+                        <dt>БУЛСТАТ: </dt>
+                        <dd>{$user_addresses[ua].vat_number}</dd>
+                    </dl>
+                    {/if}
+                    {if $user_addresses[ua].company_city}
+                    <dl class="dlist-align">
+                        <dt>Град: </dt>
+                        <dd>{$user_addresses[ua].company_city}</dd>
+                    </dl>
+                    {/if}
+                    {if $user_addresses[ua].company_mol}
+                    <dl class="dlist-align">
+                        <dt>МОЛ: </dt>
+                        <dd>{$user_addresses[ua].company_mol}</dd>
+                    </dl>
+                    {/if}
+                    <a href="/{#htaccess_edit_address_page#}/{$user_addresses[ua].id}/" class="btn btn-primary">{#edit#}</a>
+                </div>
+                {*<div class="card-footer">
+                    {if $user_addresses[ua].default_billing}<i class="fas fa-money-bill-wave"></i> <strong>Избран като адрес за плащане</strong><br />{/if}
+                    {if $user_addresses[ua].default_shipping}<i class="fas fa-shipping-fast"></i> <strong>Избран като адрес за доставка</strong><br />{/if}
+                    {if !$user_addresses[ua].default_billing && !$user_addresses[ua].default_shipping}<strong>Не е избран</strong><br />{/if}
+                </div>*}
+            </div>
+            {/section}
+        </div>
+        <div class="row mt-5">
+            <div class="col-sm-8">
+                <div class="my-orders">
+                    <h3>{#my_orders#}</h3>
+                    <div class="table-responsive">
+                        <table class="table table-light px-5">
+                            <thead>
+                                <tr>
+                                    <th class="pl-1">
+                                        Номер на поръчка
+                                    </th>
+                                    <th>
+                                        Дата на поръчка
+                                    </th>
+                                    <th style="text-align: right;">
+                                        Стойност на артикули
+                                    </th>
+                                    <th style="text-align: right;">
+                                        Доставка
+                                    </th>
+                                    <th>
+                                        &nbsp;
+                                    </th>
+                                </tr>
+                            </thead>
+                            {section name=c loop=$carts}
+                                <tr>
+                                    <td class="pl-1 py-1">
+                                        <a href="/{#htaccess_myorders#}/{$carts[c].id}/"><strong>{$carts[c].id}</strong></a>
+                                    </td>
+                                    <td class="py-1">
+                                        <strong>{$carts[c].postdate|date_format:"%d/%m/%Y %H:%M"}</strong>
+                                    </td>
+                                    <td class="py-1" align="right">
+                                        {$carts[c].total_amount} {#currency#}
+                                    </td>
+                                    <td class="py-1" align="right">
+                                        {if $carts[c].discount_free_delivery}
+                                            0.00 {#currency#}
+                                        {else}
+                                            {$carts[c].delivery_amount} {#currency#}
+                                        {/if}
+                                    </td>
+                                    <td class="py-1">
+                                        <a href="/{#htaccess_myorders#}/{$carts[c].id}/" class="linkBlue btn btn-sm btn-primary">подробности</a>
+                                    </td>
+                                </tr>
+                            {/section}
+                        </table>
+                    </div>
+                    <a href="/{#htaccess_myorders#}" class="submitFieldNormal btn btn-primary">Разгледай моите поръчки</a>
+                </div>
+            </div>
+            <div class="col d-flex justify-content-end">
+                {if !$user.facebook_id && !$user.google_id}
+                <div>
+                    <h3>{#change_password#}</h3>
+                    <form method="post" action="/change-password" id="formChangePassword" class="mt-4 form-group changePasswordForm">
+                        <input type="password" name="password" class="form-control inputFieldOrder required" placeholder="{#password#}">
+                        <input type="password" name="confirm_password" class="form-control inputFieldOrder required" placeholder="{#confirm_password#}">
+                        <button type="submit" class="form-control submitField btn btn-warning" name="buttonChangePassword" value="1" id="buttonChangePassword">{#button_change_password#}</button>
+                        <script>
+                            $(document).ready(function () {
+                                $("#buttonChangePassword").bind("click", function () {
+                                    var errors = 0;
+                                    $("#formChangePassword input").each(function (i, e) {
+                                        if ($(this).hasClass("required")) {
+                                            if ($(this).val().trim() == "") {
+                                                $(this).addClass("redBorderIn");
+                                                errors++;
+                                            }
+
+                                            if ($(this).attr("name") == "password" && $("input[name=password]").val() != $("input[name=confirm_password]").val()) {
+                                                $(this).addClass("redBorderIn");
+                                                $("input[name=confirm_password]").addClass("redBorderIn");
+                                                errors++;
+                                            }
+                                        }
+                                    });
+
+                                    if (errors > 0) {
+                                        return false;
+                                    } else {
+                                        return true;
+                                    }
+                                });
+                            });
+                        </script>
+                    </form>
+                </div>
+            {/if}
+            </div>
+        </div>
+        <div class="form-check mt-4">
+            <label class="form-check-label">
+                <input type="checkbox" name="mailinglist" value="1" class="form-check-input" {if $user.mailinglist == 1}checked{/if} onClick="$(this).hide(); $('#preloader').show(); window.location.href = '/mailinglist-subscribe-unsubscribe'"> 
+                {#join_newsletter#}
+            </label>
+            <div id="preloader" style="display: none;">
+                <img src="/images/preloader.gif">
+                Моля, изчакайте
+            </div>
+        </div>
+        <small>
+            макс: 1 / седмица - Имайте, предвид, че вашият email няма да бъде споделен с трети лица и информационните съобщения, които ви изпращаме няма да бъдат повече от едно на седмица.
+        </small>
+    </div>
+    
+    <div class="clear"></div>
+    <br />
+</div>
+<script>
+    $(document).ready(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+    });
+</script>
+{include file="footer.html"}

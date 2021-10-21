@@ -1,0 +1,92 @@
+{include file="header.html"}
+    <div class="breadcrumbsContainer">
+        <div class="container">
+            <div class="breadcrubsRow">
+                {$breadcrumbs}
+            </div>
+        </div>
+    </div>
+	<div class="catBackgroundGradient">
+		<div class="contactsContainer">
+			<div class="container">
+				<h1 class="pageTitle">{if $row.h1}{$row.h1}{else}{$row.name}{/if}</h1>
+				{if $row.pic_main}
+				<div class="aboutUsBackground" style="background-image: url(/files/{$row.pic_main});">
+					<div class="logoContainer">
+						<img src="/images/logo.png" alt="logo">
+					</div>
+				</div>
+				{/if}
+				<div class="aboutUsContent">
+					{if $row.pic_1 || $row.pic_2}
+					<div class="float-right ml-3">
+						{if $row.pic_1 && $row.menu_pos != "4_boxes"}
+							<div>
+								<a href="/files/{$row.pic_1}" class="highslide" data-fancybox="infoGallery" title="{$row.pic_1_name}"><img src="{if $row.pic_1}/files/tn/{$row.pic_1}{else}/images/noImage.png{/if}"  alt="{$row.pic_1_name}" /></a>
+							</div>
+						{/if}
+						{if $row.pic_2}
+							<div>
+							<a href="/files/{$row.pic_2}" class="highslide" data-fancybox="infoGallery" title="{$row.pic_2_name}"><img src="{if $row.pic_2}/files/tn/{$row.pic_2}{else}/images/noImage.png{/if}"  alt="{$row.pic_2_name}" class="mt-3" /></a>
+							</div>
+						{/if}
+					</div>
+					{/if}
+					
+					{$row.description}
+					
+					{if $images}
+						<h4>{#gallery#}</h4>
+						<div class="infoGallery">
+							{section name=i loop=$images}
+							<a href="/files/{$images[i].file}" data-fancybox="infoGallery" class="item-gallery">
+								<img src="/files/tn/{$images[i].file}" class="thumbImg" alt="{if $images[i].name}{$images[i].name}{else}{$row.name}{/if}">
+							</a>
+							{/section}
+						</div>
+						<div class="clear"></div>
+					{/if}
+						
+					{if $files}
+						<h4 class="heading">{#files#}</h4>
+						<div class="downloadFiles mb-5">
+						{section name=f loop=$files}
+							<a href="/{#htaccess_downloadinfofile#}/{$files[f].file}/{$row.id}" target="_blank">
+								<i class="fas fa-file-download"></i> {if $files[f].name}{$files[f].name}{else}{$files[f].file}{/if}
+							</a>
+						{/section}
+						</div>
+					{/if}
+					
+					
+					
+					{if $row.contactform}
+						{include file="contactsform.html"}
+					{/if}
+				</div>
+			</div>
+		</div>
+		
+		
+		
+	</div>
+
+<div class="blogSection">
+    <div class="container">
+        <div class="articleRow">
+			{section name=sm loop=$subMenus}
+				<article>
+					<a href="{if $subMenus[sm].url}{$subMenus[sm].url}{else}{if $subMenus[sm].htaccess_url}{$subMenus[sm].htaccess_url}{else}/{#htaccess_info#}/{$subMenus[sm].id}{/if}{/if}">					
+						<section class="imgContainer" style="background-image: url({if $subMenus[sm].pic_1}/files/tn/{$subMenus[sm].pic_1}{else}/images/article-2.jpg{/if});"></section>
+						<section class="content">
+							<h3 class="articleTitle">{$subMenus[sm].name}</h3>
+							<div class="excerpt">{$subMenus[sm].excerpt}</div>
+						</section>
+					</a>
+				</article>
+			{/section}
+        </div>
+    </div>
+
+</div>
+{include file="footer.html"}

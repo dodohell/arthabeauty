@@ -1,0 +1,304 @@
+{include file="admin/header.html"}
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb p-0">
+        <li class="breadcrumb-item">
+            <a href="./">
+                <span class="mdi mdi-home"></span>                
+            </a>
+        </li>
+        <li class="breadcrumb-item">
+            <a href="./{$php_self}">{#category_types#}</a>
+        </li>
+        <li class="breadcrumb-item" aria-current="page">{$page_heading}</li>
+    </ol>
+</nav>
+<div class="row-fluid">
+    <form method="post" enctype="multipart/form-data">
+        <div class="row">
+            <div class="col-sm-7 well">
+                <div class="nonboxy-widget">
+                    <div class="widget-head">
+                        <h5>{#settings#}</h5>
+                    </div>
+                    <div class="widget-content">
+                        <div class="widget-box">
+                            <fieldset>
+                                <div class="control-group">
+                                    <label class="checkbox inline"><input type="checkbox" value="1" name="active" {if $row.active}checked{/if}> {#active#}</label>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                    <div class="widget-head">
+                        <h5>{#general_information#}</h5>
+                    </div>
+                    <div class="widget-content">
+                        <div class="widget-box">
+                            <fieldset>
+                                <div class="control-group">
+                                    <label class="control-label" for="name_bg">{#name#} BG</label>
+                                    <div class="controls">
+                                        <input type="text" name="name_bg" value="{$row.name_bg}" class="form-control form-control-sm text-tip" id="name_bg" title="{#enter#} {#name#} BG">
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label" for="name_en">{#name#} EN</label>
+                                    <div class="controls">
+                                        <input type="text" name="name_en" value="{$row.name_en}" class="form-control form-control-sm text-tip" id="name_en" title="{#enter#} {#name#} EN">
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label" for="name_de">{#name#} DE</label>
+                                    <div class="controls">
+                                        <input type="text" name="name_de" value="{$row.name_de}" class="form-control form-control-sm text-tip" id="name_de" title="{#enter#} {#name#} DE">
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label" for="name_ro">{#name#} RO</label>
+                                    <div class="controls">
+                                        <input type="text" name="name_ro" value="{$row.name_ro}" class="form-control form-control-sm text-tip" id="name_ro" title="{#enter#} {#name#} RO">
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label" for="name_ru">{#name#} RU</label>
+                                    <div class="controls">
+                                        <input type="text" name="name_ru" value="{$row.name_ru}" class="form-control form-control-sm text-tip" id="name_ru" title="{#enter#} {#name#} RU">
+                                    </div>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                    <div class="nonboxy-widget">
+                        <div class="widget-head">
+                            <h5>{#description#}</h5>
+                        </div>
+                        <div class="widget-content">
+                            <div class="widget-box">
+                                {$editor}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-sm-5 well">
+                <div class="mb-3">
+                    <span>{#picture#} 1</span>
+                    <div class="custom-file">
+                        <input type="file" name="pic_1" class="custom-file-input" id="pic_1">
+                        <label class="custom-file-label" for="pic_1">{if $row.pic_1}{$row.pic_1}{else}{#picture#} 1{/if}</label>
+                    </div>
+                    {if $row.pic_1}
+                        <img src="/files/tn/{$row.pic_1}" class="picView">
+                        <a href="{$php_edit}?act=delete&field=pic_1&id={$id}"><i class="mdi mdi-trash-can-outline"></i>{#delete#}</a>
+                    {/if}
+                </div>
+                <script>
+                    $('#pic_1').on('change',function(){
+                        //get the file name
+                        var fileName = $(this).val();
+                        //replace the "Choose a file" label
+                        $(this).next('.custom-file-label').html(fileName);
+                    })
+                </script>
+                <div class="nonboxy-widget">
+                    <div class="widget-head">
+                        <h5>{#attached_categories#}</h5>
+                    </div>
+                    <div class="control-group">
+                        {section name=c loop=$categories}
+                            <input type="checkbox" value="{$categories[c].id}" name="categories[]" {$categories[c].selected} /> <strong>{$categories[c].name}</strong><br />
+                            {section name=sc loop=$categories[c].subcategories}
+                                <input type="checkbox" value="{$categories[c].subcategories[sc].id}" name="categories[]" {$categories[c].subcategories[sc].selected} /> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{$categories[c].subcategories[sc].name}<br />
+                            {/section}
+                        {/section}
+                    </div>
+                </div>
+
+                <div class="nonboxy-widget">
+                    <div class="widget-head">
+                        <h5>Пренасочване</h5>
+                    </div>
+                    <div class="widget-content">
+                        <div class="widget-box">
+                            <fieldset>
+                                <div class="control-group">
+                                    <label class="control-label" for="url_bg">{#url#} BG</label>
+                                    <div class="controls">
+                                        <input type="text" name="url_bg" value="{$row.url_bg}" class="form-control form-control-sm text-tip" id="url_bg" title="{#enter#} {#url#} BG">
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label" for="url_en">{#url#} EN</label>
+                                    <div class="controls">
+                                        <input type="text" name="url_en" value="{$row.url_en}" class="form-control form-control-sm text-tip" id="url_en" title="{#enter#} {#url#} EN">
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label" for="url_de">{#url#} DE</label>
+                                    <div class="controls">
+                                        <input type="text" name="url_de" value="{$row.url_de}" class="form-control form-control-sm text-tip" id="url_de" title="{#enter#} {#url#} DE">
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label" for="url_ru">{#url#} RU</label>
+                                    <div class="controls">
+                                        <input type="text" name="url_ru" value="{$row.url_ru}" class="form-control form-control-sm text-tip" id="url_ru" title="{#enter#} {#url#} RU">
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label" for="url_ro">{#url#} RO</label>
+                                    <div class="controls">
+                                        <input type="text" name="url_ro" value="{$row.url_ro}" class="form-control form-control-sm text-tip" id="url_ro" title="{#enter#} {#url#} RO">
+                                    </div>
+                                </div>
+                                {*<div class="control-group">
+                                <label class="control-label" for="url_target">{#url_target#}</label>
+                                <div class="controls">
+                                <select name="url_target" class="col-sm-12" id="url_target">
+                                <option value="_self" {if $row.url_target == "_self"}selected{/if}>{#target_self#}</option>
+                                <option value="_blank" {if $row.url_target == "_blank"}selected{/if}>{#target_blank#}</option>
+                                </select>
+                                </div>
+                                </div>*}
+                            </fieldset>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="nonboxy-widget">
+                    <div class="widget-head">
+                        <h5>{#htaccess_settings#}</h5>
+                    </div>
+                    <div class="widget-content">
+                        <div class="widget-box">
+                            <fieldset>
+                                <div class="control-group">
+                                    <label class="control-label" for="htaccess_url_bg">{#htaccess_url#} BG</label>
+                                    <div class="controls">
+                                        <input type="text" name="htaccess_url_bg" value="{$row.htaccess_url_bg}" class="htaccessField form-control form-control-sm text-tip" id="htaccess_url_bg" title="{#enter#} {#htaccess_url#} BG" autocomplete="new-password">
+                                        <div class="errorHTACCESS">{#invalid_or_duplicate_htaccess#}</div>
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label" for="htaccess_url_en">{#htaccess_url#} EN</label>
+                                    <div class="controls">
+                                        <input type="text" name="htaccess_url_en" value="{$row.htaccess_url_en}" class="htaccessField form-control form-control-sm text-tip" id="htaccess_url_en" title="{#enter#} {#htaccess_url#} EN" autocomplete="new-password">
+                                        <div class="errorHTACCESS">{#invalid_or_duplicate_htaccess#}</div>
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label" for="htaccess_url_de">{#htaccess_url#} DE</label>
+                                    <div class="controls">
+                                        <input type="text" name="htaccess_url_de" value="{$row.htaccess_url_de}" class="htaccessField form-control form-control-sm text-tip" id="htaccess_url_de" title="{#enter#} {#htaccess_url#} DE" autocomplete="new-password">
+                                        <div class="errorHTACCESS">{#invalid_or_duplicate_htaccess#}</div>
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label" for="htaccess_url_ru">{#htaccess_url#} RU</label>
+                                    <div class="controls">
+                                        <input type="text" name="htaccess_url_ru" value="{$row.htaccess_url_ru}" class="htaccessField form-control form-control-sm text-tip" id="htaccess_url_ru" title="{#enter#} {#htaccess_url#} RU" autocomplete="new-password">
+                                        <div class="errorHTACCESS">{#invalid_or_duplicate_htaccess#}</div>
+                                    </div>
+                                </div>
+                                <div class="control-group">
+                                    <label class="control-label" for="htaccess_url_ro">{#htaccess_url#} RO</label>
+                                    <div class="controls">
+                                        <input type="text" name="htaccess_url_ro" value="{$row.htaccess_url_ro}" class="htaccessField form-control form-control-sm text-tip" id="htaccess_url_ro" title="{#enter#} {#htaccess_url#} RO" autocomplete="new-password">
+                                        <div class="errorHTACCESS">{#invalid_or_duplicate_htaccess#}</div>
+                                    </div>
+                                </div>
+                                {if 0}<div id="errorTracker"></div>{/if}
+                                {literal}
+                                    <script>
+                                        $(document).ready(function () {
+                                            $(".htaccessField").bind("keyup", function () {
+                                                var use_index = $(".htaccessField").index(this);
+                                                var lang = $(".htaccessField:eq(" + use_index + ")").attr("name").replace("htaccess_url_", "");
+                                                var fieldValue = $(".htaccessField:eq(" + use_index + ")").val().trim();
+
+                                                if (fieldValue == "") {
+                                                    $(".errorHTACCESS:eq(" + use_index + ")").hide();
+                                                } else {
+                                                    $.ajax({
+                                                        type: "POST",
+                                                        url: "checkHtaccess.php",
+                                                        data: "type=category_types&lang_check=" + lang + "&record_id={/literal}{$row.id}{literal}&htaccess_url=" + $(this).val(),
+                                                        success: function (html) {
+                                                            // $("#errorTracker").empty();
+                                                            // $("#errorTracker").append(html);
+                                                            if (html != 0) {
+                                                                if (html == 2) {
+                                                                    $(".errorHTACCESS:eq(" + use_index + ")").hide();
+                                                                } else {
+                                                                    $(".errorHTACCESS:eq(" + use_index + ")").show();
+                                                                }
+                                                            } else {
+                                                                $(".errorHTACCESS:eq(" + use_index + ")").hide();
+                                                            }
+
+                                                            //check for filing the inputs with duplicate data at once and avoid submiting it.
+                                                            var error = 0;
+                                                            $(".htaccessField").each(function (i, e) {
+                                                                if (i != use_index) {
+                                                                    var elemVal = $(".htaccessField:eq(" + i + ")").val().trim();
+                                                                    if (fieldValue == elemVal) {
+                                                                        error = 1;
+                                                                        return false;
+                                                                    }
+                                                                }
+                                                            });
+
+                                                            if (error == 1) {
+                                                                $(".errorHTACCESS:eq(" + use_index + ")").show();
+                                                            } else {
+                                                                //$(".errorHTACCESS:eq("+use_index+")").hide();
+                                                            }
+                                                        }
+                                                    });
+                                                }
+                                            });
+                                        });
+                                    </script>
+                                {/literal}
+                            </fieldset>
+                        </div>
+                    </div>
+                    <div class="widget-box">
+                        <div class="alert alert-error fade in" id="generalHTACCESSerror">
+                            {if 0}<button data-dismiss="alert" class="close" type="button">×</button>{/if}
+                            <strong>{#general_error_heading#}</strong><br /> {#general_error_text#}
+                        </div>
+                    </div>
+                    <div class="form-actions">
+                        {literal}
+                            <script>
+                                $(document).ready(function () {
+                                    $("button[name=Submit]").bind("click", function () {
+                                        var prompted_error = 0;
+                                        $(".errorHTACCESS").each(function (e, i) {
+                                            if ($(this).css("display") == "block") {
+                                                prompted_error = 1;
+                                            }
+                                        });
+
+                                        if (prompted_error == 1) {
+                                            $("#generalHTACCESSerror").show();
+                                            return false;
+                                        } else {
+                                            $("#generalHTACCESSerror").hide();
+                                        }
+                                    });
+                                });
+                            </script>
+                        {/literal}
+                        <button type="submit" name="Submit" class="btn btn-info">{#save_changes#}</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {include file="admin/metaInformation.html"}
+    </form>
+</div>
+
+{include file="admin/footer.html"}

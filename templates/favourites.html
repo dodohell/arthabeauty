@@ -1,0 +1,139 @@
+{include file="header.html"}
+<div class="breadcrumbsContainer">
+    <div class="container">
+        <div class="breadcrubsRow">
+            {$breadcrumbs}
+        </div>
+    </div>
+</div>
+
+<div class="catBackgroundGradient">
+    <div class="userWelcome">
+        <div class="container">
+            <div class="topRow">
+                <div class="initials">{$user.name_initials}</div>
+                <span class="welcomeText">{#welcome#}, {$user.first_name} {$user.last_name}</span>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="categoriesWrapper">
+    <div class="container">
+        <div class="productsSection w-100">
+            <div class="topRow">
+                <div class="heading">{#favourite_products#} <span class="subHeading">{if $resultsCount > 0}({$resultsCount}){/if}</span></div>
+            </div>
+            <div class="productsRow" id="holderProducts">
+                {section name=i loop=$items}
+                <div class="singleItemFavourites" id="singleItemFavourites-{$items[i].id}">
+                    <a class="product" href="{if $items[i].htaccess_url}{$items[i].htaccess_url}{else}/{#htaccess_product#}/{$items[i].id}{/if}">
+                        <div class="imgContainer" style="background-image: url({if $items[i].mainPic}/files/tn/{$items[i].mainPic}{else}/images/noImage.png{/if});">
+                            <span class="likedBox likedBoxRed" name="{$items[i].id}"></span>
+                            {if $items[i].discountPic}<img class="discountImgBox" src="/files/{$items[i].discountPic}" alt="promo">{/if}
+                            {if $items[i].badge}
+                                    {if $items[i].discountPic}
+                                        <img class="badgeImgBoxBottom" src="/files/{$items[i].badge}" alt="badge">
+                                    {else}
+                                        <img class="badgeImgBox" src="/files/{$items[i].badge}" alt="badge">
+                                    {/if}
+                                {/if}
+                        </div>
+                        <h3 class="name">{$items[i].brand_name}</h3>
+                        {if $lng != "en"}<span class="excerpt">{$items[i].name_en}</span>{/if}
+                        <span class="excerpt">{$items[i].name}</span>
+                        {if $items[i].price_specialoffer > 0.0}
+                            <span class="d-flex flex-row justify-content-around">
+                                <span class="price">{if $abb_before_amount}{$currency_abb}{/if}{$items[i].price_specialoffer|number_format: 2} {if !$abb_before_amount}{$currency_abb}{/if}</span>
+                                <del class="price-old">{if $abb_before_amount}{$currency_abb}{/if}{$items[i].price|number_format: 2} {if !$abb_before_amount}{$currency_abb}{/if}</del>
+                            </span>
+                        {elseif $items[i].price > 0.0}
+                            <span class="price">{if $abb_before_amount}{$currency_abb}{/if}{$items[i].price|number_format: 2} {if !$abb_before_amount}{$currency_abb}{/if}</span>
+                        {/if}
+                    </a>
+                    <!-- rating-wrap -->
+                    <div class="rating-wrap">
+                        <div class="starsRow" id="rating-{$items[i].id}"></div>
+                        {*{if $items[i].reviews_count > 0 && $items[i].comments > 0}
+                            {if $items[i].reviews_count > 0}<div class="label-rating"><small>{$items[i].reviews_count} {if $items[i].reviews_count > 1}{#reviews#}{else}{#review#}{/if}</small></div>{/if}
+                            {if $items[i].comments > 0}<div class="label-rating"><small>{$items[i].comments} {if $items[i].comments > 1}{#comments#}{else}{#comment#}{/if}</small></div>{/if}
+                        {else}
+                            <div class="label-rating"><small>Все още няма ревюта.</small></div>
+                        {/if}*}
+                    </div> <!-- rating-wrap.// -->
+                    <script>
+                        $(document).ready(function () {
+                            $.fn.raty.defaults.path = '/js/raty/img';
+                            $('#rating-{$items[i].id}').raty({
+                                readOnly:  true,
+                                starType:    'png', // Element used to represent a star.
+                                starHalf:    'star-half.png', // The name of the half star image.
+                                starOff:     'star-off.png',  // Name of the star image off.
+                                starOn:      'star-on.png',   // Name of the star image on.
+                                half:  true,
+                                start: parseFloat({$items[i].rating})
+                           });
+                        });
+                    </script>
+                </div>
+                {/section}
+            </div>
+            <script>
+                $("a.product").click(function(ev){
+                    ev.preventDefault();
+                    var link = $(this).prop("href");
+                    var target = $(ev.target);
+                    if (target.is(".likedBox")) {
+                        var likedBox = $(this).find(".likedBox");
+                        likedBox.click();
+                        
+                    }else{
+                        window.location = link;
+                    }
+                });
+
+                $(".likedBox").bind("click", function(){
+                    {if !$user.id}
+                        swal({
+                            title: "{#error_login#}",
+                            text: "{#error_login_text_2#}",
+                            type: "warning",
+                            confirmButtonText: "{#proceed_login#}",
+                            showCancelButton: true,
+                            cancelButtonText: "{#cancel_liked_box#}",
+                            closeOnConfirm: true,
+                            closeonCancel: true
+                        },
+                        function(){
+                            $("#loginFormButton").trigger("click");
+                        });
+                    {else}
+                        if ( $(this).hasClass("likedBoxRed") ){
+                            var product_id = $(this).attr("name");
+                            $.ajax({
+                                type: "POST",
+                                url: "/",
+                                data: "param=post-product-to-favourites&act=remove&product_id="+product_id,
+                                dataType: "json",
+                                success: function(res){
+                                    $("#singleItemFavourites-"+product_id).remove();
+                                    $("#favouritesQuantityTopButton").html(res.total_count);
+                                }
+                            });
+                            $(this).removeClass("likedBoxRed");
+                        }
+                    {/if}
+                    return false;
+                });
+            </script>
+            <div class="bottomRow">
+                <div class="excerpt">
+                    {if $row.description && !$page}{$row.description}{/if}
+                </div>
+                <div class="pagination">
+                    {$pages}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{include file="footer.html"}

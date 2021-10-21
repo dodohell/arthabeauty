@@ -1,0 +1,83 @@
+{include file="header.html"}
+<div class="row">
+    <div class="col-12">
+        <ol class="breadcrumb">
+            {$breadcrumbs}
+        </ol>
+    </div>
+</div>
+<div class="card my-3">
+    <h1 class="px-3 py-2 mb-0">{if $row.h1}{$row.h1}{else}{$row.name}{/if}</h1>
+    <div class="mb-3 p-3">
+        {if $row.pic_1 || $row.pic_2}
+        <div style="float: right; margin-left: 10px;">
+            {if $row.pic_1 && $row.menu_pos != "4_boxes"}
+                <a href="/files/{$row.pic_1}" class="highslide" data-fancybox="infoGallery" title="{$row.pic_1_name}"><img src="{if $row.pic_1}/files/tn/{$row.pic_1}{else}/images/noImage.png{/if}"  alt="{$row.pic_1_name}" /></a>
+            {/if}
+            {if $row.pic_2}
+                <br /><br />
+                <a href="/files/{$row.pic_2}" class="highslide" data-fancybox="infoGallery" title="{$row.pic_2_name}"><img src="{if $row.pic_2}/files/tn/{$row.pic_2}{else}/images/noImage.png{/if}"  alt="{$row.pic_2_name}" /></a>
+            {/if}
+        </div>
+        {/if}
+        
+        {$row.description}
+        
+        <div class="clear"></div>
+        <br>
+        {if $images}
+        <h2 class="heading">{#gallery#}</h2>
+        <div class="row p-3">
+            {section name=i loop=$images}
+            <a href="/files/{$images[i].file}" data-fancybox="infoGallery" class="infoGallery">
+                <div class="item-gallery">
+                    <img src="/files/tn/{$images[i].file}" class="thumbImg" alt="{if $images[i].name}{$images[i].name}{else}{$row.name}{/if}">
+                </div>
+            </a>
+            {/section}
+        </div> <!-- slider-nav.// -->
+        <div class="clear"></div>
+        {/if}
+        
+        {if $files}
+        <dl>
+            <dt><h3 class="heading">{#files#}</h3></dt>
+            {section name=f loop=$files}
+            <dd>
+                <a href="/{#htaccess_downloadinfofile#}/{$files[f].file}/{$row.id}" target="_blank">
+                    {*<i class="fas fa-chevron-right"></i>*}<i class="fas fa-file-download"></i> {if $files[f].name}{$files[f].name}{else}{$files[f].file}{/if}
+                </a>
+            </dd>
+            {/section}
+        </dl>
+        {/if}
+        
+        {*{if $files}
+        <br />
+        <strong>{#files#}</strong><br />
+        {section name=f loop=$files}
+            <a href="/files/{$files[f].file}" title="{$files[f].name}" target="_blank" class="linkFile">{if $files[f].name}{$files[f].name}{else}{$files[f].file}{/if}</a>
+        {/section}
+        <div class="clear"></div>
+        <br />
+        {/if}*}
+        <div class="clear"></div>
+        {section name=sm loop=$subMenus}
+        <div class="clear"></div>
+            <h3>{$subMenus[sm].name}</h3><br />
+            {if $subMenus[sm].pic_1}
+                {if $subMenus[sm].pic_1}
+                    <a href="/files/{$subMenus[sm].pic_1}" class="highslide"><img src="{if $subMenus[sm].pic_1}/files/tn/{$subMenus[sm].pic_1}{else}/images/noImage.png{/if}" style="border: 1px solid #999;" /></a>
+                {/if}
+            {/if}
+            {$subMenus[sm].excerpt}
+            <br />
+            <a href="{if $subMenus[sm].url}{$subMenus[sm].url}{else}{if $subMenus[sm].htaccess_url}{$subMenus[sm].htaccess_url}{else}/{#htaccess_info#}/{$subMenus[sm].id}{/if}{/if}" target="{$subMenus[sm].htaccess_url}" class="linkReadMore">{#read_more#}</a>
+            <br /><br />
+        {/section}
+        {if $row.contactform}
+            {include file="contactsform.html"}
+        {/if}
+    </div>
+</div>
+{include file="footer.html"}

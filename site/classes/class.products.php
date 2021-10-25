@@ -475,7 +475,7 @@
             if($row["meta_title"]){
             }
             else{
-            	$sm->assign("infoTitle", $row["name_en"].(($row["name_en"] && $row["name_bg"])?", ":"").$row["name"]." - ArthaBeauty");
+            	$sm->assign("infoTitle", $row["name"].(($row["name_en"] && $row["name_bg"])?", ":"").$row["name_en"]." - ArthaBeauty");
             }
             if($row["meta_description"]){
             }

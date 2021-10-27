@@ -11,8 +11,8 @@
 		public $auth_url           = 'https://www.facebook.com/dialog/oauth?';
 		public $redirect_uri       = 'https://www.weddingday.bg/login-facebook-confirm';  
 		//public $redirect_uri       = 'https://www.weddingday.bg/site/index.php';  
-		public $app_id             = '107705512959170';
-		public $app_secret		   = 'f22f88a406567a946395302ba220dab3'; 
+		public $app_id             = '1045873996148106';
+		public $app_secret		   = '12487953c67781547b07492832df4e2d'; 
 		
 		/**
 		 * set up the app id, app secret and redirect uri 

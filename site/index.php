@@ -260,7 +260,7 @@
             $fb = new Facebook\Facebook([
                 'app_id' => $fb_app_id,
                 'app_secret' => $fb_app_secret,
-                'default_graph_version' => 'v3.3',
+                'default_graph_version' => 'v12.0',
             ]);
 
             $helper = $fb->getRedirectLoginHelper();
@@ -274,7 +274,7 @@
             $fb = new Facebook\Facebook([
                 'app_id' => $fb_app_id,
                 'app_secret' => $fb_app_secret,
-                'default_graph_version' => 'v3.3',
+                'default_graph_version' => 'v12.0',
             ]);
 
             $helper = $fb->getRedirectLoginHelper();

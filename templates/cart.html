@@ -163,6 +163,20 @@
                                 <span class="left">{#cart_delivery#}</span>
                                 <span class="right" id="cartProductsAmountTotalDel">{if $abb_before_amount}{$currency_abb}{/if}{if $total_amount < 79}4.00{else}0.00{/if} {if !$abb_before_amount}{$currency_abb}{/if}</span>
                             </div>
+                            <div class="orderRow">
+                                <span class="left">{#total_amount#}</span>
+                                <span class="right" id="cartProductsAmountTotal">
+                                    {if $abb_before_amount}{$currency_abb}{/if}
+                                    
+                                    {if $total_amount < 79}
+                                    {math equation="x + y" x=$total_amount y=4.0 format="%.2f"}
+                                    {else}
+                                    {$total_amount}
+                                    {/if}
+                                    
+                                    {if !$abb_before_amount}{$currency_abb}{/if}
+                                </span>
+                            </div>
                             <div class="promoCodeForm">
                                 <div class="inputField">
                                     <input type="text" name="promo_code_number" id="promo_code_number" placeholder="{#if_promo_code#}" autocomplete="off">

@@ -165,7 +165,7 @@
                             </div>
                             <div class="orderRow">
                                 <span class="left">{#total_amount#}</span>
-                                <span class="right" id="cartProductsAmountTotal">
+                                <span class="right" id="cartProductsAmountTotalTotal">
                                     {if $abb_before_amount}{$currency_abb}{/if}
                                     
                                     {if $total_amount < 79}
@@ -223,7 +223,10 @@
                                                 $("#totalContainer").removeClass("cartTotalContainer");
                                                 
                                                 $("#promo_codeSuccess").html(response.name + "<br>" + response.message);
-                                                $("#promo_codeSuccess").show();
+                                                $("#promo_codeSuccess").show();                                                
+                                                
+                                                $("#cartProductsAmountTotalTotal").html("{if $abb_before_amount}{$currency_abb}{/if}" + (response.total_amount_disconted + 4) + " {if !$abb_before_amount}{$currency_abb}{/if}");
+                                                
                                             }else{
                                                 $("#cartProductsAmount .num").html(total_amount);
                                                 $("#cartProductsPromoDiscount").html("");

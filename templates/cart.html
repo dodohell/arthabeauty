@@ -225,7 +225,7 @@
                                                 $("#promo_codeSuccess").html(response.name + "<br>" + response.message);
                                                 $("#promo_codeSuccess").show();                                                
                                                 
-                                                $("#cartProductsAmountTotalTotal").html("{if $abb_before_amount}{$currency_abb}{/if}" + (response.total_amount_disconted + 4) + " {if !$abb_before_amount}{$currency_abb}{/if}");
+                                                $("#cartProductsAmountTotalTotal").html("{if $abb_before_amount}{$currency_abb}{/if}" + (response.total_amount_disconted + 4).toFixed(2) + " {if !$abb_before_amount}{$currency_abb}{/if}");
                                                 
                                             }else{
                                                 $("#cartProductsAmount .num").html(total_amount);
@@ -241,6 +241,8 @@
                                                 $("#cartProductsAmountCont").slideUp();
                                                 $("#cartProductsPromoDiscountCont").slideUp();
                                                 $("#totalContainer").addClass("cartTotalContainer");
+                                                
+                                                $("#cartProductsAmountTotalTotal").html("{if $abb_before_amount}{$currency_abb}{/if}" + (total_amount + 4).toFixed(2) + " {if !$abb_before_amount}{$currency_abb}{/if}");
 
                                                 let errorCodes = [400, 401, 402, 403];
 

@@ -1,0 +1,9 @@
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home/arthabea/repositories/arthabeauty/
+    - /bin/cp -R design $DEPLOYPATH
+    - /bin/cp -R files $DEPLOYPATH
+    - /bin/cp -R js $DEPLOYPATH
+    - /bin/cp -R site $DEPLOYPATH
+    - /bin/cp -R templates $DEPLOYPATH
+    - /bin/cp -R lang $DEPLOYPATH

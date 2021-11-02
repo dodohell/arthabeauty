@@ -314,9 +314,27 @@
                             </div>
                             {/if}
                             <div class="totalContainer{if !$discount_promo_code_amount > 0} checkoutTotalContainer{/if}">
+                                <div class="orderRow">                                    
+                                    <span class="left">{#subtotal_amount#}</span>
+                                    <span class="right">{if $abb_before_amount}{$currency_abb}{/if}{$total_amount|number_format: 2} {if !$abb_before_amount}{$currency_abb}{/if}</span>
+                                </div>
+                                <div class="orderRow">
+                                    <span class="left">{#cart_delivery#}</span>
+                                    <span class="right" id="cartProductsAmountTotalDel">{if $abb_before_amount}{$currency_abb}{/if}{if $total_amount < 79}4.00{else}0.00{/if} {if !$abb_before_amount}{$currency_abb}{/if}</span>
+                                </div>
                                 <div class="orderRow">
                                     <span class="left">{#total_amount#}</span>
-                                    <span class="right">{if $abb_before_amount}{$currency_abb}{/if}{$total_amount|number_format: 2} {if !$abb_before_amount}{$currency_abb}{/if}</span>
+                                    <span class="right" id="cartProductsAmountTotalTotal">
+                                        {if $abb_before_amount}{$currency_abb}{/if}
+
+                                        {if $total_amount < 79}
+                                        {math equation="x + y" x=$total_amount y=4.0 format="%.2f"}
+                                        {else}
+                                        {$total_amount}
+                                        {/if}
+
+                                        {if !$abb_before_amount}{$currency_abb}{/if}
+                                    </span>
                                 </div>
                                 {*<div class="promoCodeForm">
                                     <div class="inputField">

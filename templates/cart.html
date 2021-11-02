@@ -213,6 +213,11 @@
                                                 $("#cartProductsAmountTotal").html("{if $abb_before_amount}{$currency_abb}{/if}"+response.total_amount_disconted.toFixed(2)+" {if !$abb_before_amount}{$currency_abb}{/if}");
                                                 if(response.total_amount_disconted.toFixed(2) < 79){
                                                 	$("#cartProductsAmountTotalDel").html("{if $abb_before_amount}{$currency_abb}{/if}4.00 {if !$abb_before_amount}{$currency_abb}{/if}");
+                                                    if($('.alert.alert-warning').length > 0) {
+                                                        $('.alert.alert-warning b').html("{if $abb_before_amount}{$currency_abb}{/if}" + (79 - response.total_amount_disconted).toFixed(2) + " {if !$abb_before_amount}{$currency_abb}{/if}");
+                                                    } else {
+                                                        $('.cartWrapper .container .leftColumn').prepend('<div class="alert alert-warning">Изберете продукти за още <b>{if $abb_before_amount}{$currency_abb}{/if}' + (79 - response.total_amount_disconted).toFixed(2) + ' {if !$abb_before_amount}{$currency_abb}{/if}</b> и ще получите БЕЗПЛАТНА доставка!.</div>');
+                                                    }
                                                 }
                                                 else{
                                                 	$("#cartProductsAmountTotalDel").html("{if $abb_before_amount}{$currency_abb}{/if}0.00 {if !$abb_before_amount}{$currency_abb}{/if}");

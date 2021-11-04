@@ -8,7 +8,7 @@
         <meta name="description" content="{if $infoDescr}{$infoDescr}{else}{$description.description}{/if}{if $extraTitle} {$extraTitle}{/if}" />
         {if 0}<meta name="keywords" content="{if $infoKeys}{$infoKeys}{else}{$keywords.description}{/if}{if $extraTitle}, {$extraTitle}{/if}" />		{/if}
         {$metatags.description}
-        <link rel="image_src" href="{$host}{if $images[0].pic}files/{$images[0].pic}{else}{if $row.pic_1}files/{$row.pic_1}{else}{if $row.pic}files/{$row.pic}{else}images/logo-facebook.png{/if}{/if}{/if}" />
+        <link rel="image_src" href="{$host}{if $images[0].pic}files/{$images[0].pic}{else}{if $row.pic_1}files/{$row.pic_1}{else}{if $row.pic}files/{$row.pic}{else}images/share_image_arthaveauty.png{/if}{/if}{/if}" />
         <link rel="target_url" href="https://{$smarty.server.HTTP_HOST}{$smarty.server.REQUEST_URI}{if 0}{$host}{#htaccess_product#}/{$row.id}{/if}"/>
         <link rel="shortcut icon" href="/images/favicon_arthabeauty.ico" />
         {if $noindex == 1}
@@ -24,7 +24,7 @@
         <meta property="og:type" content="article" />
         <meta property="og:title" content="{if $infoTitle}{$infoTitle}{else}{$extraTitle}{$title.description}{/if}{if $pageNum} - {$pageNum}{/if}" />
         <meta property="og:description" content="{if $infoDescr}{$infoDescr}{else}{$description.description}{/if}{if $extraTitle} {$extraTitle}{/if}" />
-        <meta property="og:image" content="{$host}{if $images[0].pic}files/{$images[0].pic}{else}{if $row.pic_1}files/{$row.pic_1}{else}{if $row.pic}files/{$row.pic}{else}images/logo-facebook.png{/if}{/if}{/if}" />
+        <meta property="og:image" content="{$host}{if $images[0].pic}files/{$images[0].pic}{else}{if $row.pic_1}files/{$row.pic_1}{else}{if $row.pic}files/{$row.pic}{else}images/share_image_arthaveauty.png{/if}{/if}{/if}" />
         {*<meta property="fb:app_id" content="{$fb_api_key}" />*}
         <link rel="stylesheet" type="text/css" href="/js/bootstrap_4_3_1/css/bootstrap.min.css" async defer>
         <link rel="stylesheet" href="/js/fontawesome-free-5_7_2-web/css/all.min.css">

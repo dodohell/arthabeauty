@@ -370,6 +370,7 @@ options = Опции
 hotoffer = Гореща оферта
 promotion = Промоция
 hand_made = Ръчна изработка
+feed_exclude = Премахни от продуктовия фийд
 marine_product = Морски артикул
 new_product = Нов продукт
 enable_bonus_points = Включи бонус точките

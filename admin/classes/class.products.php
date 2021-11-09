@@ -208,7 +208,7 @@
                 "promotion"             => $params->getInt("promotion"),
                 "weight"                => $params->getNumber("weight"),
                 "hand_made"             => $params->has("hand_made") ? 1 : 0,
-                "feed_exclude"             => $params->has("feed_exclude") ? 1 : 0,
+                "feed_exclude"          => $params->has("feed_exclude") ? 1 : 0,
                 "marine_product"        => $params->has("marine_product") ? 1 : 0,
                 'first_page'			=> $params->getInt('first_page'),
                 "new_product"           => $params->has("new_product") ? 1 : 0,

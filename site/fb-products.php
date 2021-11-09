@@ -30,6 +30,7 @@ header("Expires: 0");
                         WHERE
                             products.edate = 0
                         AND products.active = 1
+                        AND products.feed_exclude = 0
                         AND products.quantity > 0
                         {$sql_order_by}
                         

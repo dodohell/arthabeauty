@@ -309,7 +309,7 @@ class PromoCodes extends Settings {
 
                         if(empty($user) || $promoCodeAlreadyUsed['orders'] != 0) {
                             $result["code"] = 400;
-                            $result["message"] = $languageVars["wrong_promo_code"];
+                            $result["message"] = $languageVars["wrong_promo_code_user_not_logged_in_or_used"];
 
                             $res = $db->autoExecute($carts_table, array("promo_code" => null, "discount_promo_code_amount" => 0), DB_AUTOQUERY_UPDATE, "id = '".$cart_id."'"); safeCheck($res);
 

@@ -113,17 +113,18 @@ class Users extends Settings {
                         Arthabeauty
                         ";
                 } else {
-                    $message = "Здравейте, " . $first_name . " " . $last_name . "!<br />
-                        Благодарим Ви, че се регистрирахте в онлайн магазин Arthabeauty.<br /><br />
+                    $message = "Здравей, " . $first_name . " " . $last_name . "!<br />
+                        Добре дошъл/а в семейството на ArthaBeauty!<br /><br />
+                        Благодарим за твоята регистрация! <br /><br />
 
-                        Можете, да започнете да използвате Вашия профил от <a href='" . $host . "login-page' target='_blank'>ТУК</a>.<br /><br />
+                        Можеш да започнеш управлението на своя профил <a href='" . $host . "login-page' target='_blank'>ТУК</a>.<br /><br />
 
                         С уважение!<br />
                         Arthabeauty
                         ";
                 }
                 
-                $subject = "Успешна регистрация в www.arthabeauty.com";
+                $subject = "Успешна регистрация в www.arthabeauty.bg";
                 
                 foreach ($emails_test as $v) {
                     mailSender($v, $subject, $message);

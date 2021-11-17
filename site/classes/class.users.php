@@ -105,7 +105,7 @@ class Users extends Settings {
                 $_SESSION["user"] = $row;
                 if ($lng == "bg") {
                     $message = "Здравей, " . $first_name . " " . $last_name . "!<br />
-                        Добре дошъл/а в семейството на ArthaBeauty!<br /><br />
+                        Вече си част от семейството на ArthaBeauty!<br /><br />
                         Благодарим за твоята регистрация! <br /><br />
 
                         Можеш да започнеш управлението на своя профил <a href='" . $host . "login-page' target='_blank'>ТУК</a>.<br /><br />
@@ -115,7 +115,7 @@ class Users extends Settings {
                         ";
                 } else {
                     $message = "Здравей, " . $first_name . " " . $last_name . "!<br />
-                        Добре дошъл/а в семейството на ArthaBeauty!<br /><br />
+                        Вече си част от семейството на ArthaBeauty!<br /><br />
                         Благодарим за твоята регистрация! <br /><br />
 
                         Можеш да започнеш управлението на своя профил <a href='" . $host . "login-page' target='_blank'>ТУК</a>.<br /><br />

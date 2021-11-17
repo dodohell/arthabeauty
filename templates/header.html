@@ -752,7 +752,7 @@ height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
                                                             /*html += '		<span class="excerpt">'+response.products[i].excerpt+'</span>';*/
                                                             html += '	</div>';
                                                             html += '	<div class="productPrice">';
-                                                            html += '		'+response.products[i].quantity+' x '+response.products[i].product_price_total+' {#currency#}';
+                                                            html += '		'+response.products[i].quantity+' x ' + response.products[i].product_price_total.toFixed(2) + ' {#currency#}';
                                                             html += '	</div>';
                                                             html += '</li>';
 

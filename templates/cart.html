@@ -209,7 +209,7 @@
                                                 $("#promo_codeError").html("");
                                                 
                                                 $("#cartProductsAmount .num").html(total_amount);
-                                                $("#cartProductsPromoDiscount").html("{if $abb_before_amount}{$currency_abb}{/if}-"+response.discount_amount+" {if !$abb_before_amount}{$currency_abb}{/if}");
+                                                $("#cartProductsPromoDiscount").html("{if $abb_before_amount}{$currency_abb}{/if}-" + response.discount_amount.toFixed(2) + " {if !$abb_before_amount}{$currency_abb}{/if}");
                                                 $("#cartProductsAmountTotal").html("{if $abb_before_amount}{$currency_abb}{/if}"+response.total_amount_disconted.toFixed(2)+" {if !$abb_before_amount}{$currency_abb}{/if}");
                                                 if(response.total_amount_disconted.toFixed(2) < 79){
                                                 	$("#cartProductsAmountTotalDel").html("{if $abb_before_amount}{$currency_abb}{/if}4.00 {if !$abb_before_amount}{$currency_abb}{/if}");

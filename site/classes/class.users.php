@@ -104,10 +104,11 @@ class Users extends Settings {
                 $row = $db->getRow("SELECT * FROM " . $users_table . " WHERE id = '" . $id . "'"); safeCheck($row);
                 $_SESSION["user"] = $row;
                 if ($lng == "bg") {
-                    $message = "Здравейте, " . $first_name . " " . $last_name . "!<br />
-                        Благодарим Ви, че се регистрирахте в онлайн магазин Arthabeauty.<br /><br />
+                    $message = "Здравей, " . $first_name . " " . $last_name . "!<br />
+                        Добре дошъл/а в семейството на ArthaBeauty!<br /><br />
+                        Благодарим за твоята регистрация! <br /><br />
 
-                        Можете, да започнете да използвате Вашия профил от <a href='" . $host . "login-page' target='_blank'>ТУК</a>.<br /><br />
+                        Можеш да започнеш управлението на своя профил <a href='" . $host . "login-page' target='_blank'>ТУК</a>.<br /><br />
 
                         С уважение!<br />
                         Arthabeauty
@@ -124,7 +125,7 @@ class Users extends Settings {
                         ";
                 }
                 
-                $subject = "Успешна регистрация в www.arthabeauty.bg";
+                $subject = "Успешно се регистрира в arthabeauty.bg! Радваме се, че си тук!";
                 
                 foreach ($emails_test as $v) {
                     mailSender($v, $subject, $message);

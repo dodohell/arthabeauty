@@ -247,11 +247,9 @@
                                                 $("#cartProductsPromoDiscountCont").slideUp();
                                                 $("#totalContainer").addClass("cartTotalContainer");
                                                 
-                                                var total_with_delivery = total_amount + 4;
-                                                console.log(total_amount);
-                                                console.log(total_with_delivery);
+                                                var total_with_delivery = parseFloat(total_amount) + 4;                                                
                                                 
-                                                /*$("#cartProductsAmountTotalTotal").html("{if $abb_before_amount}{$currency_abb}{/if}" + total_with_delivery.toFixed(2) + " {if !$abb_before_amount}{$currency_abb}{/if}");*/
+                                                $("#cartProductsAmountTotalTotal").html("{if $abb_before_amount}{$currency_abb}{/if}" + total_with_delivery.toFixed(2) + " {if !$abb_before_amount}{$currency_abb}{/if}");
 
                                                 let errorCodes = [400, 401, 402, 403];
 

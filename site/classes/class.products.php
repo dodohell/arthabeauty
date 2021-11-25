@@ -480,7 +480,9 @@
             if($row["meta_description"]){
             }
             else{
-            	$sm->assign("infoDescr", $row["name_en"].(($row["name_en"] && $row["name_bg"])?", ":"").$row["name"].". Топ цена. Купи сега!");
+                //print_r();
+                $meta_result = mb_substr(strip_tags($row["excerpt_bg"]), 0, 180);
+            	$sm->assign("infoDescr", $meta_result);
             }
             
             $relatedProducts = self::getRelatedProductsImagesMyMainProductId($id);

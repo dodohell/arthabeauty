@@ -240,7 +240,13 @@ fbq('track', 'ViewContent', {
 								<div class="swiper-slide">
 									<div class="swiper-slide-container">
 										<a data-fancybox="gallery" href="/files/{$images[i].pic}">
-											<div class="productImage" style="background-image: url({if $images[i].pic}/files/{$images[i].pic}{else}/images/noImage.png{/if});"></div>
+											<div class="productImage" style="height: auto;">
+                                                {if $images[i].pic}
+                                                <img style="width:100%; height: auto;" alt="{$row.name}" src="/files/{$images[i].pic}">
+                                                {else}
+                                                <img src="/images/noImage.png">
+                                                {/if}
+                                            </div>
 										</a>
 									</div>
 								</div>
